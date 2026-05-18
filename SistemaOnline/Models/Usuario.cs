@@ -22,5 +22,8 @@ namespace SistemaOnline.Models
         // Relacion con Rol
         public int ID_Rol { get; set; }
         public Rol Rol { get; set; }
+        // Relación con Empleado
+        public int ID_Empleado { get; set; }
+        public Empleado Empleado { get; set; }
     }
 }

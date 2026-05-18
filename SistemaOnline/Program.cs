@@ -1,7 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using SistemaOnline.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<APPDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
+});
 
 var app = builder.Build();
 

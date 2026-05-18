@@ -17,7 +17,7 @@ namespace SistemaOnline.Models
         [StringLength(255)]
         public string Password { get; set; }
 
-        public bool? Estado { get; set; }
+        public bool Estado { get; set; }
 
         // Relacion con Rol
         public int ID_Rol { get; set; }

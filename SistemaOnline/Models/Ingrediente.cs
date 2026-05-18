@@ -25,7 +25,7 @@ namespace SistemaOnline.Models
 
         // fk y relacion para categoria_ingrediente
         public int ID_Cat_Ingrediente { get; set; }
-        public Categoria_Ingrediente CategoriaIngrediente { get; set; }
+        public Categoria_Ingrediente Categoria_Ingrediente { get; set; }
 
         // colecciones de relacion
         public ICollection<Producto_Ingrediente> Producto_Ingredientes { get; set; }

@@ -27,7 +27,7 @@ namespace SistemaOnline.Models
 
         // fk y relacion para producto_categoria
         public int ID_Categoria { get; set; }
-        public Producto_Categoria ProductoCategoria { get; set; }
+        public Producto_Categoria Producto_Categoria { get; set; }
 
         // fk con las tablas dependientes e intermedias
         public ICollection<Producto_Ingrediente> Producto_Ingredientes { get; set; }

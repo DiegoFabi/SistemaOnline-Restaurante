@@ -35,7 +35,7 @@ namespace SistemaOnline.Models
 
         // fk y objeto de relacion para mesa_restaurante
         public int ID_Mesa { get; set; }
-        public Mesa_Restaurante MesaRestaurante { get; set; }
+        public Mesa_Restaurante Mesa_Restaurante { get; set; }
 
         // colecciones dependientes del pedido
         public ICollection<Pago> Pagos { get; set; }

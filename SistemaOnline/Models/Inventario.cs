@@ -23,6 +23,6 @@ namespace SistemaOnline.Models
 
         // fk y objeto de relacion para ingrediente
         public int ID_Ingrediente { get; set; }
-        public Ingrediente Angrediente { get; set; } // usa ingrediente segun tu definicion de clase
+        public Ingrediente Ingrediente { get; set; }
     }
 }

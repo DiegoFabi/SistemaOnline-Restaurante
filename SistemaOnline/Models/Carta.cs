@@ -21,6 +21,6 @@ namespace SistemaOnline.Models
         public decimal Precio { get; set; }
 
         // una carta tiene muchas categorias de productos
-        public ICollection<Producto_Categoria> Categorias { get; set; }
+        public ICollection<Producto_Categoria> Producto_Categorias { get; set; }
     }
 }

@@ -1,0 +1,43 @@
+﻿@model SistemaOnline.ViewModels.UserVM;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="row mt-5 justify-content-center">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header">
+                    Registro
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Login" asp-action="Registro" method="post" autocomplete="off">
+                        <input class="form-control mb-3" type="text" placeholder="Nombre Completo" required asp-for="Username" />
+                        <input class="form-control mb-3" type="email" placeholder="Correo" required asp-for="Email" />
+                        <input class="form-control mb-3" type="password" placeholder="Contraseña" required asp-for="Password" />
+                        <input class="form-control mb-3" type="password" placeholder="Repite Contraseña" required asp-for="RepeatPassword" />
+                        <select class="form-select mb-3" asp-for="idRol" asp-items="@(new SelectList(ViewBag.Roles, "ID_Rol", "Nombre_Rol"))">
+                            <option value="">Elije tu rol</option>
+                        </select>
+                        <div class="d-grid gap-2 mb-3">
+                            <button class="btn btn-danger" type="submit">Registrate</button>
+                        </div>
+                    </form>
+                    @if (ViewData["Msg"] != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewData["Msg"]
+                        </div>
+                    }
+                    ¿Ya tienes una cuenta? <a asp-controller="Login" asp-action="Login">Iniciar Sesion</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

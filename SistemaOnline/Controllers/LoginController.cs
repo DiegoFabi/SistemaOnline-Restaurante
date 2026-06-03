@@ -20,7 +20,7 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public IActionResult Registro()
         {
-            ViewBag.Rol = _dbcontext.Roles.ToList();
+            ViewBag.Roles = _dbcontext.Roles.ToList();
             return View();
         }
         [HttpPost]
@@ -28,8 +28,8 @@ namespace SistemaOnline.Controllers
         {
             if (modelo.Password != modelo.RepeatPassword)
             {
-                ViewData["msg"] = "La contraseñas no coinciden, escribe denuevo";
                 ViewBag.Rol = _dbcontext.Roles.ToList();
+                ViewData["Msg"] = "La contraseñas no coinciden, escribe denuevo";
                 return View();
             }
             Usuario user = new Usuario()
@@ -42,7 +42,7 @@ namespace SistemaOnline.Controllers
             await _dbcontext.Usuarios.AddAsync(user);
             await _dbcontext.SaveChangesAsync();
             if (user.ID_Usuario != 0) return RedirectToAction("Login", "Login");
-            ViewData["msg"] = "El usuario no se creo";
+            ViewData["Msg"] = "El usuario no se creo";
             ViewBag.Roles = _dbcontext.Roles.ToList();
             return View();
         }
@@ -60,7 +60,7 @@ namespace SistemaOnline.Controllers
 
             if (existe == null)
             {
-                ViewData["msg"] = "El usuario no exise o esta mal escrito";
+                ViewData["Msg"] = "El usuario no exise o esta mal escrito";
                 return View();
             }
             //Claims
@@ -89,7 +89,7 @@ namespace SistemaOnline.Controllers
             switch (existe.Rol.Nombre_Rol)
             {
                 case "Administrador":
-                    return RedirectToAction("Admin", "Login");
+                    return RedirectToAction("Administrador", "Login");
                 case "Cocinero":
                     return RedirectToAction("Cocinero", "Login");
                 case "Mesero":
@@ -102,12 +102,6 @@ namespace SistemaOnline.Controllers
         }
         [HttpGet]
         public IActionResult Administrador()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Cocinero()
         {
             return View();
         }

@@ -41,8 +41,7 @@ namespace SistemaOnline.Data
                 .HasForeignKey(u => u.ID_Rol);
 
             modelBuilder.Entity<Rol>().HasData(
-                new Rol { ID_Rol = 1, Nombre_Rol = "Adminstrador" },
-                new Rol { ID_Rol = 2, Nombre_Rol = "Cocinero" },
+                new Rol { ID_Rol = 1, Nombre_Rol = "Administrador" },
                 new Rol { ID_Rol = 3, Nombre_Rol = "Cajero" },
                 new Rol { ID_Rol = 4, Nombre_Rol = "Mesero" },
                 new Rol { ID_Rol = 5, Nombre_Rol = "Cliente" }

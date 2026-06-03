@@ -9,13 +9,13 @@ namespace SistemaOnline.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Comprobante { get; set; }
 
-        [StringLength(30)]
+        [Required, MaxLength(30)]
         public string Tipo_Comprobante { get; set; }
 
-        [StringLength(10)]
+        [Required, MaxLength(10)]
         public string Numero_Comprobante { get; set; }
 
-        [StringLength(10)]
+        [Required, MaxLength(10)]
         public string Serie { get; set; }
 
         public DateTime Fecha_Emision { get; set; }
@@ -29,19 +29,19 @@ namespace SistemaOnline.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal IGV { get; set; }
 
-        [StringLength(30)]
+        [Required, MaxLength(30)]
         public string Estado_Comprobante { get; set; }
 
-        [StringLength(30)]
+        [Required, MaxLength(30)]
         public string Metodo_Pago { get; set; }
 
-        [StringLength(200)]
+        [Required, MaxLength(200)]
         public string Razon_Social { get; set; }
 
-        [StringLength(11)]
+        [Required, MaxLength(11)]
         public string RUC { get; set; }
 
-        [StringLength(200)]
+        [Required, MaxLength(200)]
         public string Direccion_Fiscal { get; set; }
 
         // fk y objeto de relacion para pedido

@@ -15,13 +15,13 @@ namespace SistemaOnline.Models
         [DataType(DataType.Date)]
         public DateTime Fecha_Fin { get; set; }
 
-        [StringLength(50)]
+        [Required, MaxLength(50)]
         public string Tipo_Contrato { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal Salario { get; set; }
 
-        [StringLength(500)]
+        [Required, MaxLength(500)]
         public string Clausula { get; set; }
 
         // fk y objeto de relacion para empleado

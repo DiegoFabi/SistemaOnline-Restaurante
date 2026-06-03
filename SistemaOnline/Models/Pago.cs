@@ -14,13 +14,13 @@ namespace SistemaOnline.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal Monto { get; set; }
 
-        [StringLength(50)]
+        [Required, MaxLength(50)]
         public string Metodo_Pago { get; set; }
 
-        [StringLength(100)]
+        [MaxLength(100)]
         public string Detalles_Tarjeta { get; set; }
 
-        [StringLength(20)]
+        [Required, MaxLength(20)]
         public string Estado { get; set; }
 
         // fk y objeto de relacion para pedido

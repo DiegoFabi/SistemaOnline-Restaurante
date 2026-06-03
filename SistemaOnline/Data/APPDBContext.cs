@@ -42,19 +42,22 @@ namespace SistemaOnline.Data
 
             modelBuilder.Entity<Rol>().HasData(
                 new Rol { ID_Rol = 1, Nombre_Rol = "Adminstrador" },
-                new Rol { ID_Rol = 2, Nombre_Rol = "Mesero" },
-                new Rol { ID_Rol = 3, Nombre_Rol = "Cajero" }
+                new Rol { ID_Rol = 2, Nombre_Rol = "Cocinero" },
+                new Rol { ID_Rol = 3, Nombre_Rol = "Cajero" },
+                new Rol { ID_Rol = 4, Nombre_Rol = "Mesero" },
+                new Rol { ID_Rol = 5, Nombre_Rol = "Cliente" }
                 );
 
             modelBuilder.Entity<Usuario>().HasData(
                 new Usuario { ID_Usuario = 1, Nombre_Usuario = "Tigre Capo", Email = "TrigeCapo123@gmail.com", Password = "aQwr@2", ID_Rol = 1 }
                 );
 
-            // Usuario hacia Empleado 
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.Empleado)
-                .WithMany(e => e.Usuarios)
-                .HasForeignKey(u => u.ID_Empleado);
+            // Relación 1:1 Opcional entre Empleado y Usuario
+            modelBuilder.Entity<Empleado>()
+                .HasOne(e => e.Usuario)
+                .WithOne()
+                .HasForeignKey<Empleado>(e => e.ID_Usuario)
+                .IsRequired(false);
 
             // Contrato hacia Empleado 
             modelBuilder.Entity<Contrato>()

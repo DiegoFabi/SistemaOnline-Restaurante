@@ -11,10 +11,10 @@ namespace SistemaOnline.Models
         [Column(TypeName = "decimal(10,3)")]
         public decimal Cantidad { get; set; }
 
-        [StringLength(100)]
+        [Required, MaxLength(100)]
         public string Unidad_Medida { get; set; }
 
-        [StringLength(200)]
+        [Required, MaxLength(200)]
         public string Observaciones { get; set; }
 
         // fk y objeto de relacion para ingrediente

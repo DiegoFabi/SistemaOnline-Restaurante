@@ -9,13 +9,13 @@ namespace SistemaOnline.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Ingrediente { get; set; }
 
-        [StringLength(20)]
+        [Required, MaxLength(20)]
         public string Nombre_Ingrediente { get; set; }
 
-        [StringLength(20)]
+        [Required, MaxLength(20)]
         public string Unidad_Medida { get; set; }
 
-        [StringLength(100)]
+        [Required, MaxLength(100)]
         public string Descripcion { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]

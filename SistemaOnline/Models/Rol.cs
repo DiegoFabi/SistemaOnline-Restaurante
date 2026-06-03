@@ -11,9 +11,6 @@ namespace SistemaOnline.Models
         [StringLength(50)]
         public string Nombre_Rol { get; set; }
 
-        [StringLength(150)]
-        public string Descripcion { get; set; }
-
         // Un rol tiene muchos usuarios
         public ICollection<Usuario> Usuarios { get; set; }
     }

@@ -10,25 +10,25 @@ namespace SistemaOnline.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Proveedor { get; set; }
 
-        [StringLength(200)]
+        [Required, MaxLength(200)]
         public string Nombre_Empresa { get; set; }
 
-        [StringLength(11)]
+        [Required, MaxLength(11)]
         public string RUC { get; set; }
 
-        [StringLength(100)]
+        [Required, MaxLength(100)]
         public string Email_Contacto { get; set; }
 
-        [StringLength(9)]
+        [Required, MaxLength(9)]
         public string Telefono { get; set; }
 
-        [StringLength(250)]
+        [Required, MaxLength(250)]
         public string Direccion { get; set; }
 
-        [StringLength(200)]
+        [Required, MaxLength(200)]
         public string Tipo_Suministro { get; set; }
 
-        [StringLength(50)]
+        [Required, MaxLength(50)]
         public string Estado { get; set; }
 
         // Un proveedor tiene muchos contratos y proveen diferentes tipos de productos (ingredientes)

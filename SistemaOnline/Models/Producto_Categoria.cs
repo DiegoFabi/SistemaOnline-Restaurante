@@ -9,10 +9,10 @@ namespace SistemaOnline.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID_Categoria { get; set; }
 
-        [StringLength(50)]
+        [Required, MaxLength(50)]
         public string Nombre_Categoria { get; set; }
 
-        [StringLength(200)]
+        [Required, MaxLength(200)]
         public string Descripcion { get; set; }
 
         // fk y objeto de relacion para carta

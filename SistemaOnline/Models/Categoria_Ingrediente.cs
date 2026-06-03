@@ -9,7 +9,7 @@ namespace SistemaOnline.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID_Cat_Ingrediente { get; set; }
 
-        [StringLength(50)]
+        [Required, MaxLength(50)]
         public string Nombre_Categoria { get; set; }
 
         // una categoria agrupa a muchos ingredientes

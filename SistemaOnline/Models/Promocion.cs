@@ -10,10 +10,10 @@ namespace SistemaOnline.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Promocion { get; set; }
 
-        [StringLength(100)]
+        [Required, MaxLength(100)]
         public string Nombre { get; set; }
 
-        [StringLength(300)]
+        [Required, MaxLength(300)]
         public string Descripcion { get; set; }
 
         [Column(TypeName = "decimal(5,2)")]

@@ -13,10 +13,10 @@ namespace SistemaOnline.Models
 
         public int Capacidad { get; set; }
 
-        [StringLength(100)]
+        [Required, MaxLength(100)]
         public string Ubicacion { get; set; }
 
-        [StringLength(20)]
+        [Required, MaxLength(20)]
         public string Estado { get; set; }
 
         // una mesa recibe muchos pedidos y reservaciones

@@ -13,13 +13,13 @@ namespace SistemaOnline.Models
 
         public int Numero_Personas { get; set; }
 
-        [StringLength(100)]
+        [Required, MaxLength(100)]
         public string Ocasion_Especial { get; set; }
 
-        [StringLength(20)]
+        [Required, MaxLength(20)]
         public string Estado_Reservacion { get; set; }
 
-        [StringLength(300)]
+        [Required, MaxLength(300)]
         public string Notas { get; set; }
 
         // fk y objeto de relacion para cliente

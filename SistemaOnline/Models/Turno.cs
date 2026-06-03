@@ -10,14 +10,14 @@ namespace SistemaOnline.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID_Turno { get; set; }
 
-        [StringLength(50)]
+        [Required, MaxLength(50)]
         public string Nombre_Turno { get; set; }
 
         public TimeSpan Hora_Inicio { get; set; }
 
         public TimeSpan Hora_Fin { get; set; }
 
-        [StringLength(15)]
+        [Required, MaxLength(15)]
         public string Dias_Semana { get; set; }
 
         // relacion muchos a muchos tabla intermedia

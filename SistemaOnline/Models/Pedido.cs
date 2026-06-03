@@ -13,10 +13,10 @@ namespace SistemaOnline.Models
         [DataType(DataType.Date)]
         public DateTime Fecha { get; set; }
 
-        [StringLength(50)]
+        [Required, MaxLength(50)]
         public string Estado_Pedido { get; set; }
 
-        [StringLength(255)]
+        [Required, MaxLength(255)]
         public string Detalle_Pedido { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]

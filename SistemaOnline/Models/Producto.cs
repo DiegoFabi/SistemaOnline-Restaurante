@@ -9,10 +9,10 @@ namespace SistemaOnline.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Producto { get; set; }
 
-        [StringLength(100)]
+        [Required, MaxLength(100)]
         public string Nombre_Plato { get; set; }
 
-        [StringLength(255)]
+        [Required, MaxLength(255)]
         public string Descripcion { get; set; }
 
         public double Tiempo_Preparacion { get; set; }
@@ -22,7 +22,7 @@ namespace SistemaOnline.Models
 
         public bool Disponibilidad { get; set; }
 
-        [StringLength(50)]
+        [Required, MaxLength(50)]
         public string Categoria { get; set; }
 
         // fk y relacion para producto_categoria

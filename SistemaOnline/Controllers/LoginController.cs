@@ -68,7 +68,7 @@ namespace SistemaOnline.Controllers
             {
                 new Claim(ClaimTypes.Name, existe.Nombre_Usuario),
                 new Claim(ClaimTypes.Email, existe.Email),
-                new Claim(ClaimTypes.Role, existe.Password),
+                new Claim(ClaimTypes.Role, existe.Rol.Nombre_Rol),
                 new Claim("idUser", existe.ID_Usuario.ToString())
             };
             var claimsIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -89,7 +89,7 @@ namespace SistemaOnline.Controllers
             switch (existe.Rol.Nombre_Rol)
             {
                 case "Administrador":
-                    return RedirectToAction("Administrador", "Login");
+                    return RedirectToAction("Index", "Administrador");
                 case "Cocinero":
                     return RedirectToAction("Cocinero", "Login");
                 case "Mesero":

@@ -42,13 +42,16 @@ namespace SistemaOnline.Data
 
             modelBuilder.Entity<Rol>().HasData(
                 new Rol { ID_Rol = 1, Nombre_Rol = "Administrador" },
-                new Rol { ID_Rol = 3, Nombre_Rol = "Cajero" },
-                new Rol { ID_Rol = 4, Nombre_Rol = "Mesero" },
-                new Rol { ID_Rol = 5, Nombre_Rol = "Cliente" }
+                new Rol { ID_Rol = 2, Nombre_Rol = "Cajero" },
+                new Rol { ID_Rol = 3, Nombre_Rol = "Mesero" },
+                new Rol { ID_Rol = 4, Nombre_Rol = "Cliente" }
                 );
 
             modelBuilder.Entity<Usuario>().HasData(
-                new Usuario { ID_Usuario = 1, Nombre_Usuario = "Tigre Capo", Email = "TrigeCapo123@gmail.com", Password = "aQwr@2", ID_Rol = 1 }
+                new Usuario { ID_Usuario = 1, Nombre_Usuario = "Tigre Capo", Email = "TrigeCapo123@gmail.com", Estado = true, Password = "aQwr@2", ID_Rol = 1 },
+                new Usuario { ID_Usuario = 2, Nombre_Usuario = "Diego", Email = "Diego12@gmail.com", Estado = true, Password = "123", ID_Rol = 2 },
+                new Usuario { ID_Usuario = 3, Nombre_Usuario = "Valeria", Email = "Valeria15@gmail.com", Estado = true, Password = "345", ID_Rol = 3 },
+                new Usuario { ID_Usuario = 4, Nombre_Usuario = "Ulises", Email = "Ulises@gmail.com", Estado = true, Password = "678", ID_Rol = 4 }
                 );
 
             // Relación 1:1 Opcional entre Empleado y Usuario

@@ -24,7 +24,7 @@ namespace SistemaOnline.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Registro(UserVM modelo)
+        public async Task<IActionResult> Registro(UsuarioVM modelo)
         {
             if (modelo.Password != modelo.RepeatPassword)
             {
@@ -34,10 +34,10 @@ namespace SistemaOnline.Controllers
             }
             Usuario user = new Usuario()
             {
-                Nombre_Usuario = modelo.Username,
+                Nombre_Usuario = modelo.Nombre_Usuario,
                 Email = modelo.Email,
                 Password = modelo.Password,
-                ID_Rol = modelo.idRol
+                ID_Rol = modelo.ID_Rol
             };
             await _dbcontext.Usuarios.AddAsync(user);
             await _dbcontext.SaveChangesAsync();

@@ -1,0 +1,31 @@
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace SistemaOnline.ViewModels
+{
+    public class UsuarioVM
+    {
+        public int ID_Usuario { get; set; }
+
+        [Required, MaxLength(50)]
+        public string Nombre_Usuario { get; set; }
+
+        [Required, MaxLength(100)]
+        public string Email { get; set; }
+
+        [Required, MaxLength(255)]
+        public string Password { get; set; }
+        [Required, MaxLength(255)]
+        public string RepeatPassword { get; set; }
+
+        public bool Estado { get; set; }
+
+        public int ID_Rol { get; set; }
+
+        // Para mostrar en Lista
+        public string? RolNombre { get; set; }
+
+        // Para los selects en Nuevo/Editar
+        public List<SelectListItem> RolesDisponibles { get; set; } = new();
+    }
+}

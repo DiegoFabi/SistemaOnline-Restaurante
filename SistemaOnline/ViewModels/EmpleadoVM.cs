@@ -34,6 +34,9 @@ namespace SistemaOnline.ViewModels
         public string? UsuarioNombre { get; set; }
 
         // Para los selects en Nuevo/Editar
+        public int? ID_Turno { get; set; }
         public List<SelectListItem> UsuariosDisponibles { get; set; } = new();
+        public List<SelectListItem> TurnosDisponibles { get; set; } = new();
+        public List<SelectListItem> CargosDisponibles { get; set; } = new();
     }
 }

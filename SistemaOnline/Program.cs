@@ -11,6 +11,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Login/Login";
+        options.AccessDeniedPath = "/Login/AccesoDenegado";
         options.ExpireTimeSpan = TimeSpan.FromSeconds(5000);
     });
 

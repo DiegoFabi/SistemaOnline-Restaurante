@@ -1,0 +1,74 @@
+@model SistemaOnline.ViewModels.PedidoVM
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Nuevo Pedido";
+    ViewBag.Active = "negocio";
+    string Cls(string campo) => !ViewData.ModelState.ContainsKey(campo) || ViewData.ModelState[campo].Errors.Count == 0
+        ? "w-full h-11 px-md bg-surface-container-low border border-transparent rounded-lg focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md text-on-surface"
+        : "w-full h-11 px-md bg-surface-container-low border border-error rounded-lg focus:ring-2 focus:ring-error/20 transition-all font-body-md text-body-md text-on-surface";
+}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-lg">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Nuevo Pedido</h2>
+        <p class="text-on-surface-variant">Registra un nuevo pedido.</p>
+    </div>
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg">
+        <form asp-controller="Pedido" asp-action="Nuevo" method="post" autocomplete="off" class="space-y-md">
+            <div asp-validation-summary="ModelOnly" class="text-error text-body-md"></div>
+            <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Fecha">Fecha</label>
+                <input class="@Cls("Fecha")" type="date" required asp-for="Fecha" />
+                <span asp-validation-for="Fecha" class="text-error text-label-md"></span>
+            </div>
+            <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado_Pedido">Estado del Pedido</label>
+                <input class="@Cls("Estado_Pedido")" type="text" required asp-for="Estado_Pedido" />
+                <span asp-validation-for="Estado_Pedido" class="text-error text-label-md"></span>
+            </div>
+            <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Detalle_Pedido">Detalle del Pedido</label>
+                <input class="@Cls("Detalle_Pedido")" type="text" required asp-for="Detalle_Pedido" />
+                <span asp-validation-for="Detalle_Pedido" class="text-error text-label-md"></span>
+            </div>
+            <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="SubTotal">SubTotal</label>
+                <input class="@Cls("SubTotal")" type="number" step="0.01" required asp-for="SubTotal" />
+                <span asp-validation-for="SubTotal" class="text-error text-label-md"></span>
+            </div>
+            <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Total">Total</label>
+                <input class="@Cls("Total")" type="number" step="0.01" required asp-for="Total" />
+                <span asp-validation-for="Total" class="text-error text-label-md"></span>
+            </div>
+            <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Empleado">Empleado</label>
+                <select class="@Cls("ID_Empleado")" asp-for="ID_Empleado" asp-items="Model.EmpleadosDisponibles">
+                    <option value="">-- Seleccione --</option>
+                </select>
+                <span asp-validation-for="ID_Empleado" class="text-error text-label-md"></span>
+            </div>
+            <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Cliente">Cliente</label>
+                <select class="@Cls("ID_Cliente")" asp-for="ID_Cliente" asp-items="Model.ClientesDisponibles">
+                    <option value="1">Cliente Mostrador</option>
+                </select>
+                <span asp-validation-for="ID_Cliente" class="text-error text-label-md"></span>
+            </div>
+            <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Mesa">Mesa</label>
+                <select class="@Cls("ID_Mesa")" asp-for="ID_Mesa" asp-items="Model.MesasDisponibles">
+                    <option value="">-- Seleccione --</option>
+                </select>
+                <span asp-validation-for="ID_Mesa" class="text-error text-label-md"></span>
+            </div>
+            <div class="flex items-center gap-sm pt-md">
+                <button type="submit" class="inline-flex items-center gap-sm h-11 px-md bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-title-md text-title-md rounded-lg shadow-md shadow-primary/20 transition-all active:scale-[0.98]">
+                    <span class="material-symbols-outlined">save</span> Guardar
+                </button>
+                <a asp-controller="Pedido" asp-action="Lista" class="inline-flex items-center gap-sm h-11 px-md bg-surface-container-high text-on-surface font-title-md text-title-md rounded-lg transition-all hover:bg-surface-container-highest">
+                    <span class="material-symbols-outlined">arrow_back</span> Volver
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

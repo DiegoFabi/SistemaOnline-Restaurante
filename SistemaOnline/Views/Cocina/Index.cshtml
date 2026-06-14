@@ -1,0 +1,103 @@
+@model SistemaOnline.ViewModels.CocinaDashboardVM
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Kanban de Pedidos";
+    ViewBag.Active = "dashboard";
+}
+
+<div class="mb-lg flex justify-between items-end">
+    <div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Kanban de Pedidos</h2>
+        <p class="text-on-surface-variant">Gestión visual de la producción de pedidos en cocina.</p>
+    </div>
+    @if (Model.AlertasInventario > 0)
+    {
+        <span class="px-md py-sm bg-error-container text-on-error-container rounded-full text-label-md font-bold animate-pulse-soft">
+            @Model.AlertasInventario ingredientes con stock crítico
+        </span>
+    }
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+    <!-- Pendientes -->
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden">
+        <div class="p-lg border-b border-outline-variant/20 flex justify-between items-center">
+            <h3 class="font-title-md text-title-md text-on-surface">Pendientes</h3>
+            <span class="px-sm py-xs bg-primary/10 text-primary rounded-full text-label-md font-bold">@Model.Pendientes.Count</span>
+        </div>
+        <div class="p-lg space-y-md">
+            @foreach (var p in Model.Pendientes)
+            {
+                <div class="bg-surface-container-high rounded-xl p-md">
+                    <div class="flex justify-between items-center mb-sm">
+                        <p class="font-bold text-on-surface">Pedido #@p.ID_Pedido — Mesa @(p.Mesa_Restaurante?.Numero_Mesa)</p>
+                    </div>
+                    <ul class="text-label-md text-on-surface-variant mb-md space-y-1">
+                        @foreach (var det in p.Pedido_Detalles)
+                        {
+                            <li>@det.Cantidad x @det.Producto?.Nombre_Plato</li>
+                        }
+                    </ul>
+                    <form method="post" asp-controller="Cocina" asp-action="AvanzarEstado">
+                        <input type="hidden" name="id" value="@p.ID_Pedido" />
+                        <input type="hidden" name="nuevoEstado" value="Preparando" />
+                        <button class="w-full py-xs bg-primary text-on-primary rounded-lg text-label-md font-bold" type="submit">Empezar a Preparar</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Preparando -->
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden">
+        <div class="p-lg border-b border-outline-variant/20 flex justify-between items-center">
+            <h3 class="font-title-md text-title-md text-on-surface">Preparando</h3>
+            <span class="px-sm py-xs bg-tertiary-container text-on-tertiary-container rounded-full text-label-md font-bold">@Model.Preparando.Count</span>
+        </div>
+        <div class="p-lg space-y-md">
+            @foreach (var p in Model.Preparando)
+            {
+                <div class="bg-surface-container-high rounded-xl p-md">
+                    <div class="flex justify-between items-center mb-sm">
+                        <p class="font-bold text-on-surface">Pedido #@p.ID_Pedido — Mesa @(p.Mesa_Restaurante?.Numero_Mesa)</p>
+                    </div>
+                    <ul class="text-label-md text-on-surface-variant mb-md space-y-1">
+                        @foreach (var det in p.Pedido_Detalles)
+                        {
+                            <li>@det.Cantidad x @det.Producto?.Nombre_Plato</li>
+                        }
+                    </ul>
+                    <form method="post" asp-controller="Cocina" asp-action="AvanzarEstado">
+                        <input type="hidden" name="id" value="@p.ID_Pedido" />
+                        <input type="hidden" name="nuevoEstado" value="Listo" />
+                        <button class="w-full py-xs bg-secondary text-on-secondary rounded-lg text-label-md font-bold" type="submit">Marcar como Listo</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Listos -->
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden">
+        <div class="p-lg border-b border-outline-variant/20 flex justify-between items-center">
+            <h3 class="font-title-md text-title-md text-on-surface">Listos</h3>
+            <span class="px-sm py-xs bg-secondary-container text-on-secondary-container rounded-full text-label-md font-bold">@Model.Listos.Count</span>
+        </div>
+        <div class="p-lg space-y-md">
+            @foreach (var p in Model.Listos)
+            {
+                <div class="bg-surface-container-high rounded-xl p-md">
+                    <div class="flex justify-between items-center mb-sm">
+                        <p class="font-bold text-on-surface">Pedido #@p.ID_Pedido — Mesa @(p.Mesa_Restaurante?.Numero_Mesa)</p>
+                    </div>
+                    <ul class="text-label-md text-on-surface-variant space-y-1">
+                        @foreach (var det in p.Pedido_Detalles)
+                        {
+                            <li>@det.Cantidad x @det.Producto?.Nombre_Plato</li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</div>

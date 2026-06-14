@@ -1,0 +1,84 @@
+@{
+    string titulo = ViewData["Titulo"] as string ?? "Listado";
+    string descripcion = ViewData["Descripcion"] as string ?? "";
+    string controlador = ViewData["Controlador"] as string ?? "";
+    string nuevoTexto = ViewData["NuevoTexto"] as string ?? "Nuevo";
+    string buscadorPlaceholder = ViewData["BuscadorPlaceholder"] as string ?? "Buscar...";
+}
+
+<style>
+    .animate-entry {
+        animation: fadeInSlide 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @@keyframes fadeInSlide {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .btn-hover-effect {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+        .btn-hover-effect:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(var(--primary-rgb), 0.3);
+        }
+</style>
+
+<div class="animate-entry">
+    <div class="mb-lg">
+        @* Botón de retorno corregido a Negocio/Gestion *@
+        <a asp-controller="Negocio" asp-action="Gestion"
+           class="inline-flex items-center text-on-surface-variant hover:text-primary mb-md transition-colors duration-300">
+            <span class="material-symbols-outlined mr-sm">arrow_back</span>
+            <span class="font-title-sm">Volver a la Gestión de Negocio</span>
+        </a>
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-md">
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">@titulo</h2>
+                <p class="text-on-surface-variant">@descripcion</p>
+            </div>
+            <a asp-controller="@controlador" asp-action="Nuevo"
+               class="btn-hover-effect inline-flex items-center gap-sm h-11 px-md bg-primary text-on-primary font-title-md rounded-lg shadow-md">
+                <span class="material-symbols-outlined">add</span>
+                @nuevoTexto
+            </a>
+        </div>
+    </div>
+
+    <div class="mb-md relative max-w-md">
+        <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">search</span>
+        <input id="buscadorTabla" type="text" placeholder="@buscadorPlaceholder"
+               class="w-full h-12 pl-[48px] pr-md bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-body-md text-body-md text-on-surface placeholder:text-outline/60" />
+    </div>
+</div>
+
+<script>
+    (function () {
+        const buscador = document.getElementById('buscadorTabla');
+        if (!buscador) return;
+
+        buscador.addEventListener('input', function () {
+            const filtro = this.value.trim().toLowerCase();
+            const tabla = document.getElementById('tablaPrincipal');
+            if (!tabla) return;
+
+            tabla.querySelectorAll('tbody tr').forEach(function (fila) {
+                // Animación de desvanecimiento simple
+                const esVisible = fila.textContent.toLowerCase().includes(filtro);
+                fila.style.transition = "opacity 0.2s ease";
+                fila.style.opacity = esVisible ? "1" : "0";
+                setTimeout(() => { fila.style.display = esVisible ? '' : 'none'; }, 200);
+            });
+        });
+    })();
+</script>

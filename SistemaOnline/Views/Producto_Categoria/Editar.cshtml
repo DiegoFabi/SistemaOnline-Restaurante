@@ -1,0 +1,33 @@
+@model SistemaOnline.ViewModels.Producto_CategoriaVM
+<div class="bento-container">
+    <div class="bento-card">
+        <div class="bento-header">
+            <div>
+                <h2>Editar Categoria de Producto</h2>
+                <p>Modifica los datos de la categoria.</p>
+            </div>
+        </div>
+        <form asp-controller="Producto_Categoria" asp-action="Editar" method="post" autocomplete="off" class="bento-form">
+            <div class="mb-3">
+                <label>ID Categoria</label>
+                <input class="form-control" type="number" asp-for="ID_Categoria" readonly />
+            </div>
+            <div class="mb-3">
+                <label>Nombre de la Categoria</label>
+                <input class="form-control" type="text" required asp-for="Nombre_Categoria" />
+            </div>
+            <div class="mb-3">
+                <label>Descripcion</label>
+                <textarea class="form-control" required asp-for="Descripcion"></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Carta</label>
+                <select asp-for="ID_Carta" class="form-control" asp-items="Model.CartasDisponibles"></select>
+            </div>
+            <div class="mb-3">
+                <button class="btn-bento btn-bento-primary" type="submit">Guardar</button>
+                <a asp-controller="Producto_Categoria" asp-action="Lista" class="btn-bento btn-bento-success">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>

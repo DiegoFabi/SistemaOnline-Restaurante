@@ -1,0 +1,49 @@
+@model List<SistemaOnline.ViewModels.Producto_CategoriaVM>
+<div class="bento-container">
+    <div class="bento-card">
+        <div class="bento-header">
+            <div>
+                <h2>Lista de Categorias de Producto</h2>
+                <p>Administra las categorias de productos.</p>
+            </div>
+            <a asp-controller="Producto_Categoria" asp-action="Nuevo" class="btn-bento btn-bento-primary">+ Nueva Categoria</a>
+        </div>
+        <div class="bento-table-wrapper">
+            <table class="bento-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Carta</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.ID_Categoria</td>
+                            <td>@item.Nombre_Categoria</td>
+                            <td>@item.Descripcion</td>
+                            <td>@item.CartaNombre</td>
+                            <td>
+                                <div class="bento-actions">
+                                    <a asp-controller="Producto_Categoria" asp-action="Editar" asp-route-id="@item.ID_Categoria" class="btn-bento btn-bento-edit">Editar</a>
+                                    <a asp-controller="Producto_Categoria" asp-action="Eliminar" asp-route-id="@item.ID_Categoria" onclick="return confirmar()" class="btn-bento btn-bento-delete">Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        function confirmar(){
+            return confirm("¿Está seguro que desea eliminar este registro?")
+        }
+    </script>
+}

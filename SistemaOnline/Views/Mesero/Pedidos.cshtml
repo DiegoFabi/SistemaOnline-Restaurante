@@ -1,0 +1,39 @@
+@model List<SistemaOnline.Models.Pedido>
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Pedidos";
+    ViewBag.Active = "pedidos";
+}
+
+<div class="mb-lg">
+    <h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Pedidos en Curso</h2>
+    <p class="text-on-surface-variant">Toma y seguimiento de pedidos por mesa.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+    @foreach (var p in Model)
+    {
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg">
+            <div class="flex justify-between items-start mb-md">
+                <div>
+                    <h3 class="font-title-md text-title-md text-on-surface">Mesa @(p.Mesa_Restaurante?.Numero_Mesa)</h3>
+                    <p class="text-label-md text-on-surface-variant">Pedido #@p.ID_Pedido</p>
+                </div>
+                <span class="px-sm py-xs bg-tertiary-container text-on-tertiary-container rounded-full text-label-md">@p.Estado_Pedido</span>
+            </div>
+            <div class="space-y-sm mb-md">
+                @foreach (var det in p.Pedido_Detalles)
+                {
+                    <div class="flex justify-between text-body-md">
+                        <span>@det.Cantidad x @det.Producto?.Nombre_Plato</span>
+                        <span class="font-mono-data">@((det.Cantidad * det.PrecioUnitario).ToString("C2"))</span>
+                    </div>
+                }
+            </div>
+            <div class="flex justify-between items-center border-t border-outline-variant/20 pt-sm">
+                <span class="font-bold text-on-surface">Total</span>
+                <span class="font-bold text-primary">@p.Total.ToString("C2")</span>
+            </div>
+        </div>
+    }
+</div>

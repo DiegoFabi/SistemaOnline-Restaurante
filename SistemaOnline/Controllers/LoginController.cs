@@ -91,15 +91,24 @@ namespace SistemaOnline.Controllers
                 case "Administrador":
                     return RedirectToAction("Index", "Administrador");
                 case "Cocinero":
-                    return RedirectToAction("Cocinero", "Login");
+                    return RedirectToAction("Index", "Cocinero");
                 case "Mesero":
-                    return RedirectToAction("Mesero", "Login");
+                    return RedirectToAction("Index", "Mesero");
                 case "Cajero":
-                    return RedirectToAction("Cajero", "Login");
+                    return RedirectToAction("Index", "Cajero");
                 default:
-                    return RedirectToAction("Cliente", "Login");
+                    return RedirectToAction("Index", "Cliente");
             }
         }
+
+        [HttpPost] 
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Login");
+        }
+
         [HttpGet]
         public IActionResult Administrador()
         {

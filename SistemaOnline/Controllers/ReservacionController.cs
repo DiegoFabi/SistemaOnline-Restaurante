@@ -43,6 +43,7 @@ namespace SistemaOnline.Controllers
         {
             ReservacionVM modelo = new ReservacionVM
             {
+                Fecha_Hora = DateTime.Now,
                 ClientesDisponibles = await ObtenerClientes(),
                 MesasDisponibles = await ObtenerMesas()
             };

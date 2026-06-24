@@ -38,6 +38,7 @@ namespace SistemaOnline.Controllers
         {
             ContratoVM modelo = new ContratoVM
             {
+                Fecha_Inicio = DateTime.Now,
                 EmpleadosDisponibles = await ObtenerEmpleados(),
                 ProveedoresDisponibles = await ObtenerProveedores()
             };

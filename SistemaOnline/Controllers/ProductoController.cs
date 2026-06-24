@@ -35,6 +35,12 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
+            if (!await _context.Productos_Categorias.AnyAsync())
+            {
+                ViewData["Msg"] = "Debes crear al menos una Categoría de Producto antes de registrar Productos.";
+                return View("~/Views/Negocio/Advertencia.cshtml");
+            }
+
             ProductoVM modelo = new ProductoVM
             {
                 CategoriasDisponibles = await ObtenerCategorias()
@@ -44,6 +50,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(ProductoVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.CategoriasDisponibles = await ObtenerCategorias();
+                return View(modelo);
+            }
+
             Producto producto = new Producto
             {
                 Nombre_Plato = modelo.Nombre_Plato,
@@ -56,6 +68,7 @@ namespace SistemaOnline.Controllers
             };
             await _context.Productos.AddAsync(producto);
             await _context.SaveChangesAsync();
+            Services.NotificacionStore.Agregar("restaurant_menu", "Nuevo ítem en carta", $"Se agregó el producto \"{producto.Nombre_Plato}\".");
             return RedirectToAction(nameof(Lista));
         }
         [HttpGet]
@@ -79,6 +92,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(ProductoVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.CategoriasDisponibles = await ObtenerCategorias();
+                return View(modelo);
+            }
+
             Producto producto = await _context.Productos.FirstAsync(p => p.ID_Producto == modelo.ID_Producto);
             producto.Nombre_Plato = modelo.Nombre_Plato;
             producto.Descripcion = modelo.Descripcion;

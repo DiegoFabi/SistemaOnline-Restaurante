@@ -35,8 +35,15 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
+            if (!await _context.Ingredientes.AnyAsync())
+            {
+                ViewData["Msg"] = "Debes registrar al menos un Ingrediente antes de crear Inventario.";
+                return View("~/Views/Negocio/Advertencia.cshtml");
+            }
+
             InventarioVM modelo = new InventarioVM
             {
+                Fecha_Ultima_Reposicion = DateTime.Now,
                 IngredientesDisponibles = await ObtenerIngredientes()
             };
             return View(modelo);

@@ -73,12 +73,17 @@ namespace SistemaOnline.Controllers
         public async Task<IActionResult> Pedidos()
         {
             var pedidos = await _dbcontext.Pedidos
-                .Include(p => p.Cliente)
                 .Include(p => p.Mesa_Restaurante)
                 .Include(p => p.Empleado)
                 .Where(p => p.Estado_Pedido != "Completado" && p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
                 .OrderByDescending(p => p.ID_Pedido)
                 .ToListAsync();
+
+            ViewBag.TotalPedidos = pedidos.Count;
+            ViewBag.MesasOcupadas = pedidos.Select(p => p.ID_Mesa).Distinct().Count();
+            ViewBag.Pendientes = pedidos.Count(p => p.Estado_Pedido == "Pendiente");
+            ViewBag.Servidos = pedidos.Count(p => p.Estado_Pedido == "Servido");
+
             return View(pedidos);
         }
     }

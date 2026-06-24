@@ -34,7 +34,6 @@ namespace SistemaOnline.Controllers
         {
             Rol rol = new Rol
             {
-                ID_Rol = modelo.ID_Rol,
                 Nombre_Rol = modelo.Nombre_Rol
             };
             await _context.Roles.AddAsync(rol);

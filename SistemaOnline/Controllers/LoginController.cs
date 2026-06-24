@@ -20,7 +20,6 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public IActionResult Registro()
         {
-            ViewBag.Roles = _dbcontext.Roles.ToList();
             return View();
         }
         [HttpPost]
@@ -28,22 +27,21 @@ namespace SistemaOnline.Controllers
         {
             if (modelo.Password != modelo.RepeatPassword)
             {
-                ViewBag.Rol = _dbcontext.Roles.ToList();
                 ViewData["Msg"] = "La contraseñas no coinciden, escribe denuevo";
                 return View();
             }
+            var rolCliente = await _dbcontext.Roles.FirstOrDefaultAsync(r => r.Nombre_Rol == "Cliente");
             Usuario user = new Usuario()
             {
                 Nombre_Usuario = modelo.Nombre_Usuario,
                 Email = modelo.Email,
                 Password = modelo.Password,
-                ID_Rol = modelo.ID_Rol
+                ID_Rol = rolCliente.ID_Rol
             };
             await _dbcontext.Usuarios.AddAsync(user);
             await _dbcontext.SaveChangesAsync();
             if (user.ID_Usuario != 0) return RedirectToAction("Login", "Login");
             ViewData["Msg"] = "El usuario no se creo";
-            ViewBag.Roles = _dbcontext.Roles.ToList();
             return View();
         }
         [HttpGet]
@@ -101,7 +99,7 @@ namespace SistemaOnline.Controllers
             }
         }
 
-        [HttpPost] 
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

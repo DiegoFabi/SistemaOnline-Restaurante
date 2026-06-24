@@ -30,7 +30,6 @@ namespace SistemaOnline.Controllers
             };
 
             vm.PedidosPendientes = await _dbcontext.Pedidos
-                .Include(p => p.Cliente)
                 .Include(p => p.Mesa_Restaurante)
                 .Where(p => p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
                 .OrderByDescending(p => p.ID_Pedido)
@@ -60,7 +59,6 @@ namespace SistemaOnline.Controllers
         public async Task<IActionResult> Facturacion()
         {
             var pedidos = await _dbcontext.Pedidos
-                .Include(p => p.Cliente)
                 .Include(p => p.Mesa_Restaurante)
                 .Where(p => p.Estado_Pedido != "Cancelado")
                 .OrderByDescending(p => p.ID_Pedido)

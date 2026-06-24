@@ -36,7 +36,6 @@ namespace SistemaOnline.Controllers
                 .ToListAsync();
 
             vm.PedidosRecientes = await _dbcontext.Pedidos
-                .Include(p => p.Cliente)
                 .Include(p => p.Mesa_Restaurante)
                 .OrderByDescending(p => p.ID_Pedido)
                 .Take(5)
@@ -56,6 +55,48 @@ namespace SistemaOnline.Controllers
                 .Take(3)
                 .ToListAsync();
 
+            var ventasAgrupadas = await _dbcontext.Pedidos
+                .Where(p => p.Fecha >= hoy.AddMonths(-5))
+                .GroupBy(p => new { p.Fecha.Year, p.Fecha.Month })
+                .Select(g => new { g.Key.Year, g.Key.Month, Total = g.Sum(p => p.Total) })
+                .ToListAsync();
+
+            var culturaEs = new System.Globalization.CultureInfo("es-ES");
+            vm.VentasPorMes = Enumerable.Range(0, 6)
+                .Select(i => hoy.AddMonths(-5 + i))
+                .Select(fecha =>
+                {
+                    var datoMes = ventasAgrupadas.FirstOrDefault(v => v.Year == fecha.Year && v.Month == fecha.Month);
+                    return new VentaMensualVM
+                    {
+                        Mes = culturaEs.DateTimeFormat.GetAbbreviatedMonthName(fecha.Month),
+                        Total = datoMes?.Total ?? 0
+                    };
+                })
+                .ToList();
+
+            var coloresPorEstado = new Dictionary<string, string>
+            {
+                ["Pendiente"] = "#f5a623",
+                ["Servido"] = "#4f9d69",
+                ["Pagado"] = "#3b7dd8",
+                ["Cancelado"] = "#d8463b"
+            };
+
+            var pedidosAgrupados = await _dbcontext.Pedidos
+                .GroupBy(p => p.Estado_Pedido)
+                .Select(g => new { Estado = g.Key, Cantidad = g.Count() })
+                .ToListAsync();
+
+            vm.PedidosPorEstado = pedidosAgrupados
+                .Select(g => new EstadoPedidoVM
+                {
+                    Estado = g.Estado,
+                    Cantidad = g.Cantidad,
+                    Color = coloresPorEstado.TryGetValue(g.Estado, out var color) ? color : "#9aa0a6"
+                })
+                .ToList();
+
             return View(vm);
         }
 
@@ -74,7 +115,6 @@ namespace SistemaOnline.Controllers
         public async Task<IActionResult> Reportes()
         {
             var pedidos = await _dbcontext.Pedidos
-                .Include(p => p.Cliente)
                 .OrderByDescending(p => p.Fecha)
                 .Take(50)
                 .ToListAsync();

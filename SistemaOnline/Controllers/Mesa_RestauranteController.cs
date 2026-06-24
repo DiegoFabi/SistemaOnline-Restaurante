@@ -40,7 +40,6 @@ namespace SistemaOnline.Controllers
         {
             Mesa_Restaurante mesa = new Mesa_Restaurante
             {
-                ID_Mesa = modelo.ID_Mesa,
                 Numero_Mesa = modelo.Numero_Mesa,
                 Capacidad = modelo.Capacidad,
                 Ubicacion = modelo.Ubicacion,

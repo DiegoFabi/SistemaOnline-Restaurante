@@ -35,9 +35,13 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(CartaVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Carta carta = new Carta
             {
-                ID_Carta = modelo.ID_Carta,
                 Nombre_Carta = modelo.Nombre_Carta,
                 Cantidad_Platos = modelo.Cantidad_Platos,
                 Descripcion = modelo.Descripcion,
@@ -64,6 +68,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(CartaVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Carta carta = await _context.Cartas.FirstAsync(c => c.ID_Carta == modelo.ID_Carta);
             carta.Nombre_Carta = modelo.Nombre_Carta;
             carta.Cantidad_Platos = modelo.Cantidad_Platos;

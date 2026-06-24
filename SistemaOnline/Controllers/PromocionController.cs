@@ -34,7 +34,10 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public IActionResult Nuevo()
         {
-            PromocionVM modelo = new PromocionVM();
+            PromocionVM modelo = new PromocionVM
+            {
+                Fecha_Inicio = DateTime.Now
+            };
             return View(modelo);
         }
 

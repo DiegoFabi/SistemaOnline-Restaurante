@@ -37,7 +37,6 @@ namespace SistemaOnline.Controllers
         {
             Turno turno = new Turno
             {
-                ID_Turno = modelo.ID_Turno,
                 Nombre_Turno = modelo.Nombre_Turno,
                 Hora_Inicio = modelo.Hora_Inicio,
                 Hora_Fin = modelo.Hora_Fin,

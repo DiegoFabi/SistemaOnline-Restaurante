@@ -36,8 +36,16 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
+            if (!await _context.Categorias_Ingredientes.AnyAsync())
+            {
+                ViewData["Msg"] = "Debes crear al menos una Categoría de Ingrediente antes de registrar Ingredientes.";
+                return View("~/Views/Negocio/Advertencia.cshtml");
+            }
+
             IngredienteVM modelo = new IngredienteVM
             {
+                Descripcion = "¡Nada por agregar!",
+                Estado = true,
                 CategoriasDisponibles = await ObtenerCategorias()
             };
             return View(modelo);

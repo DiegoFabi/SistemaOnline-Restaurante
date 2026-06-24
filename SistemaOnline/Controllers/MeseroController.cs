@@ -38,7 +38,6 @@ namespace SistemaOnline.Controllers
         public async Task<IActionResult> Pedidos()
         {
             var pedidos = await _dbcontext.Pedidos
-                .Include(p => p.Cliente)
                 .Include(p => p.Mesa_Restaurante)
                 .Include(p => p.Pedido_Detalles)
                     .ThenInclude(pd => pd.Producto)

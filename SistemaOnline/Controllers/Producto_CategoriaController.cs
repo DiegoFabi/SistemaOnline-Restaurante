@@ -33,6 +33,12 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
+            if (!await _context.Cartas.AnyAsync())
+            {
+                ViewData["Msg"] = "Debes crear al menos una Carta antes de registrar Categorías de Producto.";
+                return View("~/Views/Negocio/Advertencia.cshtml");
+            }
+
             Producto_CategoriaVM modelo = new Producto_CategoriaVM
             {
                 CartasDisponibles = await ObtenerCartas()
@@ -43,15 +49,25 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(Producto_CategoriaVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.CartasDisponibles = await ObtenerCartas();
+                return View(modelo);
+            }
+
             Producto_Categoria categoria = new Producto_Categoria
             {
-                ID_Categoria = modelo.ID_Categoria,
                 Nombre_Categoria = modelo.Nombre_Categoria,
                 Descripcion = modelo.Descripcion,
                 ID_Carta = modelo.ID_Carta
             };
+            bool eraPrimeraCategoria = !await _context.Productos_Categorias.AnyAsync();
             await _context.Productos_Categorias.AddAsync(categoria);
             await _context.SaveChangesAsync();
+            if (eraPrimeraCategoria)
+            {
+                Services.NotificacionStore.Agregar("lock_open", "Módulo desbloqueado", "El módulo de Productos ya está disponible.");
+            }
             return RedirectToAction(nameof(Lista));
         }
 
@@ -73,6 +89,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(Producto_CategoriaVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.CartasDisponibles = await ObtenerCartas();
+                return View(modelo);
+            }
+
             Producto_Categoria categoria = await _context.Productos_Categorias.FirstAsync(pc => pc.ID_Categoria == modelo.ID_Categoria);
             categoria.Nombre_Categoria = modelo.Nombre_Categoria;
             categoria.Descripcion = modelo.Descripcion;

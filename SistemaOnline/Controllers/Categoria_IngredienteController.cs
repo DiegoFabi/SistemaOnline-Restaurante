@@ -34,7 +34,6 @@ namespace SistemaOnline.Controllers
         {
             Categoria_Ingrediente categoria_Ingrediente = new Categoria_Ingrediente
             {
-                ID_Cat_Ingrediente = modelo.ID_Cat_Ingrediente,
                 Nombre_Categoria = modelo.Nombre_Categoria
             };
             await _context.Categorias_Ingredientes.AddAsync(categoria_Ingrediente);

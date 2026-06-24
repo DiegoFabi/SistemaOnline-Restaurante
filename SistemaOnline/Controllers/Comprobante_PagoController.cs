@@ -43,8 +43,15 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
+            if (!await _context.Pedidos.AnyAsync())
+            {
+                ViewData["Msg"] = "Debes registrar al menos un Pedido antes de registrar Comprobantes de Pago.";
+                return View("~/Views/Negocio/Advertencia.cshtml");
+            }
+
             Comprobante_PagoVM modelo = new Comprobante_PagoVM
             {
+                Fecha_Emision = DateTime.Now,
                 PedidosDisponibles = await ObtenerPedidos()
             };
             return View(modelo);

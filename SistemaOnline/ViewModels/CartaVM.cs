@@ -9,11 +9,13 @@ namespace SistemaOnline.ViewModels
         [Required, MaxLength(100)]
         public string Nombre_Carta { get; set; }
 
+        [Range(0, int.MaxValue, ErrorMessage = "La cantidad de platos no puede ser negativa.")]
         public int Cantidad_Platos { get; set; }
 
         [Required, MaxLength(100)]
         public string Descripcion { get; set; }
 
+        [Range(0, double.MaxValue, ErrorMessage = "El precio no puede ser negativo.")]
         public decimal Precio { get; set; }
     }
 }

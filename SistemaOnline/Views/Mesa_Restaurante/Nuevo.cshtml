@@ -21,7 +21,7 @@
                 <span asp-validation-for="Numero_Mesa" class="text-error text-label-md"></span>
             </div>
             <div>
-                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Capacidad">Capacidad</label>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Capacidad">Capacidad (N° de personas)</label>
                 <input class="@Cls("Capacidad")" type="number" required asp-for="Capacidad" />
                 <span asp-validation-for="Capacidad" class="text-error text-label-md"></span>
             </div>
@@ -31,8 +31,9 @@
                 <span asp-validation-for="Ubicacion" class="text-error text-label-md"></span>
             </div>
             <div>
-                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado</label>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado de la Mesa</label>
                 <input class="@Cls("Estado")" type="text" required asp-for="Estado" />
+                <p class="text-label-md text-on-surface-variant">Ej: Disponible, Ocupada, Reservada.</p>
                 <span asp-validation-for="Estado" class="text-error text-label-md"></span>
             </div>
             <div class="flex items-center gap-sm pt-md">

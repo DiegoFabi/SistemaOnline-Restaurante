@@ -4,7 +4,7 @@
         ? "flex items-center gap-md px-md py-sm transition-colors duration-150 active:scale-95 text-primary font-bold border-r-4 border-primary bg-primary-fixed/10"
         : "flex items-center gap-md px-md py-sm transition-colors duration-150 active:scale-95 text-on-surface-variant hover:bg-surface-container-high";
 }
-<aside class="fixed left-0 top-0 h-full z-40 h-screen w-64 flex flex-col bg-surface-container-lowest shadow-sm" id="SideNavBar">
+<aside class="fixed left-0 top-0 h-full z-40 h-screen w-[280px] flex flex-col bg-surface-container-low shadow-sm" id="SideNavBar">
     <div class="p-lg">
         <h1 class="font-headline-lg text-headline-lg font-bold text-primary">Rancho Sagrado</h1>
         <p class="text-on-surface-variant text-label-md">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</p>
@@ -102,23 +102,26 @@
 
     <!-- Modal de Confirmacion de Cierre de Sesion -->
     <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div class="bg-white rounded-xl p-lg shadow-2xl w-full max-w-[320px] flex flex-col items-center animate-fade-in">
-            <span class="material-symbols-outlined text-error text-[48px] mb-md">warning</span>
+        <div class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-[340px] flex flex-col items-center overflow-hidden animate-fade-in">
+            <div class="w-full bg-error-container flex flex-col items-center py-lg">
+                <span class="material-symbols-outlined text-error text-[48px]">warning</span>
+            </div>
+            <div class="p-lg flex flex-col items-center w-full">
+                <h3 class="font-title-md text-title-md text-on-surface mb-sm">¿Cerrar sesión?</h3>
+                <p class="text-body-md text-on-surface-variant text-center mb-lg">¿Estás seguro de que deseas salir del sistema?</p>
 
-            <h3 class="font-title-md text-title-md text-on-surface mb-sm">¿Cerrar sesión?</h3>
-            <p class="text-body-md text-on-surface-variant text-center mb-lg">¿Estás seguro de que deseas salir del sistema?</p>
-
-            <div class="flex gap-md w-full">
-                <button type="button" onclick="closeLogoutModal()"
-                        class="flex-1 px-md py-sm rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high font-bold">
-                    Cancelar
-                </button>
-                <form asp-controller="Login" asp-action="Logout" method="post" class="flex-1">
-                    <button type="submit"
-                            class="w-full px-md py-sm rounded-lg bg-primary text-white hover:bg-primary/90 font-bold">
-                        Cerrar
+                <div class="flex gap-md w-full">
+                    <button type="button" onclick="closeLogoutModal()"
+                            class="flex-1 px-md py-sm rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high font-bold transition-all">
+                        Cancelar
                     </button>
-                </form>
+                    <form asp-controller="Login" asp-action="Logout" method="post" class="flex-1">
+                        <button type="submit"
+                                class="w-full px-md py-sm rounded-lg bg-error text-white hover:bg-error/90 font-bold transition-all">
+                            Cerrar
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -134,7 +137,17 @@
             }
     </script>
 
-    <div class="px-sm py-lg border-t border-outline-variant/30 space-y-base">
+    <div class="px-sm py-md border-t border-outline-variant/30 space-y-sm">
+        <a asp-controller="Pedido" asp-action="Nuevo"
+           class="w-full flex items-center gap-md px-md py-sm text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg transition-colors shadow-sm shadow-primary/20">
+            <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+            <span class="font-body-md font-bold">Nuevo Pedido</span>
+        </a>
+        <button type="button" onclick="openConfiguracionModal()"
+                class="w-full flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">
+            <span class="material-symbols-outlined" data-icon="settings">settings</span>
+            <span class="font-body-md">Configuración</span>
+        </button>
         <!-- Botón que activa el modal -->
         <button type="button" onclick="openLogoutModal()"
                 class="w-full flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-error rounded-lg transition-colors">

@@ -40,15 +40,25 @@
            class="w-full h-12 pl-[48px] pr-md bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md text-on-surface placeholder:text-outline/60" />
 </div>
 
+@{
+    var bloqueados = ViewBag.Bloqueados as Dictionary<string, string> ?? new Dictionary<string, string>();
+}
 <div id="gridTablas" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
     @foreach (var t in tablas)
     {
+        bool bloqueado = bloqueados.ContainsKey(t.Controlador);
         <a data-nombre="@t.Nombre.ToLower()" asp-controller="@t.Controlador" asp-action="Lista"
-           class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg flex items-center gap-md hover:shadow-md hover:border-primary/30 transition-all">
-            <div class="bg-primary-fixed/30 text-primary rounded-lg p-base">
-                <span class="material-symbols-outlined">@t.Icono</span>
+           tabindex="@(bloqueado ? "-1" : "0")" aria-disabled="@bloqueado.ToString().ToLower()"
+           onclick="@(bloqueado ? "return false;" : null)"
+           class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg flex items-center gap-md transition-all @(bloqueado ? "card-bloqueada" : "hover:shadow-md hover:border-primary/30")">
+            <div class="@(bloqueado ? "bg-error-container text-error" : "bg-primary-fixed/30 text-primary") rounded-lg p-base">
+                <span class="material-symbols-outlined">@(bloqueado ? "lock" : t.Icono)</span>
             </div>
             <div>
+                @if (bloqueado)
+                {
+                    <p class="text-label-md text-error font-bold mb-1">@bloqueados[t.Controlador]</p>
+                }
                 <h3 class="font-title-md text-title-md text-on-surface">@t.Nombre</h3>
                 <p class="text-label-md text-on-surface-variant">Ver y administrar registros</p>
             </div>

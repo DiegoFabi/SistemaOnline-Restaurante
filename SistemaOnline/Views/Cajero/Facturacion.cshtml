@@ -18,7 +18,6 @@
                     <th class="pb-md font-bold">ID</th>
                     <th class="pb-md font-bold">Fecha</th>
                     <th class="pb-md font-bold">Mesa</th>
-                    <th class="pb-md font-bold">Cliente</th>
                     <th class="pb-md font-bold">Subtotal</th>
                     <th class="pb-md font-bold">Total</th>
                     <th class="pb-md font-bold">Estado</th>
@@ -31,7 +30,6 @@
                         <td class="py-md font-mono-data">#@p.ID_Pedido</td>
                         <td class="py-md">@p.Fecha.ToString("dd/MM/yyyy")</td>
                         <td class="py-md">@(p.Mesa_Restaurante != null ? "Mesa " + p.Mesa_Restaurante.Numero_Mesa : "-")</td>
-                        <td class="py-md">@(p.Cliente != null ? p.Cliente.Nombre + " " + p.Cliente.Apellidos : "-")</td>
                         <td class="py-md font-mono-data">@p.SubTotal.ToString("C2")</td>
                         <td class="py-md font-bold">@p.Total.ToString("C2")</td>
                         <td class="py-md">

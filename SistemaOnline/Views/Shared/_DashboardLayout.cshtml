@@ -4,114 +4,44 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>@ViewData["Title"] - Rancho Sagrado</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "primary-container": "#ff6b35",
-                        "surface-container-low": "#fff1ed",
-                        "on-error": "#ffffff",
-                        "on-tertiary": "#ffffff",
-                        "on-background": "#261814",
-                        "primary-fixed-dim": "#ffb59d",
-                        "on-tertiary-container": "#003744",
-                        "on-primary": "#ffffff",
-                        "error": "#ba1a1a",
-                        "on-primary-container": "#5f1900",
-                        "error-container": "#ffdad6",
-                        "surface-container-highest": "#f7ddd5",
-                        "on-primary-fixed": "#390c00",
-                        "surface-variant": "#f7ddd5",
-                        "primary": "#ab3500",
-                        "surface-bright": "#fff8f6",
-                        "on-tertiary-fixed-variant": "#004e60",
-                        "inverse-on-surface": "#ffede8",
-                        "surface-dim": "#eed5cd",
-                        "surface": "#fff8f6",
-                        "surface-container": "#ffe9e3",
-                        "on-surface-variant": "#594139",
-                        "surface-container-lowest": "#ffffff",
-                        "secondary": "#006a62",
-                        "on-secondary": "#ffffff",
-                        "on-secondary-fixed-variant": "#005049",
-                        "on-secondary-fixed": "#00201d",
-                        "secondary-fixed": "#70f8e8",
-                        "inverse-primary": "#ffb59d",
-                        "on-error-container": "#93000a",
-                        "on-tertiary-fixed": "#001f28",
-                        "primary-fixed": "#ffdbd0",
-                        "inverse-surface": "#3c2d28",
-                        "tertiary-fixed": "#b5ebff",
-                        "on-secondary-container": "#007168",
-                        "background": "#fff8f6",
-                        "tertiary-container": "#00a7cb",
-                        "on-primary-fixed-variant": "#832600",
-                        "on-surface": "#261814",
-                        "surface-tint": "#ab3500",
-                        "surface-container-high": "#fde3db",
-                        "secondary-container": "#70f8e8",
-                        "outline-variant": "#e1bfb5",
-                        "tertiary-fixed-dim": "#59d5fb",
-                        "tertiary": "#00677e",
-                        "outline": "#8d7168",
-                        "secondary-fixed-dim": "#4fdbcc"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    "spacing": {
-                        "xs": "4px",
-                        "base": "4px",
-                        "sm": "8px",
-                        "gutter": "16px",
-                        "xl": "40px",
-                        "md": "16px",
-                        "lg": "24px",
-                        "container-margin": "24px"
-                    },
-                    "fontFamily": {
-                        "body-md": ["Inter"],
-                        "body-lg": ["Inter"],
-                        "label-md": ["Inter"],
-                        "headline-lg-mobile": ["Inter"],
-                        "display-lg": ["Inter"],
-                        "title-md": ["Inter"],
-                        "headline-lg": ["Inter"],
-                        "mono-data": ["JetBrains Mono"]
-                    },
-                    "fontSize": {
-                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
-                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
-                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
-                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
-                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
-                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-                        "mono-data": ["14px", { "lineHeight": "20px", "fontWeight": "500" }]
-                    }
-                },
-            },
-        }
-    </script>
+    <partial name="_DesignTokensHead" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
+        :root {
+            --color-primary: #b9172f;
+            --color-primary-dark: #92001f;
+            --color-surface: #f8f9fa;
+            --color-surface-low: #f3f4f5;
+            --color-sidebar-bg: #212529;
+            --color-header-bg: #f8f9fa;
+        }
+        #SideNavBar {
+            background-color: var(--color-sidebar-bg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        }
+        #SideNavBar {
+            color: #e1e3e4;
+        }
+        #SideNavBar .text-on-surface-variant:not(#logoutModal *) {
+            color: #e1e3e4;
+        }
+        #SideNavBar .hover\:bg-surface-container-high:hover {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        header {
+            background-color: var(--color-header-bg);
+            border-bottom: 2px solid #dee2e6;
+        }
         .glass-card {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid #dee2e6;
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #e1bfb5;
+            background: #e3bebd;
             border-radius: 10px;
         }
         @@keyframes pulse-soft {
@@ -121,31 +51,377 @@
         .animate-pulse-soft {
             animation: pulse-soft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+
+        /* Patrón compartido de modal con blur + overlay oscuro,
+           reutilizado por Configuración y por Detalles del Pedido */
+        .app-modal-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .app-modal-panel {
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        #searchSuggestions {
+            background: #fff;
+        }
+
+        /* Efectos visibles de las preferencias de Configuración (solo UI, sin persistencia en backend) */
+        html.dark body {
+            background-color: #1c1410;
+            color: #f3e9e3;
+        }
+        html.dark #SideNavBar,
+        html.dark header,
+        html.dark .bg-surface-container-lowest,
+        html.dark .app-modal-panel {
+            background-color: #2a201b !important;
+            color: #f3e9e3 !important;
+        }
+        html.dark .bg-surface-container-low,
+        html.dark .bg-surface-container-high,
+        html.dark .bg-surface-container-highest,
+        html.dark .bg-slate-50 {
+            background-color: #3a2e27 !important;
+            color: #f3e9e3 !important;
+        }
+        html.dark .text-on-surface,
+        html.dark .text-on-surface-variant {
+            color: #f3e9e3 !important;
+        }
+
+        body.compact-view .p-lg {
+            padding: 8px !important;
+        }
+        body.compact-view .gap-lg {
+            gap: 8px !important;
+        }
+        body.compact-view .mb-lg {
+            margin-bottom: 8px !important;
+        }
+        body.compact-view table td,
+        body.compact-view table th {
+            padding-top: 4px !important;
+            padding-bottom: 4px !important;
+        }
+
+        /* Tarjetas/elementos bloqueados por falta de pre-condiciones (Negocio/Gestión y similares) */
+        .card-bloqueada {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="bg-background text-on-background font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
     <partial name="_Sidebar" />
-    <main class="pl-64 flex flex-col min-h-screen">
-        <header class="fixed top-0 right-0 left-64 h-16 flex items-center justify-between px-6 z-30 bg-surface shadow-sm">
+    <main class="pl-[280px] flex flex-col min-h-screen">
+        <header class="fixed top-0 right-0 left-[280px] h-[72px] flex items-center justify-between px-6 z-30 bg-surface shadow-sm">
             <div class="flex items-center gap-md flex-1">
                 <h2 class="font-title-md text-title-md text-on-surface">@ViewData["Title"]</h2>
+                <div class="relative ml-lg w-full max-w-sm">
+                    <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+                    <input id="globalSearchInput" type="text" autocomplete="off" placeholder="Buscar secciones..."
+                           class="w-full h-10 pl-[44px] pr-md bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md text-on-surface placeholder:text-outline/60" />
+                    <div id="searchSuggestions"
+                         class="hidden absolute left-0 right-0 mt-1 rounded-lg shadow-lg border border-outline-variant/30 overflow-hidden z-50 max-h-80 overflow-y-auto">
+                    </div>
+                </div>
             </div>
             <div class="flex items-center gap-lg">
-                <div class="flex items-center gap-sm pl-md border-l border-outline-variant">
-                    <div class="text-right hidden lg:block">
-                        <p class="text-body-md font-bold text-on-surface">@User.Identity?.Name</p>
-                        <p class="text-label-md text-on-surface-variant leading-none">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</p>
+                <div class="relative">
+                    <button id="notifBellButton" type="button" class="relative text-on-surface-variant hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span id="notifBadge" class="absolute -top-1 -right-1 bg-error text-white text-[10px] leading-none rounded-full w-4 h-4 flex items-center justify-center"></span>
+                    </button>
+                    <div id="notifDropdown"
+                         class="hidden absolute right-0 mt-2 w-80 bg-surface-container-lowest rounded-lg shadow-lg border border-outline-variant/30 overflow-hidden z-50">
+                        <div class="px-md py-sm bg-primary text-on-primary font-bold text-body-md">Notificaciones</div>
+                        <div id="notifList" class="max-h-80 overflow-y-auto divide-y divide-outline-variant/20"></div>
+                        <div id="notifVacio" class="hidden px-md py-lg text-center text-on-surface-variant text-label-md">Sin notificaciones nuevas.</div>
                     </div>
-                    <div class="w-10 h-10 rounded-full border-2 border-primary-fixed shadow-sm bg-primary-container text-on-primary flex items-center justify-center font-bold">
-                        @((User.Identity?.Name ?? "?").Substring(0, 1).ToUpper())
+                </div>
+                <div class="relative">
+                    <button id="userMenuButton" type="button"
+                            class="flex items-center gap-sm pl-md border-l border-outline-variant cursor-pointer">
+                        <div class="text-right hidden lg:block">
+                            <p class="text-body-md font-bold text-on-surface">@User.Identity?.Name</p>
+                            <p class="text-label-md text-on-surface-variant leading-none">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full border-2 border-primary-fixed shadow-sm bg-primary-container text-on-primary flex items-center justify-center font-bold">
+                            @((User.Identity?.Name ?? "?").Substring(0, 1).ToUpper())
+                        </div>
+                    </button>
+                    <div id="userMenuDropdown"
+                         class="hidden absolute right-0 mt-2 w-48 bg-surface-container-lowest rounded-lg shadow-lg border border-outline-variant/30 overflow-hidden z-50">
+                        <button type="button" onclick="openConfiguracionModal()"
+                                class="w-full flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high text-left">
+                            <span class="material-symbols-outlined text-[18px]">settings</span>
+                            <span class="text-body-md">Configuración</span>
+                        </button>
+                        <button type="button" onclick="openLogoutModal()"
+                                class="w-full flex items-center gap-sm px-md py-sm text-error hover:bg-surface-container-high text-left">
+                            <span class="material-symbols-outlined text-[18px]">logout</span>
+                            <span class="text-body-md">Cerrar Sesión</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </header>
-        <section class="mt-16 p-lg flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
+        <section class="mt-[72px] p-lg flex-1 overflow-y-auto custom-scrollbar bg-surface-muted">
             @RenderBody()
         </section>
     </main>
+
+    <!-- Modal de Configuración (usa el patrón compartido app-modal-*) -->
+    <div id="configuracionModal" class="fixed inset-0 z-[100] hidden items-center justify-center app-modal-overlay">
+        <div class="app-modal-panel w-full max-w-[440px] flex flex-col animate-fade-in overflow-hidden">
+            <div class="bg-primary px-lg py-lg flex items-center justify-between">
+                <div class="flex items-center gap-sm text-on-primary">
+                    <span class="material-symbols-outlined">tune</span>
+                    <h3 class="font-title-md text-title-md">Configuración</h3>
+                </div>
+                <button type="button" onclick="closeConfiguracionModal()" class="text-on-primary/80 hover:text-on-primary">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-lg space-y-md">
+                <label class="flex items-center justify-between gap-md p-md rounded-lg bg-surface-container-low cursor-pointer">
+                    <div class="flex items-center gap-md">
+                        <span class="material-symbols-outlined text-primary">dark_mode</span>
+                        <div>
+                            <p class="font-bold text-on-surface">Modo oscuro</p>
+                            <p class="text-label-md text-on-surface-variant">Solo afecta la apariencia en este dispositivo.</p>
+                        </div>
+                    </div>
+                    <input type="checkbox" id="cfgModoOscuro" class="h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary/20" />
+                </label>
+                <label class="flex items-center justify-between gap-md p-md rounded-lg bg-surface-container-low cursor-pointer">
+                    <div class="flex items-center gap-md">
+                        <span class="material-symbols-outlined text-primary">density_small</span>
+                        <div>
+                            <p class="font-bold text-on-surface">Vista compacta</p>
+                            <p class="text-label-md text-on-surface-variant">Reduce el espaciado de las tablas y tarjetas.</p>
+                        </div>
+                    </div>
+                    <input type="checkbox" id="cfgVistaCompacta" class="h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary/20" />
+                </label>
+                <label class="flex items-center justify-between gap-md p-md rounded-lg bg-surface-container-low cursor-pointer">
+                    <div class="flex items-center gap-md">
+                        <span class="material-symbols-outlined text-primary">motion_photos_off</span>
+                        <div>
+                            <p class="font-bold text-on-surface">Desactivar animaciones</p>
+                            <p class="text-label-md text-on-surface-variant">Desactiva efectos como el confeti al guardar.</p>
+                        </div>
+                    </div>
+                    <input type="checkbox" id="cfgDesactivarAnimaciones" class="h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary/20" />
+                </label>
+                <p class="flex items-start gap-xs text-label-md text-on-surface-variant italic bg-surface-container-low rounded-lg p-md">
+                    <span class="material-symbols-outlined text-[16px]">info</span>
+                    Estas preferencias se guardan solo en este navegador (localStorage) y no se envían al servidor.
+                </p>
+            </div>
+            <div class="flex gap-md w-full p-lg pt-0">
+                <button type="button" onclick="closeConfiguracionModal()"
+                        class="flex-1 px-md py-sm rounded-lg bg-primary text-on-primary hover:bg-on-primary-fixed-variant font-bold transition-all">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---------- Buscador del header (cliente, basado en la navegación existente) ----------
+        (function () {
+            const items = [
+                { icon: 'dashboard', name: 'Dashboard', url: '@Url.Action("Index", "Dashboard")' },
+                { icon: 'group', name: 'Usuarios y Roles', url: '@Url.Action("Usuarios", "Dashboard")' },
+                { icon: 'inventory_2', name: 'Inventario', url: '@Url.Action("Inventario", "Dashboard")' },
+                { icon: 'bar_chart', name: 'Reportes', url: '@Url.Action("Reportes", "Dashboard")' },
+                { icon: 'supervisor_account', name: 'Supervisión', url: '@Url.Action("Index", "Administrador")' },
+                { icon: 'event', name: 'Reservaciones', url: '@Url.Action("Reservaciones", "Administrador")' },
+                { icon: 'schedule', name: 'Turnos', url: '@Url.Action("Turnos", "Administrador")' },
+                { icon: 'restaurant_menu', name: 'Pedidos', url: '@Url.Action("Pedidos", "Administrador")' },
+                { icon: 'admin_panel_settings', name: 'Administrar Negocio', url: '@Url.Action("Advertencia", "Negocio")' },
+                { icon: 'add', name: 'Nuevo Pedido', url: '@Url.Action("Nuevo", "Pedido")' },
+                { icon: 'list_alt', name: 'Lista de Pedidos', url: '@Url.Action("Lista", "Pedido")' }
+            ];
+
+            const input = document.getElementById('globalSearchInput');
+            const suggestions = document.getElementById('searchSuggestions');
+            if (!input || !suggestions) return;
+
+            function render(list) {
+                if (list.length === 0) {
+                    suggestions.classList.add('hidden');
+                    suggestions.innerHTML = '';
+                    return;
+                }
+                suggestions.innerHTML = list.map(function (item) {
+                    return '<button type="button" data-url="' + item.url + '" ' +
+                        'class="search-suggestion w-full flex items-center gap-sm px-md py-sm text-left hover:bg-surface-container-high text-on-surface">' +
+                        '<span class="material-symbols-outlined text-[18px]">' + item.icon + '</span>' +
+                        '<span class="text-body-md">' + item.name + '</span></button>';
+                }).join('');
+                suggestions.classList.remove('hidden');
+
+                suggestions.querySelectorAll('.search-suggestion').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        window.location = btn.getAttribute('data-url');
+                    });
+                });
+            }
+
+            input.addEventListener('keyup', function () {
+                const term = this.value.trim().toLowerCase();
+                if (!term) {
+                    suggestions.classList.add('hidden');
+                    return;
+                }
+                const filtrados = items.filter(function (item) {
+                    return item.name.toLowerCase().includes(term);
+                });
+                render(filtrados);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!suggestions.contains(e.target) && e.target !== input) {
+                    suggestions.classList.add('hidden');
+                }
+            });
+        })();
+
+        // ---------- Sistema de notificaciones (persistente en servidor) ----------
+        (function () {
+            const bell = document.getElementById('notifBellButton');
+            const dropdown = document.getElementById('notifDropdown');
+            const lista = document.getElementById('notifList');
+            const vacio = document.getElementById('notifVacio');
+            const badge = document.getElementById('notifBadge');
+            if (!bell || !dropdown || !lista) return;
+
+            function actualizarBadge() {
+                const pendientes = lista.querySelectorAll('.notif-item').length;
+                badge.textContent = pendientes > 0 ? pendientes : '';
+                badge.classList.toggle('hidden', pendientes === 0);
+                vacio.classList.toggle('hidden', pendientes !== 0);
+            }
+
+            function pintarNotificacion(n) {
+                const item = document.createElement('div');
+                item.className = 'notif-item flex items-start gap-sm px-md py-sm hover:bg-surface-container-high';
+                item.dataset.id = n.id;
+                item.innerHTML =
+                    '<span class="material-symbols-outlined text-primary text-[20px]">' + n.icono + '</span>' +
+                    '<div class="flex-1">' +
+                        '<p class="text-body-md font-bold text-on-surface">' + n.titulo + '</p>' +
+                        '<p class="text-label-md text-on-surface-variant">' + n.detalle + '</p>' +
+                    '</div>' +
+                    '<button type="button" class="notif-leida text-label-md text-primary hover:underline whitespace-nowrap">Marcar como leída</button>';
+                item.querySelector('.notif-leida').addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    fetch('@Url.Action("MarcarLeida", "Notificacion")?id=' + n.id, { method: 'POST' })
+                        .finally(function () {
+                            item.remove();
+                            actualizarBadge();
+                        });
+                });
+                lista.appendChild(item);
+            }
+
+            function cargarNotificaciones() {
+                fetch('@Url.Action("Listar", "Notificacion")')
+                    .then(function (r) { return r.json(); })
+                    .then(function (notificaciones) {
+                        const idsActuales = Array.from(lista.querySelectorAll('.notif-item')).map(function (el) { return el.dataset.id; });
+                        notificaciones.forEach(function (n) {
+                            if (idsActuales.indexOf(String(n.id)) === -1) {
+                                pintarNotificacion(n);
+                            }
+                        });
+                        actualizarBadge();
+                    });
+            }
+
+            cargarNotificaciones();
+            setInterval(cargarNotificaciones, 15000);
+
+            bell.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('hidden');
+            });
+            document.addEventListener('click', function (e) {
+                if (!dropdown.contains(e.target) && e.target !== bell) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        })();
+
+        // ---------- Menú flotante de usuario ----------
+        (function () {
+            const button = document.getElementById('userMenuButton');
+            const dropdown = document.getElementById('userMenuDropdown');
+            if (!button || !dropdown) return;
+
+            button.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!dropdown.contains(e.target) && e.target !== button) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        })();
+
+        // ---------- Confeti (respeta preferencia "Desactivar animaciones") ----------
+        function lanzarConfetti() {
+            if (localStorage.getItem('app_desactivar_animaciones') === 'true') return;
+            if (typeof confetti !== 'function') return;
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+        }
+
+        // ---------- Modal de Configuración (solo UI, persistido en localStorage) ----------
+        function openConfiguracionModal() {
+            document.getElementById('userMenuDropdown').classList.add('hidden');
+            document.getElementById('configuracionModal').classList.remove('hidden');
+            document.getElementById('configuracionModal').classList.add('flex');
+        }
+        function closeConfiguracionModal() {
+            document.getElementById('configuracionModal').classList.add('hidden');
+            document.getElementById('configuracionModal').classList.remove('flex');
+        }
+
+        (function () {
+            const modoOscuro = document.getElementById('cfgModoOscuro');
+            const vistaCompacta = document.getElementById('cfgVistaCompacta');
+            const desactivarAnimaciones = document.getElementById('cfgDesactivarAnimaciones');
+            if (!modoOscuro || !vistaCompacta || !desactivarAnimaciones) return;
+
+            modoOscuro.checked = localStorage.getItem('app_modo_oscuro') === 'true';
+            vistaCompacta.checked = localStorage.getItem('app_vista_compacta') === 'true';
+            desactivarAnimaciones.checked = localStorage.getItem('app_desactivar_animaciones') === 'true';
+
+            modoOscuro.addEventListener('change', function () {
+                localStorage.setItem('app_modo_oscuro', modoOscuro.checked);
+                document.documentElement.classList.toggle('dark', modoOscuro.checked);
+            });
+            vistaCompacta.addEventListener('change', function () {
+                localStorage.setItem('app_vista_compacta', vistaCompacta.checked);
+                document.body.classList.toggle('compact-view', vistaCompacta.checked);
+            });
+            desactivarAnimaciones.addEventListener('change', function () {
+                localStorage.setItem('app_desactivar_animaciones', desactivarAnimaciones.checked);
+            });
+
+            if (modoOscuro.checked) document.documentElement.classList.add('dark');
+            if (vistaCompacta.checked) document.body.classList.add('compact-view');
+        })();
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

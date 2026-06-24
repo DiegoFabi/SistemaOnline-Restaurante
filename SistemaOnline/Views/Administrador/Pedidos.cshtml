@@ -3,6 +3,14 @@
     Layout = "_DashboardLayout";
     ViewData["Title"] = "Monitor de Pedidos";
     ViewBag.Active = "pedidos";
+
+    string ColorEstado(string estado) => estado switch
+    {
+        "Pendiente" => "bg-error-container text-on-error-container",
+        "Servido" => "bg-secondary-container text-on-secondary-container",
+        "Pagado" => "bg-tertiary-container text-on-tertiary-container",
+        _ => "bg-surface-container-high text-on-surface-variant"
+    };
 }
 
 <div class="mb-lg">
@@ -10,34 +18,55 @@
     <p class="text-on-surface-variant">Pedidos activos en el restaurante.</p>
 </div>
 
-<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden">
-    <div class="p-lg">
-        <table class="w-full text-left">
-            <thead class="text-label-md text-on-surface-variant uppercase tracking-wider">
-                <tr>
-                    <th class="pb-md font-bold">ID</th>
-                    <th class="pb-md font-bold">Mesa</th>
-                    <th class="pb-md font-bold">Cliente</th>
-                    <th class="pb-md font-bold">Mesero</th>
-                    <th class="pb-md font-bold">Total</th>
-                    <th class="pb-md font-bold">Estado</th>
-                </tr>
-            </thead>
-            <tbody class="text-body-md">
-                @foreach (var p in Model)
-                {
-                    <tr class="hover:bg-slate-50 transition-colors border-b border-outline-variant/10">
-                        <td class="py-md font-mono-data">#@p.ID_Pedido</td>
-                        <td class="py-md">@(p.Mesa_Restaurante != null ? "Mesa " + p.Mesa_Restaurante.Numero_Mesa : "-")</td>
-                        <td class="py-md">@(p.Cliente != null ? p.Cliente.Nombre + " " + p.Cliente.Apellidos : "-")</td>
-                        <td class="py-md">@(p.Empleado != null ? p.Empleado.Nombre + " " + p.Empleado.Apellidos : "-")</td>
-                        <td class="py-md font-bold">@p.Total.ToString("C2")</td>
-                        <td class="py-md">
-                            <span class="px-sm py-xs bg-tertiary-container text-on-tertiary-container rounded-full text-label-md">@p.Estado_Pedido</span>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-md mb-lg">
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg">
+        <p class="text-display-lg font-display-lg leading-none text-primary">@ViewBag.TotalPedidos</p>
+        <p class="text-on-surface-variant font-bold mt-sm">Total Pedidos</p>
     </div>
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg">
+        <p class="text-display-lg font-display-lg leading-none text-secondary">@ViewBag.MesasOcupadas</p>
+        <p class="text-on-surface-variant font-bold mt-sm">Mesas Ocupadas</p>
+    </div>
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg">
+        <p class="text-display-lg font-display-lg leading-none text-error">@ViewBag.Pendientes</p>
+        <p class="text-on-surface-variant font-bold mt-sm">Pendientes</p>
+    </div>
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg">
+        <p class="text-display-lg font-display-lg leading-none text-tertiary">@ViewBag.Servidos</p>
+        <p class="text-on-surface-variant font-bold mt-sm">Servidos</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+    @if (!Model.Any())
+    {
+        <p class="text-on-surface-variant text-body-md col-span-full">No hay pedidos activos en este momento.</p>
+    }
+    @foreach (var p in Model)
+    {
+        var transcurrido = DateTime.Now - p.Fecha;
+        string tiempoTexto = transcurrido.TotalHours >= 1
+            ? $"{(int)transcurrido.TotalHours} h {transcurrido.Minutes} min"
+            : $"{(int)transcurrido.TotalMinutes} min";
+
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 p-lg flex flex-col gap-sm">
+            <div class="flex items-center justify-between">
+                <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-primary">table_restaurant</span>
+                    @(p.Mesa_Restaurante != null ? "Mesa " + p.Mesa_Restaurante.Numero_Mesa : "Sin mesa")
+                </h3>
+                <span class="px-sm py-xs rounded-full text-label-md @ColorEstado(p.Estado_Pedido)">@p.Estado_Pedido</span>
+            </div>
+            <p class="text-label-md text-on-surface-variant font-mono-data">#@p.ID_Pedido</p>
+            <p class="text-body-md text-on-surface line-clamp-2">@p.Detalle_Pedido</p>
+            <div class="flex items-center justify-between pt-sm border-t border-outline-variant/20">
+                <span class="flex items-center gap-xs text-label-md text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[16px]">schedule</span>
+                    @tiempoTexto
+                </span>
+                <span class="font-bold text-on-surface">@p.Total.ToString("C2")</span>
+            </div>
+            <p class="text-label-md text-on-surface-variant">@(p.Empleado != null ? p.Empleado.Nombre + " " + p.Empleado.Apellidos : "-")</p>
+        </div>
+    }
 </div>

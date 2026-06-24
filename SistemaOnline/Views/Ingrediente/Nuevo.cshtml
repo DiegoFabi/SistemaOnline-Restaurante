@@ -22,7 +22,13 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Unidad_Medida">Unidad de Medida</label>
-                <input class="@Cls("Unidad_Medida")" type="text" required asp-for="Unidad_Medida" />
+                <select class="@Cls("Unidad_Medida")" asp-for="Unidad_Medida">
+                    <option value="kg">kg</option>
+                    <option value="g">g</option>
+                    <option value="l">l</option>
+                    <option value="ml">ml</option>
+                    <option value="unidad">unidad</option>
+                </select>
                 <span asp-validation-for="Unidad_Medida" class="text-error text-label-md"></span>
             </div>
             <div>

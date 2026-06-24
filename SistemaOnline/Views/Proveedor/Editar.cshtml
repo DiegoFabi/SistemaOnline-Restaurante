@@ -47,8 +47,9 @@
                 <span asp-validation-for="Tipo_Suministro" class="text-error text-label-md"></span>
             </div>
             <div>
-                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado</label>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado del Proveedor</label>
                 <input class="@Cls("Estado")" type="text" required asp-for="Estado" />
+                <p class="text-label-md text-on-surface-variant">Ej: Activo, Inactivo.</p>
                 <span asp-validation-for="Estado" class="text-error text-label-md"></span>
             </div>
             <div class="flex items-center gap-sm pt-md">

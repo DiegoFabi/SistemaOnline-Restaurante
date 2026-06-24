@@ -28,12 +28,12 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Tiempo_Preparacion">Tiempo de Preparación (minutos)</label>
-                <input class="@Cls("Tiempo_Preparacion")" type="number" step="0.1" required asp-for="Tiempo_Preparacion" />
+                <input class="@Cls("Tiempo_Preparacion")" type="number" step="0.1" min="0" required asp-for="Tiempo_Preparacion" />
                 <span asp-validation-for="Tiempo_Preparacion" class="text-error text-label-md"></span>
             </div>
             <div>
-                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Precio">Precio</label>
-                <input class="@Cls("Precio")" type="number" step="0.01" required asp-for="Precio" />
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Precio">Precio unitario por porción</label>
+                <input class="@Cls("Precio")" type="number" step="0.01" min="0" required asp-for="Precio" />
                 <span asp-validation-for="Precio" class="text-error text-label-md"></span>
             </div>
             <div>

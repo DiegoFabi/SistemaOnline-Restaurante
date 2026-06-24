@@ -123,13 +123,7 @@ namespace SistemaOnline.Data
                 .WithMany(e => e.Pedidos)
                 .HasForeignKey(p => p.ID_Empleado);
 
-            // Pedido hacia Cliente
-            modelBuilder.Entity<Pedido>()
-                .HasOne(p => p.Cliente)
-                .WithMany(c => c.Pedidos)
-                .HasForeignKey(p => p.ID_Cliente);
-
-            // Pedido hacia Mesa_Restaurante 
+            // Pedido hacia Mesa_Restaurante
             modelBuilder.Entity<Pedido>()
                 .HasOne(p => p.Mesa_Restaurante)
                 .WithMany(m => m.Pedidos)

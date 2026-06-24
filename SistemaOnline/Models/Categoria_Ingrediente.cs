@@ -6,7 +6,7 @@ namespace SistemaOnline.Models
 {
     public class Categoria_Ingrediente
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Cat_Ingrediente { get; set; }
 
         [Required, MaxLength(50)]

@@ -6,7 +6,7 @@ namespace SistemaOnline.Models
 {
     public class Producto_Categoria
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Categoria { get; set; }
 
         [Required, MaxLength(50)]

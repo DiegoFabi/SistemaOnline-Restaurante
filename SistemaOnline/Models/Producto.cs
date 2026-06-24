@@ -15,8 +15,10 @@ namespace SistemaOnline.Models
         [Required, MaxLength(255)]
         public string Descripcion { get; set; }
 
+        [Range(0, double.MaxValue, ErrorMessage = "El tiempo de preparación no puede ser negativo.")]
         public double Tiempo_Preparacion { get; set; }
 
+        [Range(0, double.MaxValue, ErrorMessage = "El precio no puede ser negativo.")]
         [Column(TypeName = "decimal(5,2)")]
         public decimal Precio { get; set; }
 

@@ -7,7 +7,7 @@ namespace SistemaOnline.Models
 {
     public class Turno
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Turno { get; set; }
 
         [Required, MaxLength(50)]

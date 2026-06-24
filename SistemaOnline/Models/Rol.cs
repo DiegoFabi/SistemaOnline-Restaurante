@@ -5,7 +5,7 @@ namespace SistemaOnline.Models
 {
     public class Rol
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_Rol { get; set; }
 
         [StringLength(50)]

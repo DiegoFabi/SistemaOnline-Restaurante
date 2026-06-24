@@ -19,19 +19,17 @@ namespace SistemaOnline.Models
         [Required, MaxLength(255)]
         public string Detalle_Pedido { get; set; }
 
+        [Range(0, double.MaxValue, ErrorMessage = "El subtotal no puede ser negativo.")]
         [Column(TypeName = "decimal(10,2)")]
         public decimal SubTotal { get; set; }
 
+        [Range(0, double.MaxValue, ErrorMessage = "El total no puede ser negativo.")]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Total { get; set; }
 
         // fk y objeto de relacion para empleado
         public int ID_Empleado { get; set; }
         public Empleado Empleado { get; set; }
-
-        // fk y objeto de relacion para cliente
-        public int ID_Cliente { get; set; }
-        public Cliente Cliente { get; set; }
 
         // fk y objeto de relacion para mesa_restaurante
         public int ID_Mesa { get; set; }

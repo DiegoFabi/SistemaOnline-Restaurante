@@ -199,6 +199,52 @@ namespace SistemaOnline.Data
                 .WithMany(pr => pr.Producto_Promociones)
                 .HasForeignKey(pp => pp.ID_Promocion);
 
+            modelBuilder.Entity<Categoria_Ingrediente>().HasData(
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 1, Nombre_Categoria = "Carnes" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 2, Nombre_Categoria = "Pescados y Mariscos" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 3, Nombre_Categoria = "Verduras y Hortalizas" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 4, Nombre_Categoria = "Frutas" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 5, Nombre_Categoria = "Lácteos" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 6, Nombre_Categoria = "Cereales y Granos" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 7, Nombre_Categoria = "Legumbres" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 8, Nombre_Categoria = "Condimentos y Especias" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 9, Nombre_Categoria = "Aceites y Grasas" },
+                new Categoria_Ingrediente { ID_Cat_Ingrediente = 10, Nombre_Categoria = "Harinas y Derivados" }
+                );
+
+            modelBuilder.Entity<Carta>().HasData(
+                new Carta { ID_Carta = 1, Nombre_Carta = "Carta Principal", Cantidad_Platos = 20, Descripcion = "Carta principal del restaurante Rancho Sagrado", Precio = 0m }
+                );
+
+            modelBuilder.Entity<Producto_Categoria>().HasData(
+                new Producto_Categoria { ID_Categoria = 1, Nombre_Categoria = "Platos Principales", Descripcion = "Platos de fondo del restaurante", ID_Carta = 1 },
+                new Producto_Categoria { ID_Categoria = 2, Nombre_Categoria = "Bebidas", Descripcion = "Bebidas frías y calientes", ID_Carta = 1 },
+                new Producto_Categoria { ID_Categoria = 3, Nombre_Categoria = "Postres", Descripcion = "Postres y dulces para finalizar la comida", ID_Carta = 1 }
+                );
+
+            modelBuilder.Entity<Producto>().HasData(
+                new Producto { ID_Producto = 1, Nombre_Plato = "Lomo Saltado", Descripcion = "Tiras de res salteadas con cebolla, tomate y papas fritas", Tiempo_Preparacion = 20, Precio = 28.50m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 2, Nombre_Plato = "Estofado de Res", Descripcion = "Carne de res cocida a fuego lento con vegetales", Tiempo_Preparacion = 45, Precio = 26.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 3, Nombre_Plato = "Ceviche", Descripcion = "Pescado fresco marinado en limón con cebolla y ají", Tiempo_Preparacion = 15, Precio = 32.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 4, Nombre_Plato = "Arroz con Mariscos", Descripcion = "Arroz al estilo criollo con mezcla de mariscos", Tiempo_Preparacion = 30, Precio = 34.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 5, Nombre_Plato = "Ensalada César", Descripcion = "Lechuga, pollo, crutones y aderezo César", Tiempo_Preparacion = 10, Precio = 18.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 6, Nombre_Plato = "Ratatouille", Descripcion = "Guiso de vegetales al horno estilo francés", Tiempo_Preparacion = 35, Precio = 22.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 7, Nombre_Plato = "Ensalada de Frutas", Descripcion = "Mezcla de frutas frescas de temporada", Tiempo_Preparacion = 10, Precio = 14.00m, Disponibilidad = true, Categoria = "Postres", ID_Categoria = 3 },
+                new Producto { ID_Producto = 8, Nombre_Plato = "Pie de Manzana", Descripcion = "Tarta de manzana horneada con canela", Tiempo_Preparacion = 25, Precio = 16.00m, Disponibilidad = true, Categoria = "Postres", ID_Categoria = 3 },
+                new Producto { ID_Producto = 9, Nombre_Plato = "Lasaña de Queso", Descripcion = "Capas de pasta horneada con queso y bechamel", Tiempo_Preparacion = 40, Precio = 27.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 10, Nombre_Plato = "Fondue de Queso", Descripcion = "Queso fundido para compartir con pan y vegetales", Tiempo_Preparacion = 20, Precio = 30.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 11, Nombre_Plato = "Arroz Chaufa", Descripcion = "Arroz salteado estilo chifa con vegetales y proteína", Tiempo_Preparacion = 20, Precio = 24.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 12, Nombre_Plato = "Risotto", Descripcion = "Arroz cremoso italiano con queso parmesano", Tiempo_Preparacion = 30, Precio = 26.50m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 13, Nombre_Plato = "Lentejas Guisadas", Descripcion = "Lentejas cocidas a fuego lento con vegetales", Tiempo_Preparacion = 35, Precio = 19.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 14, Nombre_Plato = "Garbanzos con Espinaca", Descripcion = "Garbanzos guisados con espinaca fresca", Tiempo_Preparacion = 30, Precio = 20.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 15, Nombre_Plato = "Pollo al Curry", Descripcion = "Pollo guisado en salsa de curry y especias", Tiempo_Preparacion = 30, Precio = 25.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 16, Nombre_Plato = "Ají de Gallina", Descripcion = "Pollo deshilachado en crema de ají amarillo", Tiempo_Preparacion = 35, Precio = 27.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 17, Nombre_Plato = "Papas Fritas", Descripcion = "Papas fritas crocantes servidas como acompañamiento", Tiempo_Preparacion = 12, Precio = 12.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 18, Nombre_Plato = "Mayonesa Casera", Descripcion = "Salsa mayonesa preparada artesanalmente", Tiempo_Preparacion = 10, Precio = 6.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 19, Nombre_Plato = "Pizza", Descripcion = "Pizza horneada con queso y toppings variados", Tiempo_Preparacion = 25, Precio = 29.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 },
+                new Producto { ID_Producto = 20, Nombre_Plato = "Empanadas", Descripcion = "Empanadas horneadas rellenas de carne y vegetales", Tiempo_Preparacion = 20, Precio = 15.00m, Disponibilidad = true, Categoria = "Platos Principales", ID_Categoria = 1 }
+                );
+
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -39,7 +39,7 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Ingrediente">Ingrediente</label>
                 <select class="@Cls("ID_Ingrediente")" asp-for="ID_Ingrediente" asp-items="Model.IngredientesDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Ingrediente" class="text-error text-label-md"></span>
             </div>

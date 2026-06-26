@@ -37,7 +37,7 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Rol">Rol</label>
                 <select class="@Cls("ID_Rol")" asp-for="ID_Rol" asp-items="Model.RolesDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Rol" class="text-error text-label-md"></span>
             </div>

@@ -53,7 +53,10 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado_Comprobante">Estado del Comprobante</label>
-                <input class="@Cls("Estado_Comprobante")" type="text" required asp-for="Estado_Comprobante" />
+                <select class="@Cls("Estado_Comprobante")" required asp-for="Estado_Comprobante">
+                    <option value="Emitido">Emitido</option>
+                    <option value="Anulado">Anulado</option>
+                </select>
                 <span asp-validation-for="Estado_Comprobante" class="text-error text-label-md"></span>
             </div>
             <div>
@@ -79,7 +82,7 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Pedido">Pedido</label>
                 <select class="@Cls("ID_Pedido")" asp-for="ID_Pedido" asp-items="Model.PedidosDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Pedido" class="text-error text-label-md"></span>
             </div>

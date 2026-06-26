@@ -28,7 +28,10 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Telefono">Teléfono</label>
-                <input class="@Cls("Telefono")" type="text" required asp-for="Telefono" />
+                <div class="flex gap-sm">
+                    <input class="@Cls("Telefono") flex-1" type="tel" pattern="[0-9+\-() ]*" maxlength="9" required asp-for="Telefono" />
+                    <button type="button" onclick="onSetDefault('Telefono')" class="h-11 px-md bg-error text-on-error font-label-md text-label-md rounded-lg hover:opacity-90 transition-all whitespace-nowrap">Sin teléfono</button>
+                </div>
                 <span asp-validation-for="Telefono" class="text-error text-label-md"></span>
             </div>
             <div>

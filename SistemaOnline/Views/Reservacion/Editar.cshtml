@@ -33,7 +33,12 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado_Reservacion">Estado de la Reservación</label>
-                <input class="@Cls("Estado_Reservacion")" type="text" required asp-for="Estado_Reservacion" />
+                <select class="@Cls("Estado_Reservacion")" required asp-for="Estado_Reservacion">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Confirmada">Confirmada</option>
+                    <option value="Cancelada">Cancelada</option>
+                    <option value="Completada">Completada</option>
+                </select>
                 <span asp-validation-for="Estado_Reservacion" class="text-error text-label-md"></span>
             </div>
             <div>
@@ -44,14 +49,14 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Cliente">Cliente</label>
                 <select class="@Cls("ID_Cliente")" asp-for="ID_Cliente" asp-items="Model.ClientesDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Cliente" class="text-error text-label-md"></span>
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Mesa">Mesa</label>
                 <select class="@Cls("ID_Mesa")" asp-for="ID_Mesa" asp-items="Model.MesasDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Mesa" class="text-error text-label-md"></span>
             </div>

@@ -40,13 +40,16 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Telefono">Teléfono</label>
-                <input class="@Cls("Telefono")" type="text" required asp-for="Telefono" />
+                <div class="flex gap-sm">
+                    <input class="@Cls("Telefono") flex-1" type="tel" pattern="[0-9+\-() ]*" maxlength="9" required asp-for="Telefono" />
+                    <button type="button" onclick="onSetDefault('Telefono')" class="h-11 px-md bg-error text-on-error font-label-md text-label-md rounded-lg hover:opacity-90 transition-all whitespace-nowrap">Sin teléfono</button>
+                </div>
                 <span asp-validation-for="Telefono" class="text-error text-label-md"></span>
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado Laboral</label>
                 <select class="@Cls("Estado")" asp-for="Estado">
-                    <option value="">-- Seleccione un Estado --</option>
+                    <option value="" disabled selected hidden>-- Seleccione un Estado --</option>
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
                     <option value="Pendiente">Pendiente</option>
@@ -61,7 +64,7 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Usuario">Cuenta de Usuario</label>
                 <select class="@Cls("ID_Usuario")" asp-for="ID_Usuario" asp-items="Model.UsuariosDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Usuario" class="text-error text-label-md"></span>
             </div>

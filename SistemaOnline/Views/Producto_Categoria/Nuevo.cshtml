@@ -28,7 +28,7 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Carta">Carta</label>
                 <select class="@Cls("ID_Carta")" asp-for="ID_Carta" asp-items="Model.CartasDisponibles" id="ID_Carta">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Carta" class="text-error text-label-md"></span>
             </div>

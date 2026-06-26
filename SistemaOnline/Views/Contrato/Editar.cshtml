@@ -44,14 +44,14 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Empleado">Empleado</label>
                 <select class="@Cls("ID_Empleado")" asp-for="ID_Empleado" asp-items="Model.EmpleadosDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Empleado" class="text-error text-label-md"></span>
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Proveedor">Proveedor</label>
                 <select class="@Cls("ID_Proveedor")" asp-for="ID_Proveedor" asp-items="Model.ProveedoresDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Proveedor" class="text-error text-label-md"></span>
             </div>

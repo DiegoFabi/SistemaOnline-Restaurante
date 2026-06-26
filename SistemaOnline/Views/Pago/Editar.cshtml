@@ -38,14 +38,17 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado del Pago</label>
-                <input class="@Cls("Estado")" type="text" required asp-for="Estado" />
-                <p class="text-label-md text-on-surface-variant">Ej: Pendiente, Pagado, Rechazado.</p>
+                <select class="@Cls("Estado")" required asp-for="Estado">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Pagado">Pagado</option>
+                    <option value="Rechazado">Rechazado</option>
+                </select>
                 <span asp-validation-for="Estado" class="text-error text-label-md"></span>
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Pedido">Pedido</label>
                 <select class="@Cls("ID_Pedido")" asp-for="ID_Pedido" asp-items="Model.PedidosDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Pedido" class="text-error text-label-md"></span>
             </div>

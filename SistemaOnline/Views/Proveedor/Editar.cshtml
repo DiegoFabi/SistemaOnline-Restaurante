@@ -33,7 +33,10 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Telefono">Teléfono</label>
-                <input class="@Cls("Telefono")" type="text" required asp-for="Telefono" />
+                <div class="flex gap-sm">
+                    <input class="@Cls("Telefono") flex-1" type="tel" pattern="[0-9+\-() ]*" maxlength="9" required asp-for="Telefono" />
+                    <button type="button" onclick="onSetDefault('Telefono')" class="h-11 px-md bg-error text-on-error font-label-md text-label-md rounded-lg hover:opacity-90 transition-all whitespace-nowrap">Sin teléfono</button>
+                </div>
                 <span asp-validation-for="Telefono" class="text-error text-label-md"></span>
             </div>
             <div>
@@ -48,8 +51,10 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado del Proveedor</label>
-                <input class="@Cls("Estado")" type="text" required asp-for="Estado" />
-                <p class="text-label-md text-on-surface-variant">Ej: Activo, Inactivo.</p>
+                <select class="@Cls("Estado")" required asp-for="Estado">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
                 <span asp-validation-for="Estado" class="text-error text-label-md"></span>
             </div>
             <div class="flex items-center gap-sm pt-md">

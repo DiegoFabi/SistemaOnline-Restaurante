@@ -33,8 +33,11 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado de la Mesa</label>
-                <input class="@Cls("Estado")" type="text" required asp-for="Estado" />
-                <p class="text-label-md text-on-surface-variant">Ej: Disponible, Ocupada, Reservada.</p>
+                <select class="@Cls("Estado")" required asp-for="Estado">
+                    <option value="Disponible">Disponible</option>
+                    <option value="Ocupada">Ocupada</option>
+                    <option value="Reservada">Reservada</option>
+                </select>
                 <span asp-validation-for="Estado" class="text-error text-label-md"></span>
             </div>
             <div class="flex items-center gap-sm pt-md">

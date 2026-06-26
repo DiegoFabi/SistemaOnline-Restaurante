@@ -55,10 +55,10 @@
 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-lg">
     @foreach (var mesa in Model.Mesas)
     {
-        bool libre = mesa.Estado == "Libre";
+        bool libre = mesa.Estado == "Disponible";
         <div class="@(libre
-            ? "bg-secondary-container border-secondary"
-            : "bg-primary-container border-primary") aspect-square rounded-xl shadow-sm border-2 flex flex-col items-center justify-center p-md transition-all hover:scale-105">
+                         ? "bg-secondary-container border-secondary"
+                         : "bg-primary-container border-primary") aspect-square rounded-xl shadow-sm border-2 flex flex-col items-center justify-center p-md transition-all hover:scale-105">
             <span class="material-symbols-outlined text-3xl @(libre ? "text-on-secondary-container" : "text-on-primary")" data-icon="table_restaurant">table_restaurant</span>
             <p class="font-bold text-headline-lg-mobile mt-sm @(libre ? "text-on-secondary-container" : "text-on-primary")">@mesa.Numero_Mesa</p>
             <p class="text-label-md @(libre ? "text-on-secondary-container" : "text-on-primary")">@mesa.Estado</p>

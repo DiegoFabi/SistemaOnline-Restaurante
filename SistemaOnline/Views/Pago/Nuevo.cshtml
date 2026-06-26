@@ -17,7 +17,10 @@
             <div asp-validation-summary="ModelOnly" class="text-error text-body-md"></div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Fecha_Hora_Pago">Fecha y Hora de Pago</label>
-                <input class="@Cls("Fecha_Hora_Pago")" type="datetime-local" required asp-for="Fecha_Hora_Pago" />
+                <div class="flex gap-sm">
+                    <input class="@Cls("Fecha_Hora_Pago") flex-1" type="datetime-local" required asp-for="Fecha_Hora_Pago" id="Fecha_Hora_Pago" readonly />
+                    <button type="button" onclick="document.getElementById('Fecha_Hora_Pago').readOnly = false;" class="h-11 px-md bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container-highest transition-all whitespace-nowrap">Editar fecha</button>
+                </div>
                 <span asp-validation-for="Fecha_Hora_Pago" class="text-error text-label-md"></span>
             </div>
             <div>
@@ -37,14 +40,17 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado">Estado del Pago</label>
-                <input class="@Cls("Estado")" type="text" required asp-for="Estado" />
-                <p class="text-label-md text-on-surface-variant">Ej: Pendiente, Pagado, Rechazado.</p>
+                <select class="@Cls("Estado")" required asp-for="Estado">
+                    <option value="Pendiente" selected>Pendiente</option>
+                    <option value="Pagado" disabled>Pagado</option>
+                    <option value="Rechazado" disabled>Rechazado</option>
+                </select>
                 <span asp-validation-for="Estado" class="text-error text-label-md"></span>
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Pedido">Pedido</label>
                 <select class="@Cls("ID_Pedido")" asp-for="ID_Pedido" asp-items="Model.PedidosDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Pedido" class="text-error text-label-md"></span>
             </div>

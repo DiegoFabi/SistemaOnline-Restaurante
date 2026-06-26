@@ -49,7 +49,7 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Cat_Ingrediente">Categoría</label>
                 <select class="@Cls("ID_Cat_Ingrediente")" asp-for="ID_Cat_Ingrediente" asp-items="Model.CategoriasDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Cat_Ingrediente" class="text-error text-label-md"></span>
             </div>

@@ -5,9 +5,14 @@
     ViewBag.Active = "pedidos";
 }
 
-<div class="mb-lg">
-    <h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Pedidos en Curso</h2>
-    <p class="text-on-surface-variant">Toma y seguimiento de pedidos por mesa.</p>
+<div class="mb-lg flex items-center justify-between">
+    <div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Pedidos en Curso</h2>
+        <p class="text-on-surface-variant">Toma y seguimiento de pedidos por mesa.</p>
+    </div>
+    <a asp-controller="Pedido" asp-action="Nuevo" class="inline-flex items-center gap-sm h-11 px-md bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-title-md text-title-md rounded-lg shadow-md shadow-primary/20 transition-all active:scale-[0.98]">
+        <span class="material-symbols-outlined">add</span> Nuevo Pedido
+    </a>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
@@ -34,6 +39,9 @@
                 <span class="font-bold text-on-surface">Total</span>
                 <span class="font-bold text-primary">@p.Total.ToString("C2")</span>
             </div>
+            <a asp-controller="Pedido" asp-action="Editar" asp-route-id="@p.ID_Pedido" class="mt-md inline-flex items-center justify-center gap-sm w-full h-10 px-md bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg transition-all hover:bg-surface-container-highest">
+                <span class="material-symbols-outlined text-[18px]">edit</span> Editar Pedido
+            </a>
         </div>
     }
 </div>

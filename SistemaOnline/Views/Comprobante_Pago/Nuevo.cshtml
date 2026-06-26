@@ -32,7 +32,10 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Fecha_Emision">Fecha de Emisión</label>
-                <input class="@Cls("Fecha_Emision")" type="date" required asp-for="Fecha_Emision" />
+                <div class="flex gap-sm">
+                    <input class="@Cls("Fecha_Emision") flex-1" type="date" required asp-for="Fecha_Emision" id="Fecha_Emision" readonly />
+                    <button type="button" onclick="document.getElementById('Fecha_Emision').readOnly = false;" class="h-11 px-md bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container-highest transition-all whitespace-nowrap">Editar fecha</button>
+                </div>
                 <span asp-validation-for="Fecha_Emision" class="text-error text-label-md"></span>
             </div>
             <div>
@@ -52,7 +55,10 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado_Comprobante">Estado del Comprobante</label>
-                <input class="@Cls("Estado_Comprobante")" type="text" required asp-for="Estado_Comprobante" />
+                <select class="@Cls("Estado_Comprobante")" required asp-for="Estado_Comprobante">
+                    <option value="Emitido" selected>Emitido</option>
+                    <option value="Anulado" disabled>Anulado</option>
+                </select>
                 <span asp-validation-for="Estado_Comprobante" class="text-error text-label-md"></span>
             </div>
             <div>
@@ -78,7 +84,7 @@
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Pedido">Pedido</label>
                 <select class="@Cls("ID_Pedido")" asp-for="ID_Pedido" asp-items="Model.PedidosDisponibles">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Pedido" class="text-error text-label-md"></span>
             </div>

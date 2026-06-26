@@ -18,6 +18,7 @@ namespace SistemaOnline.Models
         [Required, MaxLength(50)]
         public string Tipo_Contrato { get; set; }
 
+        [Range(100.01, double.MaxValue, ErrorMessage = "El salario debe ser mayor a 100.")]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Salario { get; set; }
 

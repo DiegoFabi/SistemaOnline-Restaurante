@@ -22,8 +22,9 @@ namespace SistemaOnline.Models
         [Required, MaxLength(100)]
         public string Cargo { get; set; }
 
-        [Required, MaxLength(9)]
-        public string Telefono { get; set; }
+        [MaxLength(9)]
+        [RegularExpression(@"^[0-9+\-() ]*$", ErrorMessage = "El teléfono solo puede contener números y los símbolos + - ( ).")]
+        public string? Telefono { get; set; }
 
         [Required, MaxLength(15)]
         public string Estado { get; set; }

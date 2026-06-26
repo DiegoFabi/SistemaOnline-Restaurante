@@ -120,7 +120,6 @@ namespace SistemaOnline.Controllers
                 Value = c.ID_Carta.ToString(),
                 Text = c.Nombre_Carta
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona una carta" });
             return lista;
         }
     }

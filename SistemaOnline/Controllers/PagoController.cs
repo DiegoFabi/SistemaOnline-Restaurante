@@ -53,6 +53,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(PagoVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.PedidosDisponibles = await ObtenerPedidos();
+                return View(modelo);
+            }
+
             Pago pago = new Pago
             {
                 Fecha_Hora_Pago = modelo.Fecha_Hora_Pago,
@@ -88,6 +94,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(PagoVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.PedidosDisponibles = await ObtenerPedidos();
+                return View(modelo);
+            }
+
             Pago pago = await _context.Pagos.FirstAsync(p => p.ID_Pago == modelo.ID_Pago);
             pago.Fecha_Hora_Pago = modelo.Fecha_Hora_Pago;
             pago.Monto = modelo.Monto;
@@ -116,7 +128,6 @@ namespace SistemaOnline.Controllers
                 Value = p.ID_Pedido.ToString(),
                 Text = "Pedido #" + p.ID_Pedido + " - " + p.Estado_Pedido
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona un pedido" });
             return lista;
         }
     }

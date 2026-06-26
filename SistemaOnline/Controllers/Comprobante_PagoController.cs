@@ -41,7 +41,7 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Nuevo()
+        public async Task<IActionResult> Nuevo(int? idPedido)
         {
             if (!await _context.Pedidos.AnyAsync())
             {
@@ -52,14 +52,33 @@ namespace SistemaOnline.Controllers
             Comprobante_PagoVM modelo = new Comprobante_PagoVM
             {
                 Fecha_Emision = DateTime.Now,
+                ID_Pedido = idPedido ?? 0,
                 PedidosDisponibles = await ObtenerPedidos()
             };
+            ViewBag.ResumenPedidos = await ObtenerResumenPedidos();
             return View(modelo);
         }
 
         [HttpPost]
         public async Task<IActionResult> Nuevo(Comprobante_PagoVM modelo)
         {
+            if (modelo.Tipo_Comprobante == "Boleta")
+            {
+                ModelState.Remove(nameof(modelo.RUC));
+                modelo.RUC = null;
+            }
+            else if (modelo.Tipo_Comprobante == "Factura" && string.IsNullOrWhiteSpace(modelo.RUC))
+            {
+                ModelState.AddModelError(nameof(modelo.RUC), "El RUC es obligatorio para una Factura.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                modelo.PedidosDisponibles = await ObtenerPedidos();
+                ViewBag.ResumenPedidos = await ObtenerResumenPedidos();
+                return View(modelo);
+            }
+
             Comprobante_Pago comprobante = new Comprobante_Pago
             {
                 Tipo_Comprobante = modelo.Tipo_Comprobante,
@@ -103,12 +122,30 @@ namespace SistemaOnline.Controllers
                 ID_Pedido = comprobante.ID_Pedido,
                 PedidosDisponibles = await ObtenerPedidos()
             };
+            ViewBag.ResumenPedidos = await ObtenerResumenPedidos();
             return View(modelo);
         }
 
         [HttpPost]
         public async Task<IActionResult> Editar(Comprobante_PagoVM modelo)
         {
+            if (modelo.Tipo_Comprobante == "Boleta")
+            {
+                ModelState.Remove(nameof(modelo.RUC));
+                modelo.RUC = null;
+            }
+            else if (modelo.Tipo_Comprobante == "Factura" && string.IsNullOrWhiteSpace(modelo.RUC))
+            {
+                ModelState.AddModelError(nameof(modelo.RUC), "El RUC es obligatorio para una Factura.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                modelo.PedidosDisponibles = await ObtenerPedidos();
+                ViewBag.ResumenPedidos = await ObtenerResumenPedidos();
+                return View(modelo);
+            }
+
             Comprobante_Pago comprobante = await _context.Comprobantes_Pagos.FirstAsync(c => c.ID_Comprobante == modelo.ID_Comprobante);
             comprobante.Tipo_Comprobante = modelo.Tipo_Comprobante;
             comprobante.Numero_Comprobante = modelo.Numero_Comprobante;
@@ -144,8 +181,30 @@ namespace SistemaOnline.Controllers
                 Value = p.ID_Pedido.ToString(),
                 Text = "Pedido #" + p.ID_Pedido + " - " + p.Estado_Pedido
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona un pedido" });
             return lista;
+        }
+
+        private async Task<List<ResumenPedidoVM>> ObtenerResumenPedidos()
+        {
+            var pedidos = await _context.Pedidos
+                .Include(p => p.Mesa_Restaurante)
+                .Include(p => p.Pedido_Detalles)
+                    .ThenInclude(pd => pd.Producto)
+                .ToListAsync();
+
+            return pedidos.Select(p => new ResumenPedidoVM
+            {
+                ID_Pedido = p.ID_Pedido,
+                MesaNumero = p.Mesa_Restaurante != null ? p.Mesa_Restaurante.Numero_Mesa.ToString() : "-",
+                SubTotal = p.SubTotal,
+                Total = p.Total,
+                Items = p.Pedido_Detalles.Select(pd => new ResumenItemVM
+                {
+                    Nombre = pd.Producto != null ? pd.Producto.Nombre_Plato : "-",
+                    Cantidad = pd.Cantidad,
+                    PrecioUnitario = pd.PrecioUnitario
+                }).ToList()
+            }).ToList();
         }
     }
 }

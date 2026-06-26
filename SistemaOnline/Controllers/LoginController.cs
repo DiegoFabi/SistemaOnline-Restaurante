@@ -25,6 +25,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Registro(UsuarioVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             if (modelo.Password != modelo.RepeatPassword)
             {
                 ViewData["Msg"] = "La contraseñas no coinciden, escribe denuevo";

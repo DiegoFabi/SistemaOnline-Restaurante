@@ -22,7 +22,7 @@ namespace SistemaOnline.Controllers
             var vm = new MeseroDashboardVM
             {
                 Mesas = mesas,
-                MesasLibres = mesas.Count(m => m.Estado == "Libre"),
+                MesasLibres = mesas.Count(m => m.Estado == "Disponible"),
                 MesasOcupadas = mesas.Count(m => m.Estado == "Ocupada"),
                 PedidosActivos = await _dbcontext.Pedidos.CountAsync(p => p.Estado_Pedido != "Completado" && p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
             };

@@ -35,6 +35,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(TurnoVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Turno turno = new Turno
             {
                 Nombre_Turno = modelo.Nombre_Turno,
@@ -63,6 +68,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(TurnoVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Turno turno = await _context.Turnos.FirstAsync(t => t.ID_Turno == modelo.ID_Turno);
             turno.Nombre_Turno = modelo.Nombre_Turno;
             turno.Hora_Inicio = modelo.Hora_Inicio;

@@ -38,6 +38,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(Mesa_RestauranteVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Mesa_Restaurante mesa = new Mesa_Restaurante
             {
                 Numero_Mesa = modelo.Numero_Mesa,
@@ -68,6 +73,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(Mesa_RestauranteVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Mesa_Restaurante mesa = await _context.Mesas.FirstAsync(m => m.ID_Mesa == modelo.ID_Mesa);
             mesa.Numero_Mesa = modelo.Numero_Mesa;
             mesa.Capacidad = modelo.Capacidad;

@@ -45,6 +45,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(UsuarioVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.RolesDisponibles = await ObtenerRoles();
+                return View(modelo);
+            }
+
             Usuario usuario = new Usuario
             {
                 Nombre_Usuario = modelo.Nombre_Usuario,
@@ -78,6 +84,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(UsuarioVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.RolesDisponibles = await ObtenerRoles();
+                return View(modelo);
+            }
+
             Usuario usuario = await _context.Usuarios.FirstAsync(u => u.ID_Usuario == modelo.ID_Usuario);
             usuario.Nombre_Usuario = modelo.Nombre_Usuario;
             usuario.Email = modelo.Email;

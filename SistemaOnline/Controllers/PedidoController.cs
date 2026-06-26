@@ -41,6 +41,12 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
+            if (!await _context.Empleados.AnyAsync() || !await _context.Mesas.AnyAsync())
+            {
+                ViewData["Msg"] = "Debes registrar al menos un Empleado y una Mesa antes de crear un Pedido.";
+                return View("~/Views/Negocio/Advertencia.cshtml");
+            }
+
             PedidoVM modelo = new PedidoVM
             {
                 Fecha = DateTime.Now,
@@ -54,6 +60,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(PedidoVM modelo)
         {
+            if (!await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
+                ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
+            if (!await _context.Mesas.AnyAsync(m => m.ID_Mesa == modelo.ID_Mesa))
+                ModelState.AddModelError(nameof(modelo.ID_Mesa), "Selecciona una mesa válida.");
+
             if (!ModelState.IsValid)
             {
                 modelo.EmpleadosDisponibles = await ObtenerEmpleados();
@@ -126,6 +137,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(PedidoVM modelo)
         {
+            if (!await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
+                ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
+            if (!await _context.Mesas.AnyAsync(m => m.ID_Mesa == modelo.ID_Mesa))
+                ModelState.AddModelError(nameof(modelo.ID_Mesa), "Selecciona una mesa válida.");
+
             if (!ModelState.IsValid)
             {
                 modelo.EmpleadosDisponibles = await ObtenerEmpleados();
@@ -190,7 +206,6 @@ namespace SistemaOnline.Controllers
                 Value = e.ID_Empleado.ToString(),
                 Text = $"{e.Nombre} {e.Apellidos}"
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona un empleado" });
             return lista;
         }
 
@@ -201,7 +216,6 @@ namespace SistemaOnline.Controllers
                 Value = m.ID_Mesa.ToString(),
                 Text = "Mesa " + m.Numero_Mesa
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona una mesa" });
             return lista;
         }
 

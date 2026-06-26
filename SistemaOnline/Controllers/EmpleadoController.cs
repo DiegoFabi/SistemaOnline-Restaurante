@@ -18,11 +18,11 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Lista()
         {
-             List<Empleado> lista = await _context.Empleados
-            .Include(e => e.Usuario)
-            .Include(e => e.Empleado_Turnos)
-                .ThenInclude(et => et.Turno)
-            .ToListAsync();
+            List<Empleado> lista = await _context.Empleados
+           .Include(e => e.Usuario)
+           .Include(e => e.Empleado_Turnos)
+               .ThenInclude(et => et.Turno)
+           .ToListAsync();
 
             ViewBag.TurnosEmpleados = lista.ToDictionary(
                 e => e.ID_Empleado,
@@ -58,7 +58,7 @@ namespace SistemaOnline.Controllers
                 }).ToListAsync(),
 
                 CargosDisponibles = await _context.Roles
-                .Where(r => r.Nombre_Rol != "Cliente") 
+                .Where(r => r.Nombre_Rol != "Cliente")
                 .Select(r => new SelectListItem
                 {
                     Value = r.Nombre_Rol,
@@ -79,6 +79,13 @@ namespace SistemaOnline.Controllers
                     Value = t.ID_Turno.ToString(),
                     Text = t.Nombre_Turno
                 }).ToListAsync();
+                modelo.CargosDisponibles = await _context.Roles
+                    .Where(r => r.Nombre_Rol != "Cliente")
+                    .Select(r => new SelectListItem
+                    {
+                        Value = r.Nombre_Rol,
+                        Text = r.Nombre_Rol
+                    }).ToListAsync();
                 return View(modelo);
             }
 
@@ -101,7 +108,7 @@ namespace SistemaOnline.Controllers
             {
                 Empleado_Turno relacion = new Empleado_Turno
                 {
-                    ID_Empleado = empleado.ID_Empleado, 
+                    ID_Empleado = empleado.ID_Empleado,
                     ID_Turno = modelo.ID_Turno.Value
                 };
 
@@ -126,9 +133,9 @@ namespace SistemaOnline.Controllers
                 Nombre = empleado.Nombre,
                 Apellidos = empleado.Apellidos,
                 Direccion = empleado.Direccion,
-                Cargo = empleado.Cargo, 
+                Cargo = empleado.Cargo,
                 Telefono = empleado.Telefono,
-                Estado = empleado.Estado, 
+                Estado = empleado.Estado,
                 DNI = empleado.DNI,
                 ID_Usuario = empleado.ID_Usuario,
 
@@ -157,6 +164,24 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(EmpleadoVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.UsuariosDisponibles = await ObtenerUsuarios();
+                modelo.TurnosDisponibles = await _context.Turnos.Select(t => new SelectListItem
+                {
+                    Value = t.ID_Turno.ToString(),
+                    Text = t.Nombre_Turno
+                }).ToListAsync();
+                modelo.CargosDisponibles = await _context.Roles
+                    .Where(r => r.Nombre_Rol != "Cliente")
+                    .Select(r => new SelectListItem
+                    {
+                        Value = r.Nombre_Rol,
+                        Text = r.Nombre_Rol
+                    }).ToListAsync();
+                return View(modelo);
+            }
+
             var empleado = await _context.Empleados
                 .Include(e => e.Empleado_Turnos)
                 .FirstOrDefaultAsync(e => e.ID_Empleado == modelo.ID_Empleado);
@@ -174,7 +199,7 @@ namespace SistemaOnline.Controllers
 
             var turnoActual = empleado.Empleado_Turnos.FirstOrDefault();
 
-            if (modelo.ID_Turno.HasValue) 
+            if (modelo.ID_Turno.HasValue)
             {
                 if (turnoActual != null)
                 {

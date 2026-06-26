@@ -44,6 +44,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(PromocionVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Promocion promocion = new Promocion
             {
                 Nombre = modelo.Nombre,
@@ -78,6 +83,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(PromocionVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Promocion promocion = await _context.Promociones.FirstAsync(p => p.ID_Promocion == modelo.ID_Promocion);
             promocion.Nombre = modelo.Nombre;
             promocion.Descripcion = modelo.Descripcion;

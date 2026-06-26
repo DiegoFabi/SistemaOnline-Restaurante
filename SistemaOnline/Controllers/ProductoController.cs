@@ -126,7 +126,6 @@ namespace SistemaOnline.Controllers
                 Value = c.ID_Categoria.ToString(),
                 Text = c.Nombre_Categoria
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona una categoria" });
             return lista;
         }
     }

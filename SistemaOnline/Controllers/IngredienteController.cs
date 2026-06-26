@@ -54,6 +54,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(IngredienteVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.CategoriasDisponibles = await ObtenerCategorias();
+                return View(modelo);
+            }
+
             Ingrediente ingrediente = new Ingrediente
             {
                 Nombre_Ingrediente = modelo.Nombre_Ingrediente,
@@ -89,6 +95,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(IngredienteVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.CategoriasDisponibles = await ObtenerCategorias();
+                return View(modelo);
+            }
+
             Ingrediente ingrediente = await _context.Ingredientes.FirstAsync(i => i.ID_Ingrediente == modelo.ID_Ingrediente);
             ingrediente.Nombre_Ingrediente = modelo.Nombre_Ingrediente;
             ingrediente.Unidad_Medida = modelo.Unidad_Medida;
@@ -117,7 +129,6 @@ namespace SistemaOnline.Controllers
                 Value = c.ID_Cat_Ingrediente.ToString(),
                 Text = c.Nombre_Categoria
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona una categoria" });
             return lista;
         }
     }

@@ -52,6 +52,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(InventarioVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.IngredientesDisponibles = await ObtenerIngredientes();
+                return View(modelo);
+            }
+
             Inventario inventario = new Inventario
             {
                 Cantidad_Stock = modelo.Cantidad_Stock,
@@ -85,6 +91,12 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(InventarioVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                modelo.IngredientesDisponibles = await ObtenerIngredientes();
+                return View(modelo);
+            }
+
             Inventario inventario = await _context.Inventarios.FirstAsync(i => i.ID_Inventario == modelo.ID_Inventario);
             inventario.Cantidad_Stock = modelo.Cantidad_Stock;
             inventario.Fecha_Ultima_Reposicion = modelo.Fecha_Ultima_Reposicion;
@@ -112,7 +124,6 @@ namespace SistemaOnline.Controllers
                 Value = i.ID_Ingrediente.ToString(),
                 Text = i.Nombre_Ingrediente
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona un ingrediente" });
             return lista;
         }
     }

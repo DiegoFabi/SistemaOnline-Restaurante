@@ -39,6 +39,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(ClienteVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Cliente cliente = new Cliente
             {
                 Nombre = modelo.Nombre,
@@ -75,6 +80,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(ClienteVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Cliente cliente = await _context.Clientes.FirstAsync(c => c.ID_Cliente == modelo.ID_Cliente);
             cliente.Nombre = modelo.Nombre;
             cliente.Apellidos = modelo.Apellidos;

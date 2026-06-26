@@ -23,7 +23,7 @@ namespace SistemaOnline.Controllers
             var vm = new CajeroDashboardVM
             {
                 TotalRecaudadoHoy = await _dbcontext.Pagos
-                    .Where(pg => pg.Fecha_Hora_Pago >= hoy && pg.Fecha_Hora_Pago < manana && pg.Estado == "Aprobado")
+                    .Where(pg => pg.Fecha_Hora_Pago >= hoy && pg.Fecha_Hora_Pago < manana && pg.Estado == "Pagado")
                     .SumAsync(pg => (decimal?)pg.Monto) ?? 0,
                 PagosHoyCount = await _dbcontext.Pagos.CountAsync(pg => pg.Fecha_Hora_Pago >= hoy && pg.Fecha_Hora_Pago < manana),
                 PedidosPorCobrar = await _dbcontext.Pedidos.CountAsync(p => p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")

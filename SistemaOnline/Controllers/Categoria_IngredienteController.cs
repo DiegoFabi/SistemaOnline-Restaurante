@@ -32,6 +32,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(Categoria_IngredienteVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Categoria_Ingrediente categoria_Ingrediente = new Categoria_Ingrediente
             {
                 Nombre_Categoria = modelo.Nombre_Categoria
@@ -54,6 +59,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(Categoria_IngredienteVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Categoria_Ingrediente categoria_Ingrediente = await _context.Categorias_Ingredientes.FirstAsync(c => c.ID_Cat_Ingrediente == modelo.ID_Cat_Ingrediente);
             categoria_Ingrediente.Nombre_Categoria = modelo.Nombre_Categoria;
             _context.Categorias_Ingredientes.Update(categoria_Ingrediente);

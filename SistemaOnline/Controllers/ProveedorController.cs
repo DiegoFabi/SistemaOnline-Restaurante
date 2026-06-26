@@ -38,6 +38,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(ProveedorVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Proveedor proveedor = new Proveedor
             {
                 Nombre_Empresa = modelo.Nombre_Empresa,
@@ -72,6 +77,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(ProveedorVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Proveedor proveedor = await _context.Proveedores.FirstAsync(p => p.ID_Proveedor == modelo.ID_Proveedor);
             proveedor.Nombre_Empresa = modelo.Nombre_Empresa;
             proveedor.RUC = modelo.RUC;

@@ -36,6 +36,12 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
+            if (!await _context.Empleados.AnyAsync() || !await _context.Proveedores.AnyAsync())
+            {
+                ViewData["Msg"] = "Debes registrar al menos un Empleado y un Proveedor antes de crear un Contrato.";
+                return View("~/Views/Negocio/Advertencia.cshtml");
+            }
+
             ContratoVM modelo = new ContratoVM
             {
                 Fecha_Inicio = DateTime.Now,
@@ -47,6 +53,18 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(ContratoVM modelo)
         {
+            if (!await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
+                ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
+            if (!await _context.Proveedores.AnyAsync(p => p.ID_Proveedor == modelo.ID_Proveedor))
+                ModelState.AddModelError(nameof(modelo.ID_Proveedor), "Selecciona un proveedor válido.");
+
+            if (!ModelState.IsValid)
+            {
+                modelo.EmpleadosDisponibles = await ObtenerEmpleados();
+                modelo.ProveedoresDisponibles = await ObtenerProveedores();
+                return View(modelo);
+            }
+
             Contrato contrato = new Contrato
             {
                 Fecha_Inicio = modelo.Fecha_Inicio,
@@ -83,6 +101,18 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(ContratoVM modelo)
         {
+            if (!await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
+                ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
+            if (!await _context.Proveedores.AnyAsync(p => p.ID_Proveedor == modelo.ID_Proveedor))
+                ModelState.AddModelError(nameof(modelo.ID_Proveedor), "Selecciona un proveedor válido.");
+
+            if (!ModelState.IsValid)
+            {
+                modelo.EmpleadosDisponibles = await ObtenerEmpleados();
+                modelo.ProveedoresDisponibles = await ObtenerProveedores();
+                return View(modelo);
+            }
+
             Contrato contrato = await _context.Contratos.FirstAsync(c => c.ID_Contrato == modelo.ID_Contrato);
             contrato.Fecha_Inicio = modelo.Fecha_Inicio;
             contrato.Fecha_Fin = modelo.Fecha_Fin;
@@ -106,30 +136,20 @@ namespace SistemaOnline.Controllers
 
         private async Task<List<SelectListItem>> ObtenerEmpleados()
         {
-            List<SelectListItem> lista = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "", Text = "Selecciona un empleado" }
-            };
-            lista.AddRange(await _context.Empleados.Select(e => new SelectListItem
+            return await _context.Empleados.Select(e => new SelectListItem
             {
                 Value = e.ID_Empleado.ToString(),
                 Text = e.Nombre + " " + e.Apellidos
-            }).ToListAsync());
-            return lista;
+            }).ToListAsync();
         }
 
         private async Task<List<SelectListItem>> ObtenerProveedores()
         {
-            List<SelectListItem> lista = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "", Text = "Selecciona un proveedor" }
-            };
-            lista.AddRange(await _context.Proveedores.Select(p => new SelectListItem
+            return await _context.Proveedores.Select(p => new SelectListItem
             {
                 Value = p.ID_Proveedor.ToString(),
                 Text = p.Nombre_Empresa
-            }).ToListAsync());
-            return lista;
+            }).ToListAsync();
         }
     }
 }

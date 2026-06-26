@@ -41,6 +41,12 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
+            if (!await _context.Clientes.AnyAsync() || !await _context.Mesas.AnyAsync())
+            {
+                ViewData["Msg"] = "Debes registrar al menos un Cliente y una Mesa antes de crear una Reservación.";
+                return View("~/Views/Negocio/Advertencia.cshtml");
+            }
+
             ReservacionVM modelo = new ReservacionVM
             {
                 Fecha_Hora = DateTime.Now,
@@ -53,6 +59,18 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(ReservacionVM modelo)
         {
+            if (!await _context.Clientes.AnyAsync(c => c.ID_Cliente == modelo.ID_Cliente))
+                ModelState.AddModelError(nameof(modelo.ID_Cliente), "Selecciona un cliente válido.");
+            if (!await _context.Mesas.AnyAsync(m => m.ID_Mesa == modelo.ID_Mesa))
+                ModelState.AddModelError(nameof(modelo.ID_Mesa), "Selecciona una mesa válida.");
+
+            if (!ModelState.IsValid)
+            {
+                modelo.ClientesDisponibles = await ObtenerClientes();
+                modelo.MesasDisponibles = await ObtenerMesas();
+                return View(modelo);
+            }
+
             Reservacion reservacion = new Reservacion
             {
                 Fecha_Hora = modelo.Fecha_Hora,
@@ -91,6 +109,18 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(ReservacionVM modelo)
         {
+            if (!await _context.Clientes.AnyAsync(c => c.ID_Cliente == modelo.ID_Cliente))
+                ModelState.AddModelError(nameof(modelo.ID_Cliente), "Selecciona un cliente válido.");
+            if (!await _context.Mesas.AnyAsync(m => m.ID_Mesa == modelo.ID_Mesa))
+                ModelState.AddModelError(nameof(modelo.ID_Mesa), "Selecciona una mesa válida.");
+
+            if (!ModelState.IsValid)
+            {
+                modelo.ClientesDisponibles = await ObtenerClientes();
+                modelo.MesasDisponibles = await ObtenerMesas();
+                return View(modelo);
+            }
+
             Reservacion reservacion = await _context.Reservaciones.FirstAsync(r => r.ID_Reservacion == modelo.ID_Reservacion);
             reservacion.Fecha_Hora = modelo.Fecha_Hora;
             reservacion.Numero_Personas = modelo.Numero_Personas;
@@ -120,7 +150,6 @@ namespace SistemaOnline.Controllers
                 Value = c.ID_Cliente.ToString(),
                 Text = c.Nombre + " " + c.Apellidos
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona un cliente" });
             return lista;
         }
 
@@ -131,7 +160,6 @@ namespace SistemaOnline.Controllers
                 Value = m.ID_Mesa.ToString(),
                 Text = "Mesa " + m.Numero_Mesa
             }).ToListAsync();
-            lista.Insert(0, new SelectListItem { Value = "", Text = "Selecciona una mesa" });
             return lista;
         }
     }

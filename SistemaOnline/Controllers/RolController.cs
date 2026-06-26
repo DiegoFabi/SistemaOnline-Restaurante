@@ -32,6 +32,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(RolVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Rol rol = new Rol
             {
                 Nombre_Rol = modelo.Nombre_Rol
@@ -54,6 +59,11 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(RolVM modelo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
             Rol rol = await _context.Roles.FirstAsync(r => r.ID_Rol == modelo.ID_Rol);
             rol.Nombre_Rol = modelo.Nombre_Rol;
             _context.Roles.Update(rol);

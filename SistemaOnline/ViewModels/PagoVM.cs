@@ -10,6 +10,7 @@ namespace SistemaOnline.ViewModels
         [DataType(DataType.DateTime)]
         public DateTime Fecha_Hora_Pago { get; set; }
 
+        [Range(1, double.MaxValue, ErrorMessage = "El monto debe ser mayor o igual a 1.")]
         public decimal Monto { get; set; }
 
         [Required, MaxLength(50)]

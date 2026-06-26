@@ -7,13 +7,16 @@ namespace SistemaOnline.ViewModels
     {
         public int ID_Inventario { get; set; }
 
+        [Range(0, double.MaxValue, ErrorMessage = "La cantidad en stock no puede ser negativa.")]
         public decimal Cantidad_Stock { get; set; }
 
-        [DataType(DataType.Date)]
+        [Required, DataType(DataType.Date)]
         public DateTime Fecha_Ultima_Reposicion { get; set; }
 
+        [Range(0, double.MaxValue, ErrorMessage = "El stock mínimo no puede ser negativo.")]
         public decimal Stock_Minimo { get; set; }
 
+        [Range(0, double.MaxValue, ErrorMessage = "El stock máximo no puede ser negativo.")]
         public decimal Stock_Maximo { get; set; }
 
         public int ID_Ingrediente { get; set; }

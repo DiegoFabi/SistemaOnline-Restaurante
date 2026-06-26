@@ -19,8 +19,10 @@ namespace SistemaOnline.ViewModels
         [DataType(DataType.Date)]
         public DateTime Fecha_Emision { get; set; }
 
+        [Range(1, double.MaxValue, ErrorMessage = "El subtotal debe ser mayor o igual a 1.")]
         public decimal Sub_Total { get; set; }
 
+        [Range(1, double.MaxValue, ErrorMessage = "El monto total debe ser mayor o igual a 1.")]
         public decimal Monto_Total { get; set; }
 
         public decimal IGV { get; set; }
@@ -34,8 +36,9 @@ namespace SistemaOnline.ViewModels
         [Required, MaxLength(200)]
         public string Razon_Social { get; set; }
 
-        [Required, MaxLength(11)]
-        public string RUC { get; set; }
+        [MaxLength(11)]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "El RUC solo puede contener números.")]
+        public string? RUC { get; set; }
 
         [Required, MaxLength(200)]
         public string Direccion_Fiscal { get; set; }

@@ -6,21 +6,29 @@ namespace SistemaOnline.ViewModels
     {
         public int ID_Cliente { get; set; }
 
+        [Required, MaxLength(50)]
         public string Nombre { get; set; }
 
+        [Required, MaxLength(50)]
         public string Apellidos { get; set; }
 
-        public string Telefono { get; set; }
+        [MaxLength(9)]
+        [RegularExpression(@"^[0-9+\-() ]*$", ErrorMessage = "El teléfono solo puede contener números y los símbolos + - ( ).")]
+        public string? Telefono { get; set; }
 
+        [Required, MaxLength(100), EmailAddress]
         public string Email { get; set; }
 
-        [DataType(DataType.Date)]
+        [Required, DataType(DataType.Date)]
         public DateTime Fecha_Nacimiento { get; set; }
 
+        [Required, MaxLength(150)]
         public string Direccion { get; set; }
 
+        [Required, MaxLength(8)]
         public string DNI { get; set; }
 
+        [Required, MaxLength(11)]
         public string RUC { get; set; }
     }
 }

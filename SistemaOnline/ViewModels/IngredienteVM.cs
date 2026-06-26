@@ -7,12 +7,16 @@ namespace SistemaOnline.ViewModels
     {
         public int ID_Ingrediente { get; set; }
 
+        [Required, MaxLength(20)]
         public string Nombre_Ingrediente { get; set; }
 
+        [Required, MaxLength(20)]
         public string Unidad_Medida { get; set; }
 
+        [Required, MaxLength(100)]
         public string Descripcion { get; set; }
 
+        [Range(1, double.MaxValue, ErrorMessage = "El costo unitario debe ser mayor o igual a 1.")]
         public decimal Costo_Unitario { get; set; }
 
         public bool Estado { get; set; }

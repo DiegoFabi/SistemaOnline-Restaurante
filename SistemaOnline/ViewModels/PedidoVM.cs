@@ -16,10 +16,10 @@ namespace SistemaOnline.ViewModels
         [Required, MaxLength(255)]
         public string Detalle_Pedido { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "El subtotal no puede ser negativo.")]
+        [Range(1, double.MaxValue, ErrorMessage = "El subtotal debe ser mayor o igual a 1.")]
         public decimal SubTotal { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "El total no puede ser negativo.")]
+        [Range(1, double.MaxValue, ErrorMessage = "El total debe ser mayor o igual a 1.")]
         public decimal Total { get; set; }
 
         [Required(ErrorMessage = "Selecciona un empleado.")]

@@ -3,6 +3,8 @@
     Layout = "_DashboardLayout";
     ViewData["Title"] = "Monitor de Pedidos";
     ViewBag.Active = "pedidos";
+    ViewData["Controlador"] = "Administrador";
+    ViewData["AccionLista"] = "Pedidos";
 
     string ColorEstado(string estado) => estado switch
     {
@@ -70,3 +72,4 @@
         </div>
     }
 </div>
+<partial name="_Pagination" />

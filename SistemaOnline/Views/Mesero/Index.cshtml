@@ -3,6 +3,8 @@
     Layout = "_DashboardLayout";
     ViewData["Title"] = "Mapa de Mesas";
     ViewBag.Active = "dashboard";
+    ViewData["Controlador"] = "Mesero";
+    ViewData["AccionLista"] = "Index";
 }
 
 <div class="mb-lg">
@@ -56,13 +58,15 @@
     @foreach (var mesa in Model.Mesas)
     {
         bool libre = mesa.Estado == "Disponible";
-        <div class="@(libre
+        <a asp-controller="Mesero" asp-action="Mesa" asp-route-id="@mesa.ID_Mesa"
+           class="@(libre
                          ? "bg-secondary-container border-secondary"
-                         : "bg-primary-container border-primary") aspect-square rounded-xl shadow-sm border-2 flex flex-col items-center justify-center p-md transition-all hover:scale-105">
+                         : "bg-primary-container border-primary") aspect-square rounded-xl shadow-sm border-2 flex flex-col items-center justify-center p-md transition-all hover:scale-105 cursor-pointer">
             <span class="material-symbols-outlined text-3xl @(libre ? "text-on-secondary-container" : "text-on-primary")" data-icon="table_restaurant">table_restaurant</span>
             <p class="font-bold text-headline-lg-mobile mt-sm @(libre ? "text-on-secondary-container" : "text-on-primary")">@mesa.Numero_Mesa</p>
             <p class="text-label-md @(libre ? "text-on-secondary-container" : "text-on-primary")">@mesa.Estado</p>
             <p class="text-label-md opacity-80 @(libre ? "text-on-secondary-container" : "text-on-primary")">Cap. @mesa.Capacidad — @mesa.Ubicacion</p>
-        </div>
+        </a>
     }
 </div>
+<partial name="_Pagination" />

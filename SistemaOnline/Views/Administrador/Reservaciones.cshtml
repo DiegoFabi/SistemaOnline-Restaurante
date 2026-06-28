@@ -3,6 +3,8 @@
     Layout = "_DashboardLayout";
     ViewData["Title"] = "Reservaciones";
     ViewBag.Active = "reservaciones";
+    ViewData["Controlador"] = "Administrador";
+    ViewData["AccionLista"] = "Reservaciones";
 }
 
 <div class="mb-lg">
@@ -41,3 +43,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

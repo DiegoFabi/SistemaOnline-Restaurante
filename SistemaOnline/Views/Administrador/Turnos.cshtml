@@ -3,6 +3,8 @@
     Layout = "_DashboardLayout";
     ViewData["Title"] = "Gestión de Turnos";
     ViewBag.Active = "turnos";
+    ViewData["Controlador"] = "Administrador";
+    ViewData["AccionLista"] = "Turnos";
 }
 
 <div class="mb-lg">
@@ -65,3 +67,4 @@
         </div>
     }
 </div>
+<partial name="_Pagination" />

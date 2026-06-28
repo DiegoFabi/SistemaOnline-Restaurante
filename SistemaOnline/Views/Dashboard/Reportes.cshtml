@@ -3,11 +3,13 @@
     Layout = "_DashboardLayout";
     ViewData["Title"] = "Reportes";
     ViewBag.Active = "reportes";
+    ViewData["Controlador"] = "Dashboard";
+    ViewData["AccionLista"] = "Reportes";
 }
 
 <div class="mb-lg">
     <h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Reporte de Ventas</h2>
-    <p class="text-on-surface-variant">Últimos 50 pedidos registrados.</p>
+    <p class="text-on-surface-variant">Historial completo de pedidos registrados.</p>
 </div>
 
 <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden">
@@ -39,3 +41,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

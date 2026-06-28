@@ -3,6 +3,8 @@
     Layout = "_DashboardLayout";
     ViewData["Title"] = "Inventario";
     ViewBag.Active = "inventario";
+    ViewData["Controlador"] = "Dashboard";
+    ViewData["AccionLista"] = "Inventario";
 }
 
 <div class="mb-lg">
@@ -49,3 +51,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

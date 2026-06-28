@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaOnline.Data;
+using SistemaOnline.Services;
 using SistemaOnline.ViewModels;
 
 namespace SistemaOnline.Controllers
@@ -15,15 +16,16 @@ namespace SistemaOnline.Controllers
             _dbcontext = dbContext;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var mesas = await _dbcontext.Mesas.OrderBy(m => m.Numero_Mesa).ToListAsync();
+            var query = _dbcontext.Mesas.OrderBy(m => m.Numero_Mesa);
+            var resultado = await query.ToPagedListAsync(page, pageSize);
 
             var vm = new MeseroDashboardVM
             {
-                Mesas = mesas,
-                MesasLibres = mesas.Count(m => m.Estado == "Disponible"),
-                MesasOcupadas = mesas.Count(m => m.Estado == "Ocupada"),
+                Mesas = resultado.Items,
+                MesasLibres = await _dbcontext.Mesas.CountAsync(m => m.Estado == "Disponible"),
+                MesasOcupadas = await _dbcontext.Mesas.CountAsync(m => m.Estado == "Ocupada"),
                 PedidosActivos = await _dbcontext.Pedidos.CountAsync(p => p.Estado_Pedido != "Completado" && p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
             };
 
@@ -32,28 +34,60 @@ namespace SistemaOnline.Controllers
                 .Where(p => p.Estado_Pedido == "Listo")
                 .ToListAsync();
 
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
             return View(vm);
         }
 
-        public async Task<IActionResult> Pedidos()
+        public async Task<IActionResult> Mesa(int id)
         {
+            var mesa = await _dbcontext.Mesas.FirstOrDefaultAsync(m => m.ID_Mesa == id);
+            if (mesa == null) return NotFound();
+
             var pedidos = await _dbcontext.Pedidos
+                .Include(p => p.Empleado)
+                .Include(p => p.Pedido_Detalles)
+                    .ThenInclude(pd => pd.Producto)
+                .Where(p => p.ID_Mesa == id && p.Estado_Pedido != "Completado" && p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
+                .OrderByDescending(p => p.ID_Pedido)
+                .ToListAsync();
+
+            ViewBag.Mesa = mesa;
+            return View(pedidos);
+        }
+
+        public async Task<IActionResult> Pedidos(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
+        {
+            var query = _dbcontext.Pedidos
                 .Include(p => p.Mesa_Restaurante)
                 .Include(p => p.Pedido_Detalles)
                     .ThenInclude(pd => pd.Producto)
                 .Where(p => p.Estado_Pedido != "Completado" && p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
-                .OrderByDescending(p => p.ID_Pedido)
-                .ToListAsync();
-            return View(pedidos);
+                .OrderByDescending(p => p.ID_Pedido);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
-        public async Task<IActionResult> Notificaciones()
+        public async Task<IActionResult> Notificaciones(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var pedidosListos = await _dbcontext.Pedidos
+            var query = _dbcontext.Pedidos
                 .Include(p => p.Mesa_Restaurante)
                 .Where(p => p.Estado_Pedido == "Listo")
-                .ToListAsync();
-            return View(pedidosListos);
+                .OrderByDescending(p => p.ID_Pedido);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
     }
 }

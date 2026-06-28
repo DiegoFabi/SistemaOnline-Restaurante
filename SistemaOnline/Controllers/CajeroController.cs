@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaOnline.Data;
+using SistemaOnline.Services;
 using SistemaOnline.ViewModels;
 
 namespace SistemaOnline.Controllers
@@ -56,35 +57,49 @@ namespace SistemaOnline.Controllers
             return View(vm);
         }
 
-        public async Task<IActionResult> Facturacion()
+        public async Task<IActionResult> Facturacion(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var pedidos = await _dbcontext.Pedidos
+            var query = _dbcontext.Pedidos
                 .Include(p => p.Mesa_Restaurante)
                 .Where(p => p.Estado_Pedido != "Cancelado")
-                .OrderByDescending(p => p.ID_Pedido)
-                .ToListAsync();
-            return View(pedidos);
+                .OrderByDescending(p => p.ID_Pedido);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
-        public async Task<IActionResult> Pagos()
+        public async Task<IActionResult> Pagos(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var pagos = await _dbcontext.Pagos
+            var query = _dbcontext.Pagos
                 .Include(pg => pg.Pedido)
-                .OrderByDescending(pg => pg.Fecha_Hora_Pago)
-                .ToListAsync();
-            return View(pagos);
+                .OrderByDescending(pg => pg.Fecha_Hora_Pago);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
-        public async Task<IActionResult> Clientes(string? buscar)
+        public async Task<IActionResult> Clientes(string? buscar, int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
             var query = _dbcontext.Clientes.AsQueryable();
             if (!string.IsNullOrWhiteSpace(buscar))
             {
                 query = query.Where(c => c.Nombre.Contains(buscar) || c.Apellidos.Contains(buscar) || c.DNI.Contains(buscar) || c.Email.Contains(buscar));
             }
-            var clientes = await query.OrderBy(c => c.Nombre).ToListAsync();
+            var resultado = await query.OrderBy(c => c.Nombre).ToPagedListAsync(page, pageSize);
             ViewBag.Buscar = buscar;
-            return View(clientes);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
     }
 }

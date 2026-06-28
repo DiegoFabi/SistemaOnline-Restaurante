@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaOnline.Data;
+using SistemaOnline.Services;
 using SistemaOnline.ViewModels;
 
 namespace SistemaOnline.Controllers
@@ -51,40 +52,57 @@ namespace SistemaOnline.Controllers
             return View(vm);
         }
 
-        public async Task<IActionResult> Reservaciones()
+        public async Task<IActionResult> Reservaciones(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var reservaciones = await _dbcontext.Reservaciones
+            var query = _dbcontext.Reservaciones
                 .Include(r => r.Cliente)
                 .Include(r => r.Mesa_Restaurante)
-                .OrderBy(r => r.Fecha_Hora)
-                .ToListAsync();
-            return View(reservaciones);
+                .OrderBy(r => r.Fecha_Hora);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
-        public async Task<IActionResult> Turnos()
+        public async Task<IActionResult> Turnos(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var turnos = await _dbcontext.Turnos
+            var query = _dbcontext.Turnos
                 .Include(t => t.Empleado_Turnos)
                     .ThenInclude(et => et.Empleado)
-                .ToListAsync();
-            return View(turnos);
+                .OrderBy(t => t.ID_Turno);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
-        public async Task<IActionResult> Pedidos()
+        public async Task<IActionResult> Pedidos(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var pedidos = await _dbcontext.Pedidos
+            var queryBase = _dbcontext.Pedidos
+                .Where(p => p.Estado_Pedido != "Completado" && p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado");
+
+            ViewBag.TotalPedidos = await queryBase.CountAsync();
+            ViewBag.MesasOcupadas = await queryBase.Select(p => p.ID_Mesa).Distinct().CountAsync();
+            ViewBag.Pendientes = await queryBase.CountAsync(p => p.Estado_Pedido == "Pendiente");
+            ViewBag.Servidos = await queryBase.CountAsync(p => p.Estado_Pedido == "Servido");
+
+            var query = queryBase
                 .Include(p => p.Mesa_Restaurante)
                 .Include(p => p.Empleado)
-                .Where(p => p.Estado_Pedido != "Completado" && p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
-                .OrderByDescending(p => p.ID_Pedido)
-                .ToListAsync();
+                .OrderByDescending(p => p.ID_Pedido);
 
-            ViewBag.TotalPedidos = pedidos.Count;
-            ViewBag.MesasOcupadas = pedidos.Select(p => p.ID_Mesa).Distinct().Count();
-            ViewBag.Pendientes = pedidos.Count(p => p.Estado_Pedido == "Pendiente");
-            ViewBag.Servidos = pedidos.Count(p => p.Estado_Pedido == "Servido");
-
-            return View(pedidos);
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
     }
 }

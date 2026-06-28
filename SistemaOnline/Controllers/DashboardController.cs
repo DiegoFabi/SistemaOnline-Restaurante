@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaOnline.Data;
+using SistemaOnline.Services;
 using SistemaOnline.ViewModels;
 
 namespace SistemaOnline.Controllers
@@ -100,25 +101,40 @@ namespace SistemaOnline.Controllers
             return View(vm);
         }
 
-        public async Task<IActionResult> Usuarios()
+        public async Task<IActionResult> Usuarios(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var usuarios = await _dbcontext.Usuarios.Include(u => u.Rol).ToListAsync();
-            return View(usuarios);
+            var query = _dbcontext.Usuarios.Include(u => u.Rol).OrderBy(u => u.ID_Usuario);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
-        public async Task<IActionResult> Inventario()
+        public async Task<IActionResult> Inventario(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var inventario = await _dbcontext.Inventarios.Include(i => i.Ingrediente).ToListAsync();
-            return View(inventario);
+            var query = _dbcontext.Inventarios.Include(i => i.Ingrediente).OrderBy(i => i.ID_Inventario);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
-        public async Task<IActionResult> Reportes()
+        public async Task<IActionResult> Reportes(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var pedidos = await _dbcontext.Pedidos
-                .OrderByDescending(p => p.Fecha)
-                .Take(50)
-                .ToListAsync();
-            return View(pedidos);
+            var query = _dbcontext.Pedidos.OrderByDescending(p => p.Fecha);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
     }
 }

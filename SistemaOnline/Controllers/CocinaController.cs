@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaOnline.Data;
+using SistemaOnline.Services;
 using SistemaOnline.ViewModels;
 
 namespace SistemaOnline.Controllers
@@ -48,26 +49,35 @@ namespace SistemaOnline.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Ingredientes()
+        public async Task<IActionResult> Ingredientes(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var inventario = await _dbcontext.Inventarios
+            var query = _dbcontext.Inventarios
                 .Include(i => i.Ingrediente)
                     .ThenInclude(ing => ing.Categoria_Ingrediente)
-                .OrderBy(i => i.Ingrediente.Nombre_Ingrediente)
-                .ToListAsync();
-            return View(inventario);
+                .OrderBy(i => i.Ingrediente.Nombre_Ingrediente);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
-        public async Task<IActionResult> Detalle()
+        public async Task<IActionResult> Detalle(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            var pedidos = await _dbcontext.Pedidos
+            var query = _dbcontext.Pedidos
                 .Include(p => p.Mesa_Restaurante)
                 .Include(p => p.Pedido_Detalles)
                     .ThenInclude(pd => pd.Producto)
-                .OrderByDescending(p => p.ID_Pedido)
-                .Take(20)
-                .ToListAsync();
-            return View(pedidos);
+                .OrderByDescending(p => p.ID_Pedido);
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
     }
 }

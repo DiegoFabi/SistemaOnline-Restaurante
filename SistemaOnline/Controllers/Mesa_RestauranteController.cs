@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,18 +16,23 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Mesa_Restaurante> lista = await _context.Mesas.ToListAsync();
-            List<Mesa_RestauranteVM> modelo = lista.Select(m => new Mesa_RestauranteVM
+            var query = _context.Mesas.OrderBy(m => m.ID_Mesa).Select(m => new Mesa_RestauranteVM
             {
                 ID_Mesa = m.ID_Mesa,
                 Numero_Mesa = m.Numero_Mesa,
                 Capacidad = m.Capacidad,
                 Ubicacion = m.Ubicacion,
                 Estado = m.Estado
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

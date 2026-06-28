@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,9 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Comprobante_Pago> lista = await _context.Comprobantes_Pagos.Include(c => c.Pedido).ToListAsync();
-            List<Comprobante_PagoVM> modelo = lista.Select(c => new Comprobante_PagoVM
+            var query = _context.Comprobantes_Pagos.Include(c => c.Pedido).OrderBy(c => c.ID_Comprobante).Select(c => new Comprobante_PagoVM
             {
                 ID_Comprobante = c.ID_Comprobante,
                 Tipo_Comprobante = c.Tipo_Comprobante,
@@ -36,8 +36,14 @@ namespace SistemaOnline.Controllers
                 Direccion_Fiscal = c.Direccion_Fiscal,
                 ID_Pedido = c.ID_Pedido,
                 PedidoInfo = $"Pedido #{c.Pedido.ID_Pedido} - {c.Pedido.Estado_Pedido}"
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

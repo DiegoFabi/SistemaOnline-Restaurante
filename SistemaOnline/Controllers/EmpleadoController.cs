@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +17,14 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Empleado> lista = await _context.Empleados
-           .Include(e => e.Usuario)
-           .Include(e => e.Empleado_Turnos)
-               .ThenInclude(et => et.Turno)
-           .ToListAsync();
-
-            ViewBag.TurnosEmpleados = lista.ToDictionary(
-                e => e.ID_Empleado,
-                e => e.Empleado_Turnos.FirstOrDefault()?.Turno?.Nombre_Turno ?? "Sin asignar"
-            );
-
-            List<EmpleadoVM> modelo = lista.Select(e => new EmpleadoVM
+            var query = _context.Empleados
+            .Include(e => e.Usuario)
+            .Include(e => e.Empleado_Turnos)
+                .ThenInclude(et => et.Turno)
+            .OrderBy(e => e.ID_Empleado)
+            .Select(e => new EmpleadoVM
             {
                 ID_Empleado = e.ID_Empleado,
                 Nombre = e.Nombre,
@@ -41,8 +36,25 @@ namespace SistemaOnline.Controllers
                 DNI = e.DNI,
                 ID_Usuario = e.ID_Usuario,
                 UsuarioNombre = e.Usuario != null ? e.Usuario.Nombre_Usuario : "-"
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+
+            var idsPagina = resultado.Items.Select(e => e.ID_Empleado).ToList();
+            ViewBag.TurnosEmpleados = await _context.Empleados
+                .Where(e => idsPagina.Contains(e.ID_Empleado))
+                .Include(e => e.Empleado_Turnos)
+                    .ThenInclude(et => et.Turno)
+                .ToDictionaryAsync(
+                    e => e.ID_Empleado,
+                    e => e.Empleado_Turnos.FirstOrDefault()?.Turno?.Nombre_Turno ?? "Sin asignar"
+                );
+
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

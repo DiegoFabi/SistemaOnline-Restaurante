@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,26 +17,32 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Pedido> lista = await _context.Pedidos
+            var query = _context.Pedidos
                 .Include(p => p.Empleado)
                 .Include(p => p.Mesa_Restaurante)
-                .ToListAsync();
-            List<PedidoVM> modelo = lista.Select(p => new PedidoVM
-            {
-                ID_Pedido = p.ID_Pedido,
-                Fecha = p.Fecha,
-                Estado_Pedido = p.Estado_Pedido,
-                Detalle_Pedido = p.Detalle_Pedido,
-                SubTotal = p.SubTotal,
-                Total = p.Total,
-                ID_Empleado = p.ID_Empleado,
-                ID_Mesa = p.ID_Mesa,
-                EmpleadoNombre = $"{p.Empleado.Nombre} {p.Empleado.Apellidos}",
-                MesaNumero = p.Mesa_Restaurante.Numero_Mesa.ToString()
-            }).ToList();
-            return View(modelo);
+                .OrderBy(p => p.ID_Pedido)
+                .Select(p => new PedidoVM
+                {
+                    ID_Pedido = p.ID_Pedido,
+                    Fecha = p.Fecha,
+                    Estado_Pedido = p.Estado_Pedido,
+                    Detalle_Pedido = p.Detalle_Pedido,
+                    SubTotal = p.SubTotal,
+                    Total = p.Total,
+                    ID_Empleado = p.ID_Empleado,
+                    ID_Mesa = p.ID_Mesa,
+                    EmpleadoNombre = $"{p.Empleado.Nombre} {p.Empleado.Apellidos}",
+                    MesaNumero = p.Mesa_Restaurante.Numero_Mesa.ToString()
+                });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]
@@ -54,6 +61,7 @@ namespace SistemaOnline.Controllers
                 MesasDisponibles = await ObtenerMesas(),
                 CategoriasProductos = await ObtenerCategoriasProductos()
             };
+            ViewBag.MesasActivas = await ObtenerMesasConPedidoActivo();
             return View(modelo);
         }
 
@@ -70,6 +78,7 @@ namespace SistemaOnline.Controllers
                 modelo.EmpleadosDisponibles = await ObtenerEmpleados();
                 modelo.MesasDisponibles = await ObtenerMesas();
                 modelo.CategoriasProductos = await ObtenerCategoriasProductos();
+                ViewBag.MesasActivas = await ObtenerMesasConPedidoActivo();
                 return View(modelo);
             }
 
@@ -197,6 +206,15 @@ namespace SistemaOnline.Controllers
             _context.Pedidos.Remove(pedido);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Lista));
+        }
+
+        private async Task<List<int>> ObtenerMesasConPedidoActivo()
+        {
+            return await _context.Pedidos
+                .Where(p => p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
+                .Select(p => p.ID_Mesa)
+                .Distinct()
+                .ToListAsync();
         }
 
         private async Task<List<SelectListItem>> ObtenerEmpleados()

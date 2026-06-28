@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,26 +17,32 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Reservacion> lista = await _context.Reservaciones
+            var query = _context.Reservaciones
                 .Include(r => r.Cliente)
                 .Include(r => r.Mesa_Restaurante)
-                .ToListAsync();
-            List<ReservacionVM> modelo = lista.Select(r => new ReservacionVM
-            {
-                ID_Reservacion = r.ID_Reservacion,
-                Fecha_Hora = r.Fecha_Hora,
-                Numero_Personas = r.Numero_Personas,
-                Ocasion_Especial = r.Ocasion_Especial,
-                Estado_Reservacion = r.Estado_Reservacion,
-                Notas = r.Notas,
-                ID_Cliente = r.ID_Cliente,
-                ID_Mesa = r.ID_Mesa,
-                ClienteNombre = $"{r.Cliente.Nombre} {r.Cliente.Apellidos}",
-                MesaNumero = "Mesa " + r.Mesa_Restaurante.Numero_Mesa
-            }).ToList();
-            return View(modelo);
+                .OrderBy(r => r.ID_Reservacion)
+                .Select(r => new ReservacionVM
+                {
+                    ID_Reservacion = r.ID_Reservacion,
+                    Fecha_Hora = r.Fecha_Hora,
+                    Numero_Personas = r.Numero_Personas,
+                    Ocasion_Especial = r.Ocasion_Especial,
+                    Estado_Reservacion = r.Estado_Reservacion,
+                    Notas = r.Notas,
+                    ID_Cliente = r.ID_Cliente,
+                    ID_Mesa = r.ID_Mesa,
+                    ClienteNombre = $"{r.Cliente.Nombre} {r.Cliente.Apellidos}",
+                    MesaNumero = "Mesa " + r.Mesa_Restaurante.Numero_Mesa
+                });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

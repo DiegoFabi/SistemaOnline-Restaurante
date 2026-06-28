@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,18 +17,23 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Producto_Categoria> lista = await _context.Productos_Categorias.Include(pc => pc.Carta).ToListAsync();
-            List<Producto_CategoriaVM> modelo = lista.Select(pc => new Producto_CategoriaVM
+            var query = _context.Productos_Categorias.Include(pc => pc.Carta).OrderBy(pc => pc.ID_Categoria).Select(pc => new Producto_CategoriaVM
             {
                 ID_Categoria = pc.ID_Categoria,
                 Nombre_Categoria = pc.Nombre_Categoria,
                 Descripcion = pc.Descripcion,
                 ID_Carta = pc.ID_Carta,
                 CartaNombre = pc.Carta.Nombre_Carta
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

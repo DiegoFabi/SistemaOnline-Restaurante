@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,9 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Inventario> lista = await _context.Inventarios.Include(i => i.Ingrediente).ToListAsync();
-            List<InventarioVM> modelo = lista.Select(i => new InventarioVM
+            var query = _context.Inventarios.Include(i => i.Ingrediente).OrderBy(i => i.ID_Inventario).Select(i => new InventarioVM
             {
                 ID_Inventario = i.ID_Inventario,
                 Cantidad_Stock = i.Cantidad_Stock,
@@ -28,8 +28,14 @@ namespace SistemaOnline.Controllers
                 Stock_Maximo = i.Stock_Maximo,
                 ID_Ingrediente = i.ID_Ingrediente,
                 IngredienteNombre = i.Ingrediente.Nombre_Ingrediente
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,9 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Pago> lista = await _context.Pagos.Include(p => p.Pedido).ToListAsync();
-            List<PagoVM> modelo = lista.Select(p => new PagoVM
+            var query = _context.Pagos.Include(p => p.Pedido).OrderBy(p => p.ID_Pago).Select(p => new PagoVM
             {
                 ID_Pago = p.ID_Pago,
                 Fecha_Hora_Pago = p.Fecha_Hora_Pago,
@@ -29,8 +29,14 @@ namespace SistemaOnline.Controllers
                 Estado = p.Estado,
                 ID_Pedido = p.ID_Pedido,
                 PedidoInfo = $"Pedido #{p.Pedido.ID_Pedido} - {p.Pedido.Estado_Pedido}"
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

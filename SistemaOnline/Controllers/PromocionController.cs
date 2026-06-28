@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +16,9 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Promocion> lista = await _context.Promociones.ToListAsync();
-            List<PromocionVM> modelo = lista.Select(p => new PromocionVM
+            var query = _context.Promociones.OrderBy(p => p.ID_Promocion).Select(p => new PromocionVM
             {
                 ID_Promocion = p.ID_Promocion,
                 Nombre = p.Nombre,
@@ -27,8 +27,14 @@ namespace SistemaOnline.Controllers
                 Fecha_Inicio = p.Fecha_Inicio,
                 Fecha_Fin = p.Fecha_Fin,
                 Estado = p.Estado
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

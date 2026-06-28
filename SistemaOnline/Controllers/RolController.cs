@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,15 +15,20 @@ namespace SistemaOnline.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Rol> lista = await _context.Roles.ToListAsync();
-            List<RolVM> modelo = lista.Select(r => new RolVM
+            var query = _context.Roles.OrderBy(r => r.ID_Rol).Select(r => new RolVM
             {
                 ID_Rol = r.ID_Rol,
                 Nombre_Rol = r.Nombre_Rol
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
         [HttpGet]
         public IActionResult Nuevo()

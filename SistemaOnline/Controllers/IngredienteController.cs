@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,9 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Ingrediente> lista = await _context.Ingredientes.Include(i => i.Categoria_Ingrediente).ToListAsync();
-            List<IngredienteVM> modelo = lista.Select(i => new IngredienteVM
+            var query = _context.Ingredientes.Include(i => i.Categoria_Ingrediente).OrderBy(i => i.ID_Ingrediente).Select(i => new IngredienteVM
             {
                 ID_Ingrediente = i.ID_Ingrediente,
                 Nombre_Ingrediente = i.Nombre_Ingrediente,
@@ -29,8 +29,14 @@ namespace SistemaOnline.Controllers
                 Estado = i.Estado,
                 ID_Cat_Ingrediente = i.ID_Cat_Ingrediente,
                 CategoriaNombre = i.Categoria_Ingrediente.Nombre_Categoria
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
 
         [HttpGet]

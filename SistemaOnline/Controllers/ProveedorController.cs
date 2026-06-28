@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +15,9 @@ namespace SistemaOnline.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Proveedor> lista = await _context.Proveedores.ToListAsync();
-            List<ProveedorVM> modelo = lista.Select(p => new ProveedorVM
+            var query = _context.Proveedores.OrderBy(p => p.ID_Proveedor).Select(p => new ProveedorVM
             {
                 ID_Proveedor = p.ID_Proveedor,
                 Nombre_Empresa = p.Nombre_Empresa,
@@ -27,8 +27,14 @@ namespace SistemaOnline.Controllers
                 Direccion = p.Direccion,
                 Tipo_Suministro = p.Tipo_Suministro,
                 Estado = p.Estado
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
         [HttpGet]
         public IActionResult Nuevo()

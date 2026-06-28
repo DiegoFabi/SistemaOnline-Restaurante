@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,18 +15,23 @@ namespace SistemaOnline.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Turno> lista = await _context.Turnos.ToListAsync();
-            List<TurnoVM> modelo = lista.Select(t => new TurnoVM
+            var query = _context.Turnos.OrderBy(t => t.ID_Turno).Select(t => new TurnoVM
             {
                 ID_Turno = t.ID_Turno,
                 Nombre_Turno = t.Nombre_Turno,
                 Hora_Inicio = t.Hora_Inicio,
                 Hora_Fin = t.Hora_Fin,
                 Dias_Semana = t.Dias_Semana
-            }).ToList();
-            return View(modelo);
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
         [HttpGet]
         public IActionResult Nuevo()

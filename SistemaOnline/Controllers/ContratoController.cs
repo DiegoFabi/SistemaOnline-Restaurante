@@ -1,6 +1,7 @@
 using SistemaOnline.Data;
 using SistemaOnline.Models;
 using SistemaOnline.ViewModels;
+using SistemaOnline.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,9 @@ namespace SistemaOnline.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IActionResult> Lista()
+        public async Task<IActionResult> Lista(int page = 1, int pageSize = PaginationExtensions.DefaultPageSize)
         {
-            List<Contrato> lista = await _context.Contratos.Include(c => c.Empleado).Include(c => c.Proveedor).ToListAsync();
-            List<ContratoVM> modelo = lista.Select(c => new ContratoVM
+            var query = _context.Contratos.Include(c => c.Empleado).Include(c => c.Proveedor).OrderBy(c => c.ID_Contrato).Select(c => new ContratoVM
             {
                 ID_Contrato = c.ID_Contrato,
                 Fecha_Inicio = c.Fecha_Inicio,
@@ -26,12 +26,19 @@ namespace SistemaOnline.Controllers
                 Tipo_Contrato = c.Tipo_Contrato,
                 Salario = c.Salario,
                 Clausula = c.Clausula,
+                TipoParticipante = c.ID_Empleado != null ? "Empleado" : "Proveedor",
                 ID_Empleado = c.ID_Empleado,
                 ID_Proveedor = c.ID_Proveedor,
-                EmpleadoNombre = $"{c.Empleado.Nombre} {c.Empleado.Apellidos}",
-                ProveedorNombre = c.Proveedor.Nombre_Empresa
-            }).ToList();
-            return View(modelo);
+                EmpleadoNombre = c.Empleado != null ? $"{c.Empleado.Nombre} {c.Empleado.Apellidos}" : null,
+                ProveedorNombre = c.Proveedor != null ? c.Proveedor.Nombre_Empresa : null
+            });
+
+            var resultado = await query.ToPagedListAsync(page, pageSize);
+            ViewBag.Page = resultado.Page;
+            ViewBag.PageSize = resultado.PageSize;
+            ViewBag.TotalPages = resultado.TotalPages;
+            ViewBag.TotalCount = resultado.TotalCount;
+            return View(resultado.Items);
         }
         [HttpGet]
         public async Task<IActionResult> Nuevo()
@@ -53,10 +60,21 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(ContratoVM modelo)
         {
-            if (!await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
-                ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
-            if (!await _context.Proveedores.AnyAsync(p => p.ID_Proveedor == modelo.ID_Proveedor))
-                ModelState.AddModelError(nameof(modelo.ID_Proveedor), "Selecciona un proveedor válido.");
+            ModelState.Remove(nameof(modelo.ID_Empleado));
+            ModelState.Remove(nameof(modelo.ID_Proveedor));
+
+            if (modelo.TipoParticipante == "Empleado")
+            {
+                modelo.ID_Proveedor = null;
+                if (modelo.ID_Empleado == null || !await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
+                    ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
+            }
+            else
+            {
+                modelo.ID_Empleado = null;
+                if (modelo.ID_Proveedor == null || !await _context.Proveedores.AnyAsync(p => p.ID_Proveedor == modelo.ID_Proveedor))
+                    ModelState.AddModelError(nameof(modelo.ID_Proveedor), "Selecciona un proveedor válido.");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -93,6 +111,7 @@ namespace SistemaOnline.Controllers
                 Clausula = contrato.Clausula,
                 ID_Empleado = contrato.ID_Empleado,
                 ID_Proveedor = contrato.ID_Proveedor,
+                TipoParticipante = contrato.ID_Empleado != null ? "Empleado" : "Proveedor",
                 EmpleadosDisponibles = await ObtenerEmpleados(),
                 ProveedoresDisponibles = await ObtenerProveedores()
             };
@@ -101,10 +120,21 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(ContratoVM modelo)
         {
-            if (!await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
-                ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
-            if (!await _context.Proveedores.AnyAsync(p => p.ID_Proveedor == modelo.ID_Proveedor))
-                ModelState.AddModelError(nameof(modelo.ID_Proveedor), "Selecciona un proveedor válido.");
+            ModelState.Remove(nameof(modelo.ID_Empleado));
+            ModelState.Remove(nameof(modelo.ID_Proveedor));
+
+            if (modelo.TipoParticipante == "Empleado")
+            {
+                modelo.ID_Proveedor = null;
+                if (modelo.ID_Empleado == null || !await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
+                    ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
+            }
+            else
+            {
+                modelo.ID_Empleado = null;
+                if (modelo.ID_Proveedor == null || !await _context.Proveedores.AnyAsync(p => p.ID_Proveedor == modelo.ID_Proveedor))
+                    ModelState.AddModelError(nameof(modelo.ID_Proveedor), "Selecciona un proveedor válido.");
+            }
 
             if (!ModelState.IsValid)
             {

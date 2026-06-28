@@ -24,9 +24,12 @@ namespace SistemaOnline.ViewModels
         [Required, MaxLength(500)]
         public string Clausula { get; set; }
 
-        public int ID_Empleado { get; set; }
+        [Required(ErrorMessage = "Selecciona el tipo de participante.")]
+        public string TipoParticipante { get; set; } = "Empleado";
 
-        public int ID_Proveedor { get; set; }
+        public int? ID_Empleado { get; set; }
+
+        public int? ID_Proveedor { get; set; }
 
         // Para mostrar en Lista
         public string? EmpleadoNombre { get; set; }

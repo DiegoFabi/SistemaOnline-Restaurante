@@ -26,11 +26,11 @@ namespace SistemaOnline.Models
         public string Clausula { get; set; }
 
         // fk y objeto de relacion para empleado
-        public int ID_Empleado { get; set; }
-        public Empleado Empleado { get; set; }
+        public int? ID_Empleado { get; set; }
+        public Empleado? Empleado { get; set; }
 
         // fk y objeto de relacion para proveedor
-        public int ID_Proveedor { get; set; }
-        public Proveedor Proveedor { get; set; }
+        public int? ID_Proveedor { get; set; }
+        public Proveedor? Proveedor { get; set; }
     }
 }

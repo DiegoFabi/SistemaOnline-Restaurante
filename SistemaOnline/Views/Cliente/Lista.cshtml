@@ -16,12 +16,12 @@
             <thead class="text-label-md text-on-surface-variant uppercase tracking-wider">
                 <tr>
                     <th class="pb-md font-bold">ID</th>
-                    <th class="pb-md font-bold">Nombre</th>
-                    <th class="pb-md font-bold">Apellidos</th>
+                    <th class="pb-md font-bold col-ellipsis">Nombre</th>
+                    <th class="pb-md font-bold col-ellipsis">Apellidos</th>
                     <th class="pb-md font-bold">Teléfono</th>
-                    <th class="pb-md font-bold">Email</th>
+                    <th class="pb-md font-bold col-ellipsis">Email</th>
                     <th class="pb-md font-bold">Fecha de Nacimiento</th>
-                    <th class="pb-md font-bold">Dirección</th>
+                    <th class="pb-md font-bold col-ellipsis">Dirección</th>
                     <th class="pb-md font-bold">DNI</th>
                     <th class="pb-md font-bold">RUC</th>
                     <th class="pb-md font-bold">Acciones</th>
@@ -32,12 +32,12 @@
                 {
                     <tr class="hover:bg-slate-50 transition-colors border-b border-outline-variant/10">
                         <td class="py-md">@item.ID_Cliente</td>
-                        <td class="py-md font-bold">@item.Nombre</td>
-                        <td class="py-md">@item.Apellidos</td>
+                        <td class="py-md font-bold col-ellipsis" title="@item.Nombre">@item.Nombre</td>
+                        <td class="py-md col-ellipsis" title="@item.Apellidos">@item.Apellidos</td>
                         <td class="py-md">@item.Telefono</td>
-                        <td class="py-md">@item.Email</td>
+                        <td class="py-md col-ellipsis" title="@item.Email">@item.Email</td>
                         <td class="py-md font-mono-data">@item.Fecha_Nacimiento.ToString("dd/MM/yyyy")</td>
-                        <td class="py-md">@item.Direccion</td>
+                        <td class="py-md col-ellipsis" title="@item.Direccion">@item.Direccion</td>
                         <td class="py-md font-mono-data">@item.DNI</td>
                         <td class="py-md font-mono-data">@item.RUC</td>
                         <td class="py-md">
@@ -56,3 +56,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

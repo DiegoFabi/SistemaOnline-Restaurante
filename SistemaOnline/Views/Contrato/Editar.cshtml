@@ -42,13 +42,27 @@
                 <span asp-validation-for="Clausula" class="text-error text-label-md"></span>
             </div>
             <div>
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Tipo de Participante</label>
+                <input type="hidden" asp-for="TipoParticipante" id="TipoParticipante" />
+                <div class="flex gap-sm">
+                    <button type="button" id="btnEmpleado" onclick="seleccionarTipoParticipante('Empleado')"
+                            class="flex-1 h-9 px-md rounded-lg border-2 font-label-md text-label-md font-semibold transition-all">
+                        Empleado
+                    </button>
+                    <button type="button" id="btnProveedor" onclick="seleccionarTipoParticipante('Proveedor')"
+                            class="flex-1 h-9 px-md rounded-lg border-2 font-label-md text-label-md font-semibold transition-all">
+                        Proveedor
+                    </button>
+                </div>
+            </div>
+            <div id="grupoEmpleado">
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Empleado">Empleado</label>
                 <select class="@Cls("ID_Empleado")" asp-for="ID_Empleado" asp-items="Model.EmpleadosDisponibles">
                     <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
                 <span asp-validation-for="ID_Empleado" class="text-error text-label-md"></span>
             </div>
-            <div>
+            <div id="grupoProveedor" class="hidden">
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Proveedor">Proveedor</label>
                 <select class="@Cls("ID_Proveedor")" asp-for="ID_Proveedor" asp-items="Model.ProveedoresDisponibles">
                     <option value="" disabled selected hidden>-- Seleccione --</option>
@@ -66,3 +80,39 @@
         </form>
     </div>
 </div>
+
+<script>
+    function seleccionarTipoParticipante(tipo) {
+        document.getElementById('TipoParticipante').value = tipo;
+
+        var btnEmpleado = document.getElementById('btnEmpleado');
+        var btnProveedor = document.getElementById('btnProveedor');
+        var grupoEmpleado = document.getElementById('grupoEmpleado');
+        var grupoProveedor = document.getElementById('grupoProveedor');
+        var selectEmpleado = grupoEmpleado.querySelector('select');
+        var selectProveedor = grupoProveedor.querySelector('select');
+
+        var esEmpleado = tipo === 'Empleado';
+
+        btnEmpleado.classList.toggle('bg-error', esEmpleado);
+        btnEmpleado.classList.toggle('text-white', esEmpleado);
+        btnEmpleado.classList.toggle('border-error', true);
+        btnEmpleado.classList.toggle('bg-white', !esEmpleado);
+        btnEmpleado.classList.toggle('text-error', !esEmpleado);
+
+        btnProveedor.classList.toggle('bg-error', !esEmpleado);
+        btnProveedor.classList.toggle('text-white', !esEmpleado);
+        btnProveedor.classList.toggle('border-error', true);
+        btnProveedor.classList.toggle('bg-white', esEmpleado);
+        btnProveedor.classList.toggle('text-error', esEmpleado);
+
+        grupoEmpleado.classList.toggle('hidden', !esEmpleado);
+        grupoProveedor.classList.toggle('hidden', esEmpleado);
+        selectEmpleado.disabled = !esEmpleado;
+        selectProveedor.disabled = esEmpleado;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        seleccionarTipoParticipante(document.getElementById('TipoParticipante').value || 'Empleado');
+    });
+</script>

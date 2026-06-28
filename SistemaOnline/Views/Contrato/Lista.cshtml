@@ -20,8 +20,8 @@
                     <th class="pb-md font-bold">Fecha Fin</th>
                     <th class="pb-md font-bold">Tipo Contrato</th>
                     <th class="pb-md font-bold">Salario</th>
-                    <th class="pb-md font-bold">Empleado</th>
-                    <th class="pb-md font-bold">Proveedor</th>
+                    <th class="pb-md font-bold col-ellipsis">Empleado</th>
+                    <th class="pb-md font-bold col-ellipsis">Proveedor</th>
                     <th class="pb-md font-bold">Acciones</th>
                 </tr>
             </thead>
@@ -34,8 +34,8 @@
                         <td class="py-md font-mono-data">@item.Fecha_Fin.ToString("dd/MM/yyyy")</td>
                         <td class="py-md font-bold">@item.Tipo_Contrato</td>
                         <td class="py-md font-mono-data">@item.Salario</td>
-                        <td class="py-md">@item.EmpleadoNombre</td>
-                        <td class="py-md">@item.ProveedorNombre</td>
+                        <td class="py-md col-ellipsis" title="@item.EmpleadoNombre">@item.EmpleadoNombre</td>
+                        <td class="py-md col-ellipsis" title="@item.ProveedorNombre">@item.ProveedorNombre</td>
                         <td class="py-md">
                             <div class="flex items-center gap-md">
                                 <a asp-controller="Contrato" asp-action="Editar" asp-route-id="@item.ID_Contrato" class="inline-flex items-center gap-xs text-tertiary hover:underline">
@@ -52,3 +52,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

@@ -20,7 +20,7 @@
                     <th class="pb-md font-bold">Última Reposición</th>
                     <th class="pb-md font-bold">Stock Mínimo</th>
                     <th class="pb-md font-bold">Stock Máximo</th>
-                    <th class="pb-md font-bold">Ingrediente</th>
+                    <th class="pb-md font-bold col-ellipsis">Ingrediente</th>
                     <th class="pb-md font-bold">Acciones</th>
                 </tr>
             </thead>
@@ -33,7 +33,7 @@
                         <td class="py-md font-mono-data">@item.Fecha_Ultima_Reposicion.ToString("dd/MM/yyyy")</td>
                         <td class="py-md font-mono-data">@item.Stock_Minimo</td>
                         <td class="py-md font-mono-data">@item.Stock_Maximo</td>
-                        <td class="py-md font-bold">@item.IngredienteNombre</td>
+                        <td class="py-md font-bold col-ellipsis" title="@item.IngredienteNombre">@item.IngredienteNombre</td>
                         <td class="py-md">
                             <div class="flex items-center gap-md">
                                 <a asp-controller="Inventario" asp-action="Editar" asp-route-id="@item.ID_Inventario" class="inline-flex items-center gap-xs text-tertiary hover:underline">
@@ -50,3 +50,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

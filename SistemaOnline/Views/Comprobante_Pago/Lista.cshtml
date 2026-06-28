@@ -22,7 +22,7 @@
                     <th class="pb-md font-bold">Fecha de Emisión</th>
                     <th class="pb-md font-bold">Monto Total</th>
                     <th class="pb-md font-bold">Estado</th>
-                    <th class="pb-md font-bold">Pedido</th>
+                    <th class="pb-md font-bold col-ellipsis">Pedido</th>
                     <th class="pb-md font-bold">Acciones</th>
                 </tr>
             </thead>
@@ -37,7 +37,7 @@
                         <td class="py-md font-mono-data">@item.Fecha_Emision.ToString("dd/MM/yyyy")</td>
                         <td class="py-md font-mono-data">@item.Monto_Total</td>
                         <td class="py-md">@item.Estado_Comprobante</td>
-                        <td class="py-md">@item.PedidoInfo</td>
+                        <td class="py-md col-ellipsis" title="@item.PedidoInfo">@item.PedidoInfo</td>
                         <td class="py-md">
                             <div class="flex items-center gap-md">
                                 <a asp-controller="Comprobante_Pago" asp-action="Editar" asp-route-id="@item.ID_Comprobante" class="inline-flex items-center gap-xs text-tertiary hover:underline">
@@ -54,3 +54,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

@@ -5,8 +5,9 @@
         : "flex items-center gap-md px-md py-sm transition-colors duration-150 active:scale-95 text-on-surface-variant hover:bg-surface-container-high";
 }
 <aside class="fixed left-0 top-0 h-full z-40 h-screen w-[280px] flex flex-col bg-surface-container-low shadow-sm" id="SideNavBar">
-    <div class="p-lg">
-        <h1 class="font-headline-lg text-headline-lg font-bold text-primary">Rancho Sagrado</h1>
+    <div class="p-lg flex flex-col items-center text-center">
+        <img src="~/images/logo-rancho-sagrado.png" alt="El Rancho Sagrado" class="w-20 h-20 object-contain mb-sm" />
+        <h1 class="font-title-md text-title-md font-bold text-primary leading-tight">El Rancho Sagrado</h1>
         <p class="text-on-surface-variant text-label-md">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</p>
     </div>
     <nav class="flex-1 px-sm space-y-base">

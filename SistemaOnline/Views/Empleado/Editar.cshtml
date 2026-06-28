@@ -62,17 +62,29 @@
                 <span asp-validation-for="DNI" class="text-error text-label-md"></span>
             </div>
             <div>
-                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Usuario">Cuenta de Usuario</label>
-                <select class="@Cls("ID_Usuario")" asp-for="ID_Usuario" asp-items="Model.UsuariosDisponibles">
+                <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs mb-1" for="ID_Usuario">
+                    Cuenta de Usuario
+                    <button type="button" onclick="desbloquearCampoCritico('ID_Usuario')" class="text-on-surface-variant hover:text-primary" title="Permitir edición excepcional de la cuenta de usuario">
+                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    </button>
+                </label>
+                <select class="@Cls("ID_Usuario") bg-surface-container-high cursor-not-allowed" asp-for="ID_Usuario" asp-items="Model.UsuariosDisponibles" id="ID_Usuario" disabled>
                     <option value="" disabled selected hidden>-- Seleccione --</option>
                 </select>
+                <input type="hidden" id="ID_Usuario_hidden" name="ID_Usuario" value="@Model.ID_Usuario" />
                 <span asp-validation-for="ID_Usuario" class="text-error text-label-md"></span>
             </div>
             <div>
-                <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Turno">Turno Asignado</label>
-                <select class="@Cls("ID_Turno")" asp-for="ID_Turno" asp-items="Model.TurnosDisponibles">
+                <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs mb-1" for="ID_Turno">
+                    Turno Asignado
+                    <button type="button" onclick="desbloquearCampoCritico('ID_Turno')" class="text-on-surface-variant hover:text-primary" title="Permitir edición excepcional del turno">
+                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    </button>
+                </label>
+                <select class="@Cls("ID_Turno") bg-surface-container-high cursor-not-allowed" asp-for="ID_Turno" asp-items="Model.TurnosDisponibles" id="ID_Turno" disabled>
                     <option value="">-- Seleccione un Turno --</option>
                 </select>
+                <input type="hidden" id="ID_Turno_hidden" name="ID_Turno" value="@Model.ID_Turno" />
                 <span asp-validation-for="ID_Turno" class="text-error text-label-md"></span>
             </div>
             <div class="flex items-center gap-sm pt-md">
@@ -86,3 +98,16 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function desbloquearCampoCritico(id) {
+            const select = document.getElementById(id);
+            const hidden = document.getElementById(id + '_hidden');
+            select.disabled = false;
+            select.classList.remove('cursor-not-allowed', 'bg-surface-container-high');
+            hidden.removeAttribute('name');
+            select.addEventListener('change', function () { hidden.value = select.value; });
+        }
+    </script>
+}

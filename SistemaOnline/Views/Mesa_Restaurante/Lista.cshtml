@@ -18,7 +18,7 @@
                     <th class="pb-md font-bold">ID</th>
                     <th class="pb-md font-bold">Número de Mesa</th>
                     <th class="pb-md font-bold">Capacidad</th>
-                    <th class="pb-md font-bold">Ubicación</th>
+                    <th class="pb-md font-bold col-ellipsis">Ubicación</th>
                     <th class="pb-md font-bold">Estado</th>
                     <th class="pb-md font-bold">Acciones</th>
                 </tr>
@@ -30,7 +30,7 @@
                         <td class="py-md font-mono-data">@item.ID_Mesa</td>
                         <td class="py-md font-bold">@item.Numero_Mesa</td>
                         <td class="py-md font-mono-data">@item.Capacidad</td>
-                        <td class="py-md">@item.Ubicacion</td>
+                        <td class="py-md col-ellipsis" title="@item.Ubicacion">@item.Ubicacion</td>
                         <td class="py-md">@item.Estado</td>
                         <td class="py-md">
                             <div class="flex items-center gap-md">
@@ -48,3 +48,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

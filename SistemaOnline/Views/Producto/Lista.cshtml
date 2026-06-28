@@ -16,13 +16,13 @@
             <thead class="text-label-md text-on-surface-variant uppercase tracking-wider">
                 <tr>
                     <th class="pb-md font-bold">ID</th>
-                    <th class="pb-md font-bold">Nombre del Plato</th>
-                    <th class="pb-md font-bold">Descripción</th>
+                    <th class="pb-md font-bold col-ellipsis">Nombre del Plato</th>
+                    <th class="pb-md font-bold col-ellipsis">Descripción</th>
                     <th class="pb-md font-bold">Tiempo de Preparación</th>
                     <th class="pb-md font-bold">Precio</th>
                     <th class="pb-md font-bold">Disponible</th>
-                    <th class="pb-md font-bold">Categoría</th>
-                    <th class="pb-md font-bold">Categoría (relación)</th>
+                    <th class="pb-md font-bold col-ellipsis">Categoría</th>
+                    <th class="pb-md font-bold col-ellipsis">Categoría (relación)</th>
                     <th class="pb-md font-bold">Acciones</th>
                 </tr>
             </thead>
@@ -31,13 +31,13 @@
                 {
                     <tr class="hover:bg-slate-50 transition-colors border-b border-outline-variant/10">
                         <td class="py-md font-mono-data">@item.ID_Producto</td>
-                        <td class="py-md font-bold">@item.Nombre_Plato</td>
-                        <td class="py-md">@item.Descripcion</td>
+                        <td class="py-md font-bold col-ellipsis" title="@item.Nombre_Plato">@item.Nombre_Plato</td>
+                        <td class="py-md col-ellipsis" title="@item.Descripcion">@item.Descripcion</td>
                         <td class="py-md font-mono-data">@item.Tiempo_Preparacion</td>
                         <td class="py-md font-mono-data">@item.Precio</td>
                         <td class="py-md">@(item.Disponibilidad ? "Sí" : "No")</td>
-                        <td class="py-md">@item.Categoria</td>
-                        <td class="py-md">@item.CategoriaRelNombre</td>
+                        <td class="py-md col-ellipsis" title="@item.Categoria">@item.Categoria</td>
+                        <td class="py-md col-ellipsis" title="@item.CategoriaRelNombre">@item.CategoriaRelNombre</td>
                         <td class="py-md">
                             <div class="flex items-center gap-md">
                                 <a asp-controller="Producto" asp-action="Editar" asp-route-id="@item.ID_Producto" class="inline-flex items-center gap-xs text-tertiary hover:underline">
@@ -54,3 +54,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pagination" />

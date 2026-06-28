@@ -32,7 +32,13 @@
             </div>
             <div>
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Dias_Semana">Días de la Semana</label>
-                <input class="@Cls("Dias_Semana")" type="text" required asp-for="Dias_Semana" placeholder="Lunes-Viernes" />
+                <select class="@Cls("Dias_Semana")" required asp-for="Dias_Semana">
+                    <option value="" disabled selected hidden>-- Seleccione --</option>
+                    <option value="Lunes-Viernes">Lunes-Viernes</option>
+                    <option value="Lunes-Sábado">Lunes-Sábado</option>
+                    <option value="Sábado-Domingo">Sábado-Domingo</option>
+                    <option value="Todos los días">Todos los días</option>
+                </select>
                 <span asp-validation-for="Dias_Semana" class="text-error text-label-md"></span>
             </div>
             <div class="flex items-center gap-sm pt-md">

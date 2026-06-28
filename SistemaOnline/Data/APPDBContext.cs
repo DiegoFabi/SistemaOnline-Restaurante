@@ -61,17 +61,19 @@ namespace SistemaOnline.Data
                 .HasForeignKey<Empleado>(e => e.ID_Usuario)
                 .IsRequired(false);
 
-            // Contrato hacia Empleado 
+            // Contrato hacia Empleado
             modelBuilder.Entity<Contrato>()
                 .HasOne(c => c.Empleado)
                 .WithMany(e => e.Contratos)
-                .HasForeignKey(c => c.ID_Empleado);
+                .HasForeignKey(c => c.ID_Empleado)
+                .IsRequired(false);
 
-            // Contrato hacia Proveedor 
+            // Contrato hacia Proveedor
             modelBuilder.Entity<Contrato>()
                 .HasOne(c => c.Proveedor)
                 .WithMany(p => p.Contratos)
-                .HasForeignKey(c => c.ID_Proveedor);
+                .HasForeignKey(c => c.ID_Proveedor)
+                .IsRequired(false);
 
             // Empleado_Turno (tabla intermedia M:M)
             modelBuilder.Entity<Empleado_Turno>()
@@ -210,6 +212,12 @@ namespace SistemaOnline.Data
                 new Categoria_Ingrediente { ID_Cat_Ingrediente = 8, Nombre_Categoria = "Condimentos y Especias" },
                 new Categoria_Ingrediente { ID_Cat_Ingrediente = 9, Nombre_Categoria = "Aceites y Grasas" },
                 new Categoria_Ingrediente { ID_Cat_Ingrediente = 10, Nombre_Categoria = "Harinas y Derivados" }
+                );
+
+            modelBuilder.Entity<Turno>().HasData(
+                new Turno { ID_Turno = 1, Nombre_Turno = "Mañana", Hora_Inicio = new TimeSpan(6, 0, 0), Hora_Fin = new TimeSpan(14, 0, 0), Dias_Semana = "Lunes-Viernes" },
+                new Turno { ID_Turno = 2, Nombre_Turno = "Tarde", Hora_Inicio = new TimeSpan(14, 0, 0), Hora_Fin = new TimeSpan(22, 0, 0), Dias_Semana = "Lunes-Viernes" },
+                new Turno { ID_Turno = 3, Nombre_Turno = "Noche", Hora_Inicio = new TimeSpan(22, 0, 0), Hora_Fin = new TimeSpan(6, 0, 0), Dias_Semana = "Lunes-Sábado" }
                 );
 
             modelBuilder.Entity<Carta>().HasData(

@@ -11,10 +11,10 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["SistemaOnline/SistemaOnline.csproj", "SistemaOnline/"]
-RUN dotnet restore "./SistemaOnline/SistemaOnline.csproj"
+COPY ["SistemaOnline.csproj", "./"]
+RUN dotnet restore "SistemaOnline.csproj"
 COPY . .
-WORKDIR "/src/SistemaOnline"
+WORKDIR "/src"
 RUN dotnet build "./SistemaOnline.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Esta fase se usa para publicar el proyecto de servicio que se copiará en la fase final.

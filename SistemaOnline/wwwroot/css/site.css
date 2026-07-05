@@ -29,3 +29,25 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+table.w-full.text-left th,
+table.w-full.text-left td {
+    padding-right: 24px;
+}
+
+    table.w-full.text-left th:last-child,
+    table.w-full.text-left td:last-child {
+        padding-right: 0;
+    }
+
+/* Remove native browser spinner arrows from qty stepper inputs */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.qty-input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}

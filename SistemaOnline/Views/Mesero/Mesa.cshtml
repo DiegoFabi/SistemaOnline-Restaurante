@@ -21,7 +21,15 @@
 
 @if (!Model.Any())
 {
-    <p class="text-on-surface-variant text-body-md">No hay pedidos activos en esta mesa.</p>
+    <div class="min-h-[60vh] flex flex-col items-center justify-center text-center gap-md">
+        <span class="material-symbols-outlined text-[72px] text-outline/50">receipt_long</span>
+        <p class="text-on-surface-variant text-body-md">No hay pedidos activos en esta mesa.</p>
+        <a asp-controller="Mesero" asp-action="Index"
+           class="inline-flex items-center gap-sm h-11 px-lg bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-title-md text-title-md rounded-lg shadow-md shadow-primary/20 transition-all active:scale-[0.98]">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Volver al mapa de mesas
+        </a>
+    </div>
 }
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">

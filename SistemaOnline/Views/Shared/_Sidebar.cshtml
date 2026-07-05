@@ -84,7 +84,7 @@
                 <span class="font-body-md">Notificaciones</span>
             </a>
         }
-        @if (User.IsInRole("Cocina"))
+        @if (User.IsInRole("Chef"))
         {
             <a class="@Cls("dashboard")" asp-controller="Cocina" asp-action="Index">
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
@@ -139,11 +139,30 @@
     </script>
 
     <div class="px-sm py-md border-t border-outline-variant/30 space-y-sm">
-        <a asp-controller="Pedido" asp-action="Nuevo"
-           class="w-full flex items-center gap-md px-md py-sm text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg transition-colors shadow-sm shadow-primary/20">
-            <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
-            <span class="font-body-md font-bold">Nuevo Pedido</span>
-        </a>
+        @if (User.IsInRole("Administrador") || User.IsInRole("Mesero"))
+        {
+            <a asp-controller="Pedido" asp-action="Nuevo"
+               class="w-full flex items-center gap-md px-md py-sm text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg transition-colors shadow-sm shadow-primary/20">
+                <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                <span class="font-body-md font-bold">Nuevo Pedido</span>
+            </a>
+        }
+        else if (User.IsInRole("Cajero"))
+        {
+            <a asp-controller="Cajero" asp-action="Facturacion"
+               class="w-full flex items-center gap-md px-md py-sm text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg transition-colors shadow-sm shadow-primary/20">
+                <span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+                <span class="font-body-md font-bold">Ir a Facturación</span>
+            </a>
+        }
+        else if (User.IsInRole("Chef"))
+        {
+            <a asp-controller="Cocina" asp-action="Index"
+               class="w-full flex items-center gap-md px-md py-sm text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg transition-colors shadow-sm shadow-primary/20">
+                <span class="material-symbols-outlined" data-icon="monitor_heart">monitor_heart</span>
+                <span class="font-body-md font-bold">Monitor de Cocina</span>
+            </a>
+        }
         <button type="button" onclick="openConfiguracionModal()"
                 class="w-full flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">
             <span class="material-symbols-outlined" data-icon="settings">settings</span>

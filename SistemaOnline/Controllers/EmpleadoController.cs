@@ -265,5 +265,20 @@ namespace SistemaOnline.Controllers
             }).ToListAsync());
             return lista;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> UsuariosPorCargo(string cargo)
+        {
+            if (string.IsNullOrWhiteSpace(cargo))
+                return Json(new List<object>());
+
+            var usuarios = await _context.Usuarios
+                .Include(u => u.Rol)
+                .Where(u => u.Rol.Nombre_Rol == cargo)
+                .Select(u => new { value = u.ID_Usuario.ToString(), text = u.Nombre_Usuario })
+                .ToListAsync();
+
+            return Json(usuarios);
+        }
     }
 }

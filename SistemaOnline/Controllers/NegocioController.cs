@@ -35,8 +35,8 @@ namespace SistemaOnline.Controllers
         public async Task<IActionResult> Gestion()
         {
             var bloqueados = new Dictionary<string, string>();
-            if (!await _dbcontext.Empleados.AnyAsync() || !await _dbcontext.Proveedores.AnyAsync())
-                bloqueados["Contrato"] = "Para desbloquear esta sección, debe registrar al menos un Empleado y un Proveedor.";
+            if (!await _dbcontext.Empleados.AnyAsync() && !await _dbcontext.Proveedores.AnyAsync())
+                bloqueados["Contrato"] = "Para desbloquear esta sección, debe registrar al menos un Empleado o un Proveedor.";
             if (!await _dbcontext.Clientes.AnyAsync() || !await _dbcontext.Mesas.AnyAsync())
                 bloqueados["Reservacion"] = "Para desbloquear esta sección, debe registrar al menos un Cliente y una Mesa.";
             if (!await _dbcontext.Empleados.AnyAsync() || !await _dbcontext.Mesas.AnyAsync())

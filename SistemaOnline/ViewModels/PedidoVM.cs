@@ -13,13 +13,13 @@ namespace SistemaOnline.ViewModels
         [Required(ErrorMessage = "Selecciona un estado para el pedido.")]
         public string Estado_Pedido { get; set; }
 
-        [Required, MaxLength(255)]
-        public string Detalle_Pedido { get; set; }
+        [MaxLength(500)]
+        public string? Detalle_Pedido { get; set; }
 
-        [Range(1, double.MaxValue, ErrorMessage = "El subtotal debe ser mayor o igual a 1.")]
+        [Range(0, double.MaxValue, ErrorMessage = "El subtotal no puede ser negativo.")]
         public decimal SubTotal { get; set; }
 
-        [Range(1, double.MaxValue, ErrorMessage = "El total debe ser mayor o igual a 1.")]
+        [Range(0, double.MaxValue, ErrorMessage = "El total no puede ser negativo.")]
         public decimal Total { get; set; }
 
         [Required(ErrorMessage = "Selecciona un empleado.")]
@@ -30,6 +30,9 @@ namespace SistemaOnline.ViewModels
 
         // IDs de productos seleccionados en el modal de "Detalles del Pedido"
         public List<int> ProductosSeleccionados { get; set; } = new();
+
+        // Cantidades por producto (ID_Producto → cantidad)
+        public Dictionary<int, int> CantidadesProductos { get; set; } = new();
 
         // Para mostrar en Lista
         public string? EmpleadoNombre { get; set; }

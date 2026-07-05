@@ -37,7 +37,7 @@ namespace SistemaOnline.ViewModels
         public string Razon_Social { get; set; }
 
         [MaxLength(11)]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "El RUC solo puede contener números.")]
+        [RegularExpression(@"^[0-9]{11}$", ErrorMessage = "El RUC debe tener exactamente 11 dígitos numéricos.")]
         public string? RUC { get; set; }
 
         [Required, MaxLength(200)]

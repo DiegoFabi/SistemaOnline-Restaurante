@@ -7,7 +7,7 @@ using SistemaOnline.ViewModels;
 
 namespace SistemaOnline.Controllers
 {
-    [Authorize(Roles = "Cocina")]
+    [Authorize(Roles = "Chef")]
     public class CocinaController : Controller
     {
         private readonly APPDBContext _dbcontext;

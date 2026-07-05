@@ -109,5 +109,34 @@
             hidden.removeAttribute('name');
             select.addEventListener('change', function () { hidden.value = select.value; });
         }
+
+        document.getElementById('Cargo').addEventListener('change', function () {
+            const cargo = this.value;
+            const select = document.getElementById('ID_Usuario');
+            const hidden = document.getElementById('ID_Usuario_hidden');
+            if (select.disabled) return; // only act when unlocked
+            select.innerHTML = '<option value="" disabled selected hidden>-- Cargando... --</option>';
+
+            if (!cargo) {
+                select.innerHTML = '<option value="">-- Ninguno --</option>';
+                return;
+            }
+
+            fetch('/Empleado/UsuariosPorCargo?cargo=' + encodeURIComponent(cargo))
+                .then(r => r.json())
+                .then(function (data) {
+                    select.innerHTML = '<option value="">-- Ninguno --</option>';
+                    data.forEach(function (u) {
+                        const opt = document.createElement('option');
+                        opt.value = u.value;
+                        opt.textContent = u.text;
+                        select.appendChild(opt);
+                    });
+                    if (data.length === 0) {
+                        select.innerHTML = '<option value="">-- Sin usuarios para este cargo --</option>';
+                    }
+                    hidden.value = select.value;
+                });
+        });
     </script>
 }

@@ -20,13 +20,14 @@ namespace SistemaOnline.ViewModels
         public string Cargo { get; set; }
 
         [MaxLength(9)]
-        [RegularExpression(@"^[0-9+\-() ]*$", ErrorMessage = "El teléfono solo puede contener números y los símbolos + - ( ).")]
+        [RegularExpression(@"^9[0-9]{8}$", ErrorMessage = "El teléfono debe iniciar con 9 y tener exactamente 9 dígitos.")]
         public string? Telefono { get; set; }
 
         [Required, MaxLength(15)]
         public string Estado { get; set; }
 
         [Required, MaxLength(8)]
+        [RegularExpression(@"^[0-9]{8}$", ErrorMessage = "El DNI debe tener exactamente 8 dígitos numéricos.")]
         public string DNI { get; set; }
 
         public int? ID_Usuario { get; set; }

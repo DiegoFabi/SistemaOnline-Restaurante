@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SistemaOnline.ViewModels
@@ -10,7 +10,7 @@ namespace SistemaOnline.ViewModels
         [Required, MaxLength(50)]
         public string Nombre_Usuario { get; set; }
 
-        [Required, MaxLength(100)]
+        [Required, MaxLength(100), EmailAddress]
         public string Email { get; set; }
 
         [Required, MaxLength(255)]

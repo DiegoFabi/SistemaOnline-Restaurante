@@ -50,8 +50,12 @@ namespace SistemaOnline.Controllers
         {
             if (!await _context.Empleados.AnyAsync() || !await _context.Mesas.AnyAsync())
             {
-                ViewData["Msg"] = "Debes registrar al menos un Empleado y una Mesa antes de crear un Pedido.";
-                return View("~/Views/Negocio/Advertencia.cshtml");
+                if (User.IsInRole("Administrador"))
+                {
+                    ViewData["Msg"] = "Debes registrar al menos un Empleado y una Mesa antes de crear un Pedido.";
+                    return View("~/Views/Negocio/Advertencia.cshtml");
+                }
+                return View("~/Views/Shared/SistemaNoConfigurado.cshtml");
             }
 
             PedidoVM modelo = new PedidoVM
@@ -84,7 +88,7 @@ namespace SistemaOnline.Controllers
 
             Pedido pedido = new Pedido
             {
-                Fecha = modelo.Fecha,
+                Fecha = DateTime.Now,
                 Estado_Pedido = modelo.Estado_Pedido,
                 Detalle_Pedido = modelo.Detalle_Pedido,
                 SubTotal = modelo.SubTotal,
@@ -104,11 +108,12 @@ namespace SistemaOnline.Controllers
 
                 foreach (var producto in productos)
                 {
+                    int cantidad = modelo.CantidadesProductos != null && modelo.CantidadesProductos.TryGetValue(producto.ID_Producto, out int qty) && qty > 0 ? qty : 1;
                     await _context.Pedidos_Detalles.AddAsync(new Pedido_Detalle
                     {
                         ID_Pedido = pedido.ID_Pedido,
                         ID_Producto = producto.ID_Producto,
-                        Cantidad = 1,
+                        Cantidad = cantidad,
                         PrecioUnitario = producto.Precio
                     });
                 }
@@ -136,6 +141,7 @@ namespace SistemaOnline.Controllers
                 ID_Empleado = pedido.ID_Empleado,
                 ID_Mesa = pedido.ID_Mesa,
                 ProductosSeleccionados = pedido.Pedido_Detalles?.Select(pd => pd.ID_Producto).ToList() ?? new List<int>(),
+                CantidadesProductos = pedido.Pedido_Detalles?.ToDictionary(pd => pd.ID_Producto, pd => pd.Cantidad) ?? new Dictionary<int, int>(),
                 EmpleadosDisponibles = await ObtenerEmpleados(),
                 MesasDisponibles = await ObtenerMesas(),
                 CategoriasProductos = await ObtenerCategoriasProductos()
@@ -185,11 +191,12 @@ namespace SistemaOnline.Controllers
 
                 foreach (var producto in productos)
                 {
+                    int cantidad = modelo.CantidadesProductos != null && modelo.CantidadesProductos.TryGetValue(producto.ID_Producto, out int qty) && qty > 0 ? qty : 1;
                     await _context.Pedidos_Detalles.AddAsync(new Pedido_Detalle
                     {
                         ID_Pedido = pedido.ID_Pedido,
                         ID_Producto = producto.ID_Producto,
-                        Cantidad = 1,
+                        Cantidad = cantidad,
                         PrecioUnitario = producto.Precio
                     });
                 }
@@ -229,11 +236,13 @@ namespace SistemaOnline.Controllers
 
         private async Task<List<SelectListItem>> ObtenerMesas()
         {
-            var lista = await _context.Mesas.Select(m => new SelectListItem
-            {
-                Value = m.ID_Mesa.ToString(),
-                Text = "Mesa " + m.Numero_Mesa
-            }).ToListAsync();
+            var lista = await _context.Mesas
+                .Where(m => m.Estado == "Disponible" || m.Estado == "Libre")
+                .Select(m => new SelectListItem
+                {
+                    Value = m.ID_Mesa.ToString(),
+                    Text = "Mesa " + m.Numero_Mesa + " (" + m.Ubicacion + ")"
+                }).ToListAsync();
             return lista;
         }
 

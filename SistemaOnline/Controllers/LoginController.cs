@@ -93,8 +93,8 @@ namespace SistemaOnline.Controllers
             {
                 case "Administrador":
                     return RedirectToAction("Index", "Administrador");
-                case "Cocinero":
-                    return RedirectToAction("Index", "Cocinero");
+                case "Chef":
+                    return RedirectToAction("Index", "Cocina");
                 case "Mesero":
                     return RedirectToAction("Index", "Mesero");
                 case "Cajero":
@@ -130,6 +130,12 @@ namespace SistemaOnline.Controllers
         }
         [HttpGet]
         public IActionResult Cliente()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AccesoDenegado()
         {
             return View();
         }

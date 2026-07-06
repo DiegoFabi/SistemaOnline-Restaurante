@@ -50,10 +50,10 @@ namespace SistemaOnline.Data
 
             modelBuilder.Entity<Usuario>().HasData(
                 new Usuario { ID_Usuario = 1, Nombre_Usuario = "Tigre Capo", Email = "TrigeCapo123@gmail.com", Estado = true, Password = "aQwr@2", ID_Rol = 1 },
-                new Usuario { ID_Usuario = 2, Nombre_Usuario = "Diego", Email = "Diego12@gmail.com", Estado = true, Password = "123", ID_Rol = 2 },
-                new Usuario { ID_Usuario = 3, Nombre_Usuario = "Valeria", Email = "Valeria15@gmail.com", Estado = true, Password = "345", ID_Rol = 3 },
-                new Usuario { ID_Usuario = 4, Nombre_Usuario = "Ulises", Email = "Ulises@gmail.com", Estado = true, Password = "678", ID_Rol = 4 },
-                new Usuario { ID_Usuario = 5, Nombre_Usuario = "Carlos Chef", Email = "carlos.chef@gmail.com", Estado = true, Password = "chef123", ID_Rol = 5 }
+                new Usuario { ID_Usuario = 2, Nombre_Usuario = "Carlos Chef", Email = "carlos.chef@gmail.com", Estado = true, Password = "chef123", ID_Rol = 5 },
+                new Usuario { ID_Usuario = 3, Nombre_Usuario = "Ana Rojas", Email = "ana.rojas@rancho.com", Estado = true, Password = "mesero456", ID_Rol = 3 },
+                new Usuario { ID_Usuario = 4, Nombre_Usuario = "Julio Castillo", Email = "julio.castillo@rancho.com", Estado = true, Password = "chef456", ID_Rol = 5 },
+                new Usuario { ID_Usuario = 5, Nombre_Usuario = "Valeria Elizabeth", Email = "valeria.eli@rancho.com", Estado = true, Password = "caja456", ID_Rol = 2 }
                 );
 
             // Relación 1:1 Opcional entre Empleado y Usuario
@@ -289,12 +289,10 @@ namespace SistemaOnline.Data
                 );
 
             modelBuilder.Entity<Empleado>().HasData(
-                new Empleado { ID_Empleado = 1, Nombre = "Luis", Apellidos = "Mamani Quispe", Direccion = "Av. Los Incas 320, Cusco", Cargo = "Mesero", Telefono = "987654321", Estado = "Activo", DNI = "72341589", ID_Usuario = 3 },
-                new Empleado { ID_Empleado = 2, Nombre = "Rosa", Apellidos = "Flores Huanca", Direccion = "Jr. Bolívar 145, Lima", Cargo = "Cajero", Telefono = "912345678", Estado = "Activo", DNI = "60128374", ID_Usuario = 2 },
-                new Empleado { ID_Empleado = 3, Nombre = "Carlos", Apellidos = "Vega Torres", Direccion = "Calle Las Begonias 78, Arequipa", Cargo = "Chef", Telefono = "956781234", Estado = "Activo", DNI = "48392015", ID_Usuario = 5 },
-                new Empleado { ID_Empleado = 4, Nombre = "Ana", Apellidos = "Rojas Paredes", Direccion = "Av. Grau 901, Trujillo", Cargo = "Mesero", Telefono = "934561278", Estado = "Activo", DNI = "52109384" },
-                new Empleado { ID_Empleado = 5, Nombre = "Julio", Apellidos = "Castillo Medina", Direccion = "Jr. Tacna 456, Piura", Cargo = "Chef", Telefono = "946723891", Estado = "Activo", DNI = "38201745" },
-                new Empleado { ID_Empleado = 6, Nombre = "Patricia", Apellidos = "Llanos Díaz", Direccion = "Av. La Marina 233, Lima", Cargo = "Cajero", Telefono = "923456789", Estado = "Activo", DNI = "61047382" }
+                new Empleado { ID_Empleado = 1, Nombre = "Rosa", Apellidos = "Flores Huanca", Direccion = "Jr. Bolívar 145, Lima", Cargo = "Chef", Telefono = "912345678", Estado = "Activo", DNI = "60128374", ID_Usuario = 2 },
+                new Empleado { ID_Empleado = 2, Nombre = "Ana", Apellidos = "Rojas Paredes", Direccion = "Av. Grau 901, Trujillo", Cargo = "Mesero", Telefono = "934561278", Estado = "Activo", DNI = "52109384", ID_Usuario = 3 },
+                new Empleado { ID_Empleado = 3, Nombre = "Julio", Apellidos = "Castillo Medina", Direccion = "Jr. Tacna 456, Piura", Cargo = "Chef", Telefono = "946723891", Estado = "Activo", DNI = "38201745", ID_Usuario = 4 },
+                new Empleado { ID_Empleado = 4, Nombre = "Valeria", Apellidos = "Elizabeth", Direccion = "Av. La Marina 233, Lima", Cargo = "Cajero", Telefono = "923456789", Estado = "Activo", DNI = "61047382", ID_Usuario = 5 }
                 );
 
             modelBuilder.Entity<Ingrediente>().HasData(

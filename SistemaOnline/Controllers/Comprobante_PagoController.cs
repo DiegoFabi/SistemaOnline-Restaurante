@@ -55,12 +55,25 @@ namespace SistemaOnline.Controllers
                 return View("~/Views/Negocio/Advertencia.cshtml");
             }
 
-            Comprobante_PagoVM modelo = new Comprobante_PagoVM
+            var modelo = new Comprobante_PagoVM
             {
                 Fecha_Emision = DateTime.Now,
                 ID_Pedido = idPedido ?? 0,
                 PedidosDisponibles = await ObtenerPedidos()
             };
+
+            // Pre-poblar totales si viene de un pedido específico
+            if (idPedido.HasValue)
+            {
+                var pedido = await _context.Pedidos.FindAsync(idPedido.Value);
+                if (pedido != null)
+                {
+                    modelo.Sub_Total = pedido.SubTotal;
+                    modelo.IGV = Math.Round(pedido.SubTotal * 0.18m, 2);
+                    modelo.Monto_Total = pedido.Total;
+                }
+            }
+
             ViewBag.ResumenPedidos = await ObtenerResumenPedidos();
             return View(modelo);
         }
@@ -68,14 +81,44 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(Comprobante_PagoVM modelo)
         {
-            if (modelo.Tipo_Comprobante == "Boleta")
+            // Limpiar validaciones de facturación si no se emite comprobante
+            if (!modelo.EmitirComprobante)
             {
+                ModelState.Remove(nameof(modelo.Tipo_Comprobante));
+                ModelState.Remove(nameof(modelo.Numero_Comprobante));
+                ModelState.Remove(nameof(modelo.Serie));
+                ModelState.Remove(nameof(modelo.Razon_Social));
                 ModelState.Remove(nameof(modelo.RUC));
+                ModelState.Remove(nameof(modelo.Direccion_Fiscal));
+                modelo.Tipo_Comprobante = null;
+                modelo.Numero_Comprobante = null;
+                modelo.Serie = null;
+                modelo.Razon_Social = null;
                 modelo.RUC = null;
+                modelo.Direccion_Fiscal = null;
             }
-            else if (modelo.Tipo_Comprobante == "Factura" && string.IsNullOrWhiteSpace(modelo.RUC))
+            else
             {
-                ModelState.AddModelError(nameof(modelo.RUC), "El RUC es obligatorio para una Factura.");
+                // Con comprobante: campos base obligatorios
+                if (string.IsNullOrWhiteSpace(modelo.Tipo_Comprobante))
+                    ModelState.AddModelError(nameof(modelo.Tipo_Comprobante), "El tipo de comprobante es obligatorio.");
+                if (string.IsNullOrWhiteSpace(modelo.Numero_Comprobante))
+                    ModelState.AddModelError(nameof(modelo.Numero_Comprobante), "El número de comprobante es obligatorio.");
+                if (string.IsNullOrWhiteSpace(modelo.Serie))
+                    ModelState.AddModelError(nameof(modelo.Serie), "La serie es obligatoria.");
+                if (string.IsNullOrWhiteSpace(modelo.Razon_Social))
+                    ModelState.AddModelError(nameof(modelo.Razon_Social), "La razón social es obligatoria.");
+                if (string.IsNullOrWhiteSpace(modelo.Direccion_Fiscal))
+                    ModelState.AddModelError(nameof(modelo.Direccion_Fiscal), "La dirección fiscal es obligatoria.");
+
+                // RUC solo requerido para Factura
+                if (modelo.Tipo_Comprobante == "Factura" && string.IsNullOrWhiteSpace(modelo.RUC))
+                    ModelState.AddModelError(nameof(modelo.RUC), "El RUC es obligatorio para una Factura.");
+                else if (modelo.Tipo_Comprobante != "Factura")
+                {
+                    ModelState.Remove(nameof(modelo.RUC));
+                    modelo.RUC = null;
+                }
             }
 
             if (!ModelState.IsValid)
@@ -85,7 +128,7 @@ namespace SistemaOnline.Controllers
                 return View(modelo);
             }
 
-            Comprobante_Pago comprobante = new Comprobante_Pago
+            var comprobante = new Comprobante_Pago
             {
                 Tipo_Comprobante = modelo.Tipo_Comprobante,
                 Numero_Comprobante = modelo.Numero_Comprobante,
@@ -103,7 +146,18 @@ namespace SistemaOnline.Controllers
             };
             await _context.Comprobantes_Pagos.AddAsync(comprobante);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Lista));
+
+            // Marcar pedido como Pagado y liberar mesa
+            var pedido = await _context.Pedidos.Include(p => p.Mesa_Restaurante).FirstOrDefaultAsync(p => p.ID_Pedido == modelo.ID_Pedido);
+            if (pedido != null)
+            {
+                pedido.Estado_Pedido = "Pagado";
+                if (pedido.Mesa_Restaurante != null) pedido.Mesa_Restaurante.Estado = "Libre";
+                await _context.SaveChangesAsync();
+                Services.NotificacionStore.Agregar("receipt_long", "Pago registrado", $"Pedido #{pedido.ID_Pedido} cobrado por {modelo.Metodo_Pago}. Mesa liberada.");
+            }
+
+            return RedirectToAction("Index", "Cajero");
         }
 
         [HttpGet]
@@ -135,14 +189,18 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(Comprobante_PagoVM modelo)
         {
-            if (modelo.Tipo_Comprobante == "Boleta")
+            if (!modelo.EmitirComprobante)
             {
-                ModelState.Remove(nameof(modelo.RUC));
-                modelo.RUC = null;
+                foreach (var field in new[] { nameof(modelo.Tipo_Comprobante), nameof(modelo.Numero_Comprobante), nameof(modelo.Serie), nameof(modelo.Razon_Social), nameof(modelo.RUC), nameof(modelo.Direccion_Fiscal) })
+                    ModelState.Remove(field);
+                modelo.Tipo_Comprobante = null; modelo.Numero_Comprobante = null; modelo.Serie = null;
+                modelo.Razon_Social = null; modelo.RUC = null; modelo.Direccion_Fiscal = null;
             }
-            else if (modelo.Tipo_Comprobante == "Factura" && string.IsNullOrWhiteSpace(modelo.RUC))
+            else
             {
-                ModelState.AddModelError(nameof(modelo.RUC), "El RUC es obligatorio para una Factura.");
+                if (modelo.Tipo_Comprobante != "Factura") { ModelState.Remove(nameof(modelo.RUC)); modelo.RUC = null; }
+                else if (string.IsNullOrWhiteSpace(modelo.RUC))
+                    ModelState.AddModelError(nameof(modelo.RUC), "El RUC es obligatorio para una Factura.");
             }
 
             if (!ModelState.IsValid)
@@ -182,11 +240,14 @@ namespace SistemaOnline.Controllers
 
         private async Task<List<SelectListItem>> ObtenerPedidos()
         {
-            var lista = await _context.Pedidos.Select(p => new SelectListItem
-            {
-                Value = p.ID_Pedido.ToString(),
-                Text = "Pedido #" + p.ID_Pedido + " - " + p.Estado_Pedido
-            }).ToListAsync();
+            var lista = await _context.Pedidos
+                .Where(p => p.Estado_Pedido == "Entregado")
+                .Include(p => p.Mesa_Restaurante)
+                .Select(p => new SelectListItem
+                {
+                    Value = p.ID_Pedido.ToString(),
+                    Text = "Pedido #" + p.ID_Pedido + " — Mesa " + (p.Mesa_Restaurante != null ? p.Mesa_Restaurante.Numero_Mesa.ToString() : "?")
+                }).ToListAsync();
             return lista;
         }
 

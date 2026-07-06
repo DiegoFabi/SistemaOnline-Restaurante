@@ -16,7 +16,7 @@ namespace SistemaOnline.Controllers
             _dbcontext = dbContext;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string orden = "desc")
         {
             var hoy = DateTime.Today;
             var manana = hoy.AddDays(1);
@@ -27,15 +27,18 @@ namespace SistemaOnline.Controllers
                     .Where(pg => pg.Fecha_Hora_Pago >= hoy && pg.Fecha_Hora_Pago < manana && pg.Estado == "Pagado")
                     .SumAsync(pg => (decimal?)pg.Monto) ?? 0,
                 PagosHoyCount = await _dbcontext.Pagos.CountAsync(pg => pg.Fecha_Hora_Pago >= hoy && pg.Fecha_Hora_Pago < manana),
-                PedidosPorCobrar = await _dbcontext.Pedidos.CountAsync(p => p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
+                PedidosPorCobrar = await _dbcontext.Pedidos.CountAsync(p => p.Estado_Pedido == "Entregado")
             };
 
-            vm.PedidosPendientes = await _dbcontext.Pedidos
+            var queryEntregados = _dbcontext.Pedidos
                 .Include(p => p.Mesa_Restaurante)
-                .Where(p => p.Estado_Pedido != "Pagado" && p.Estado_Pedido != "Cancelado")
-                .OrderByDescending(p => p.ID_Pedido)
-                .Take(10)
-                .ToListAsync();
+                .Where(p => p.Estado_Pedido == "Entregado");
+
+            vm.PedidosPendientes = orden == "asc"
+                ? await queryEntregados.OrderBy(p => p.ID_Pedido).Take(5).ToListAsync()
+                : await queryEntregados.OrderByDescending(p => p.ID_Pedido).Take(5).ToListAsync();
+
+            ViewBag.Orden = orden;
 
             vm.PagosRecientes = await _dbcontext.Pagos
                 .Include(pg => pg.Pedido)
@@ -61,7 +64,7 @@ namespace SistemaOnline.Controllers
         {
             var query = _dbcontext.Pedidos
                 .Include(p => p.Mesa_Restaurante)
-                .Where(p => p.Estado_Pedido != "Cancelado")
+                .Where(p => p.Estado_Pedido == "Entregado" || p.Estado_Pedido == "Pagado")
                 .OrderByDescending(p => p.ID_Pedido);
 
             var resultado = await query.ToPagedListAsync(page, pageSize);
@@ -101,5 +104,6 @@ namespace SistemaOnline.Controllers
             ViewBag.TotalCount = resultado.TotalCount;
             return View(resultado.Items);
         }
+
     }
 }

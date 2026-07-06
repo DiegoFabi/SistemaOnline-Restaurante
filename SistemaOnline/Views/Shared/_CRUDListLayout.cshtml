@@ -42,11 +42,18 @@
 
 <div class="animate-entry">
     <div class="mb-lg">
-        @* Botón de retorno corregido a Negocio/Gestion *@
-        <a asp-controller="Negocio" asp-action="Gestion"
+        @{
+            string backController = "Negocio";
+            string backAction = "Gestion";
+            string backLabel = "Volver a la Gestión de Negocio";
+            if (User.IsInRole("Mesero")) { backController = "Mesero"; backAction = "Index"; backLabel = "Volver al Panel de Mesas"; }
+            else if (User.IsInRole("Cajero")) { backController = "Cajero"; backAction = "Index"; backLabel = "Volver al Panel de Caja"; }
+            else if (User.IsInRole("Chef")) { backController = "Cocina"; backAction = "Index"; backLabel = "Volver al Monitor de Cocina"; }
+        }
+        <a asp-controller="@backController" asp-action="@backAction"
            class="inline-flex items-center text-on-surface-variant hover:text-primary mb-md transition-colors duration-300">
             <span class="material-symbols-outlined mr-sm">arrow_back</span>
-            <span class="font-title-sm">Volver a la Gestión de Negocio</span>
+            <span class="font-title-sm">@backLabel</span>
         </a>
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-md">

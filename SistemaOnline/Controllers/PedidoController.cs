@@ -46,7 +46,7 @@ namespace SistemaOnline.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Nuevo()
+        public async Task<IActionResult> Nuevo(int? mesaId = null)
         {
             if (!await _context.Empleados.AnyAsync() || !await _context.Mesas.AnyAsync())
             {
@@ -58,31 +58,77 @@ namespace SistemaOnline.Controllers
                 return View("~/Views/Shared/SistemaNoConfigurado.cshtml");
             }
 
+            bool esMesero = User.IsInRole("Mesero");
+            int preselEmpleado = 0;
+            List<SelectListItem> empleadosList;
+
+            if (esMesero)
+            {
+                // Pre-select the authenticated mesero's Empleado record
+                var emailUsuario = User.Identity?.Name;
+                var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == emailUsuario || u.Nombre_Usuario == emailUsuario);
+                var empleado = usuario != null
+                    ? await _context.Empleados.FirstOrDefaultAsync(e => e.ID_Usuario == usuario.ID_Usuario)
+                    : null;
+                preselEmpleado = empleado?.ID_Empleado ?? 0;
+                empleadosList = empleado != null
+                    ? new List<SelectListItem> { new SelectListItem { Value = empleado.ID_Empleado.ToString(), Text = $"{empleado.Nombre} {empleado.Apellidos}", Selected = true } }
+                    : new List<SelectListItem>();
+            }
+            else
+            {
+                // Admin: show only Mesero-role employees
+                empleadosList = await ObtenerEmpleadosMeseros();
+            }
+
             PedidoVM modelo = new PedidoVM
             {
                 Fecha = DateTime.Now,
-                EmpleadosDisponibles = await ObtenerEmpleados(),
+                Estado_Pedido = esMesero ? "En Cocina" : "Pendiente",
+                ID_Empleado = preselEmpleado,
+                ID_Mesa = mesaId ?? 0,
+                EmpleadosDisponibles = empleadosList,
                 MesasDisponibles = await ObtenerMesas(),
                 CategoriasProductos = await ObtenerCategoriasProductos()
             };
             ViewBag.MesasActivas = await ObtenerMesasConPedidoActivo();
+            ViewBag.EsMesero = esMesero;
             return View(modelo);
         }
 
         [HttpPost]
         public async Task<IActionResult> Nuevo(PedidoVM modelo)
         {
-            if (!await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
-                ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
+            bool esMesero = User.IsInRole("Mesero");
+
+            if (esMesero)
+            {
+                // Enforce mesero's own employee — reject any tampered ID
+                var emailUsuario = User.Identity?.Name;
+                var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == emailUsuario || u.Nombre_Usuario == emailUsuario);
+                var empleado = usuario != null ? await _context.Empleados.FirstOrDefaultAsync(e => e.ID_Usuario == usuario.ID_Usuario) : null;
+                if (empleado == null)
+                    ModelState.AddModelError(nameof(modelo.ID_Empleado), "No se encontró tu registro de empleado.");
+                else
+                    modelo.ID_Empleado = empleado.ID_Empleado;
+                modelo.Estado_Pedido = "En Cocina";
+            }
+            else
+            {
+                if (!await _context.Empleados.AnyAsync(e => e.ID_Empleado == modelo.ID_Empleado))
+                    ModelState.AddModelError(nameof(modelo.ID_Empleado), "Selecciona un empleado válido.");
+            }
+
             if (!await _context.Mesas.AnyAsync(m => m.ID_Mesa == modelo.ID_Mesa))
                 ModelState.AddModelError(nameof(modelo.ID_Mesa), "Selecciona una mesa válida.");
 
             if (!ModelState.IsValid)
             {
-                modelo.EmpleadosDisponibles = await ObtenerEmpleados();
+                modelo.EmpleadosDisponibles = esMesero ? new List<SelectListItem>() : await ObtenerEmpleadosMeseros();
                 modelo.MesasDisponibles = await ObtenerMesas();
                 modelo.CategoriasProductos = await ObtenerCategoriasProductos();
                 ViewBag.MesasActivas = await ObtenerMesasConPedidoActivo();
+                ViewBag.EsMesero = esMesero;
                 return View(modelo);
             }
 
@@ -98,7 +144,19 @@ namespace SistemaOnline.Controllers
             };
             await _context.Pedidos.AddAsync(pedido);
             await _context.SaveChangesAsync();
-            Services.NotificacionStore.Agregar("receipt_long", "Pedido creado", $"Nuevo pedido #{pedido.ID_Pedido} registrado.");
+
+            // Marcar mesa como Ocupada
+            var mesaParaOcupar = await _context.Mesas.FindAsync(pedido.ID_Mesa);
+            if (mesaParaOcupar != null && mesaParaOcupar.Estado != "Ocupada")
+            {
+                mesaParaOcupar.Estado = "Ocupada";
+                await _context.SaveChangesAsync();
+            }
+
+            if (User.IsInRole("Mesero"))
+                Services.NotificacionStore.Agregar("restaurant_menu", "Nuevo pedido en cocina", $"Pedido #{pedido.ID_Pedido} enviado a cocina — Mesa {pedido.ID_Mesa}.");
+            else
+                Services.NotificacionStore.Agregar("receipt_long", "Pedido creado", $"Nuevo pedido #{pedido.ID_Pedido} registrado.");
 
             if (modelo.ProductosSeleccionados != null && modelo.ProductosSeleccionados.Any())
             {
@@ -234,16 +292,40 @@ namespace SistemaOnline.Controllers
             return lista;
         }
 
-        private async Task<List<SelectListItem>> ObtenerMesas()
+        private async Task<List<SelectListItem>> ObtenerEmpleadosMeseros()
         {
-            var lista = await _context.Mesas
-                .Where(m => m.Estado == "Disponible" || m.Estado == "Libre")
-                .Select(m => new SelectListItem
+            var lista = await _context.Empleados
+                .Where(e => e.Cargo == "Mesero")
+                .Select(e => new SelectListItem
                 {
-                    Value = m.ID_Mesa.ToString(),
-                    Text = "Mesa " + m.Numero_Mesa + " (" + m.Ubicacion + ")"
+                    Value = e.ID_Empleado.ToString(),
+                    Text = $"{e.Nombre} {e.Apellidos}"
                 }).ToListAsync();
             return lista;
+        }
+
+        private async Task<List<SelectListItem>> ObtenerMesas()
+        {
+            var mesas = await _context.Mesas
+                .OrderBy(m => m.Numero_Mesa)
+                .ToListAsync();
+
+            // IDs con pedidos activos para mostrar indicador en el label
+            var estadosOcupado = new[] { "Pendiente", "En Cocina", "Preparando", "Listo" };
+            var mesasOcupadas = await _context.Pedidos
+                .Where(p => estadosOcupado.Contains(p.Estado_Pedido))
+                .Select(p => p.ID_Mesa)
+                .Distinct()
+                .ToListAsync();
+            var ocupadasSet = new HashSet<int>(mesasOcupadas);
+
+            return mesas.Select(m => new SelectListItem
+            {
+                Value = m.ID_Mesa.ToString(),
+                Text = ocupadasSet.Contains(m.ID_Mesa)
+                    ? $"Mesa {m.Numero_Mesa} ({m.Ubicacion}) — Ocupada"
+                    : $"Mesa {m.Numero_Mesa} ({m.Ubicacion})"
+            }).ToList();
         }
 
         private async Task<List<CategoriaProductosVM>> ObtenerCategoriasProductos()

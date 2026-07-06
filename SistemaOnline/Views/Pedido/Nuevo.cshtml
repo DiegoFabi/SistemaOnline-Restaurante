@@ -26,12 +26,22 @@
                 </div>
                 <div>
                     <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="Estado_Pedido">Estado del Pedido</label>
-                    <select class="@Cls("Estado_Pedido")" required asp-for="Estado_Pedido" id="Estado_Pedido">
-                        <option value="Pendiente" selected>Pendiente</option>
-                        <option value="Cancelado" disabled>Cancelado</option>
-                        <option value="Servido" disabled>Servido</option>
-                        <option value="Pagado" disabled>Pagado</option>
-                    </select>
+                    @if (ViewBag.EsMesero == true)
+                    {
+                        <input type="hidden" asp-for="Estado_Pedido" value="En Cocina" />
+                        <div class="w-full h-11 px-md bg-surface-container-high border border-transparent rounded-lg flex items-center text-body-md text-on-surface-variant cursor-not-allowed">
+                            <span class="material-symbols-outlined text-[16px] mr-sm text-secondary">restaurant</span> En Cocina
+                        </div>
+                    }
+                    else
+                    {
+                        <select class="@Cls("Estado_Pedido")" required asp-for="Estado_Pedido" id="Estado_Pedido">
+                            <option value="Pendiente" selected>Pendiente</option>
+                            <option value="En Cocina">En Cocina</option>
+                            <option value="Cancelado" disabled>Cancelado</option>
+                            <option value="Pagado" disabled>Pagado</option>
+                        </select>
+                    }
                     <span asp-validation-for="Estado_Pedido" class="text-error text-label-md"></span>
                 </div>
                 <input type="hidden" asp-for="Detalle_Pedido" id="Detalle_Pedido" />
@@ -52,9 +62,20 @@
                 </div>
                 <div>
                     <label class="font-label-md text-label-md text-on-surface-variant block mb-1" for="ID_Empleado">Empleado</label>
-                    <select class="@Cls("ID_Empleado")" asp-for="ID_Empleado" asp-items="Model.EmpleadosDisponibles" id="ID_Empleado">
-                        <option value="" disabled selected hidden>-- Seleccione --</option>
-                    </select>
+                    @if (ViewBag.EsMesero == true)
+                    {
+                        <input type="hidden" asp-for="ID_Empleado" />
+                        <div class="w-full h-11 px-md bg-surface-container-high border border-transparent rounded-lg flex items-center text-body-md text-on-surface-variant cursor-not-allowed">
+                            <span class="material-symbols-outlined text-[16px] mr-sm">person</span>
+                            @(Model.EmpleadosDisponibles?.FirstOrDefault()?.Text ?? "Mesero asignado")
+                        </div>
+                    }
+                    else
+                    {
+                        <select class="@Cls("ID_Empleado")" asp-for="ID_Empleado" asp-items="Model.EmpleadosDisponibles" id="ID_Empleado">
+                            <option value="" disabled selected hidden>-- Seleccione --</option>
+                        </select>
+                    }
                     <span asp-validation-for="ID_Empleado" class="text-error text-label-md"></span>
                 </div>
                 <div>

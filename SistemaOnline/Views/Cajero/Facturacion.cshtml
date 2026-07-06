@@ -40,7 +40,13 @@
                             <span class="px-sm py-xs bg-primary-container text-on-primary-container rounded-full text-label-md">@p.Estado_Pedido</span>
                         </td>
                         <td class="py-md text-right">
-                            @if (cobrable)
+                            @if (p.Estado_Pedido == "Pagado")
+                            {
+                                <span class="inline-flex items-center gap-xs h-9 px-sm bg-secondary-container text-on-secondary-container font-label-md text-label-md rounded-lg cursor-default select-none">
+                                    <span class="material-symbols-outlined text-[16px]">check_circle</span> Cobrado
+                                </span>
+                            }
+                            else if (cobrable)
                             {
                                 <a asp-controller="Comprobante_Pago" asp-action="Nuevo" asp-route-idPedido="@p.ID_Pedido" class="inline-flex items-center gap-xs h-9 px-sm bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md rounded-lg transition-all">
                                     <span class="material-symbols-outlined text-[16px]">point_of_sale</span> Cobrar

@@ -91,6 +91,11 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            if (await _context.Productos_Categorias.AnyAsync(pc => pc.ID_Carta == id))
+            {
+                TempData["Error"] = "No se puede eliminar una carta que tiene categorías de productos asociadas.";
+                return RedirectToAction(nameof(Lista));
+            }
             Carta carta = await _context.Cartas.FirstAsync(c => c.ID_Carta == id);
             _context.Cartas.Remove(carta);
             await _context.SaveChangesAsync();

@@ -21,6 +21,7 @@ namespace SistemaOnline.ViewModels
 
         public bool Estado { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Selecciona una categoría válida.")]
         public int ID_Cat_Ingrediente { get; set; }
 
         // Para mostrar en Lista

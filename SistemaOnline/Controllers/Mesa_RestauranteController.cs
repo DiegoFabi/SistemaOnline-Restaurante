@@ -85,6 +85,12 @@ namespace SistemaOnline.Controllers
             }
 
             Mesa_Restaurante mesa = await _context.Mesas.FirstAsync(m => m.ID_Mesa == modelo.ID_Mesa);
+            var estadosActivos = new[] { "Pendiente", "En Cocina", "Preparando", "Listo", "Entregado" };
+            if (await _context.Pedidos.AnyAsync(p => p.ID_Mesa == modelo.ID_Mesa && estadosActivos.Contains(p.Estado_Pedido)))
+            {
+                ModelState.AddModelError(string.Empty, "No se puede editar una mesa con pedidos activos.");
+                return View(modelo);
+            }
             mesa.Numero_Mesa = modelo.Numero_Mesa;
             mesa.Capacidad = modelo.Capacidad;
             mesa.Ubicacion = modelo.Ubicacion;
@@ -97,6 +103,11 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            if (await _context.Pedidos.AnyAsync(p => p.ID_Mesa == id))
+            {
+                TempData["Error"] = "No se puede eliminar una mesa que tiene pedidos asociados.";
+                return RedirectToAction(nameof(Lista));
+            }
             Mesa_Restaurante mesa = await _context.Mesas.FirstAsync(m => m.ID_Mesa == id);
             _context.Mesas.Remove(mesa);
             await _context.SaveChangesAsync();

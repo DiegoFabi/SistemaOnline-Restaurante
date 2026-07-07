@@ -119,6 +119,11 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            if (await _context.Pedidos_Detalles.AnyAsync(pd => pd.ID_Producto == id))
+            {
+                TempData["Error"] = "No se puede eliminar un producto que tiene detalles de pedidos asociados.";
+                return RedirectToAction(nameof(Lista));
+            }
             Producto producto = await _context.Productos.FirstAsync(p => p.ID_Producto == id);
             _context.Productos.Remove(producto);
             await _context.SaveChangesAsync();

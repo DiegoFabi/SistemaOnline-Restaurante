@@ -246,6 +246,16 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            if (await _context.Pedidos.AnyAsync(p => p.ID_Empleado == id))
+            {
+                TempData["Error"] = "No se puede eliminar un empleado que tiene pedidos asociados.";
+                return RedirectToAction(nameof(Lista));
+            }
+            if (await _context.Contratos.AnyAsync(c => c.ID_Empleado == id))
+            {
+                TempData["Error"] = "No se puede eliminar un empleado que tiene contratos asociados.";
+                return RedirectToAction(nameof(Lista));
+            }
             Empleado empleado = await _context.Empleados.FirstAsync(e => e.ID_Empleado == id);
             _context.Empleados.Remove(empleado);
             await _context.SaveChangesAsync();

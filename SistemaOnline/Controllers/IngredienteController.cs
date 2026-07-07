@@ -122,6 +122,11 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            if (await _context.Inventarios.AnyAsync(i => i.ID_Ingrediente == id))
+            {
+                TempData["Error"] = "No se puede eliminar un ingrediente que tiene registros de inventario asociados.";
+                return RedirectToAction(nameof(Lista));
+            }
             Ingrediente ingrediente = await _context.Ingredientes.FirstAsync(i => i.ID_Ingrediente == id);
             _context.Ingredientes.Remove(ingrediente);
             await _context.SaveChangesAsync();

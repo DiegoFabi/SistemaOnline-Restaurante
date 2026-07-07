@@ -107,6 +107,11 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            if (await _context.Reservaciones.AnyAsync(r => r.ID_Cliente == id))
+            {
+                TempData["Error"] = "No se puede eliminar un cliente que tiene reservaciones asociadas.";
+                return RedirectToAction(nameof(Lista));
+            }
             Cliente cliente = await _context.Clientes.FirstAsync(c => c.ID_Cliente == id);
             _context.Clientes.Remove(cliente);
             await _context.SaveChangesAsync();

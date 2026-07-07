@@ -121,7 +121,12 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
-            Pago pago = await _context.Pagos.FirstAsync(p => p.ID_Pago == id);
+            var pago = await _context.Pagos.Include(p => p.Pedido).FirstAsync(p => p.ID_Pago == id);
+            if (pago.Pedido?.Estado_Pedido == "Pagado")
+            {
+                TempData["Error"] = "No se puede eliminar un pago cuyo pedido ya está en estado Pagado.";
+                return RedirectToAction(nameof(Lista));
+            }
             _context.Pagos.Remove(pago);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Lista));
@@ -129,11 +134,14 @@ namespace SistemaOnline.Controllers
 
         private async Task<List<SelectListItem>> ObtenerPedidos()
         {
-            var lista = await _context.Pedidos.Select(p => new SelectListItem
-            {
-                Value = p.ID_Pedido.ToString(),
-                Text = "Pedido #" + p.ID_Pedido + " - " + p.Estado_Pedido
-            }).ToListAsync();
+            var estados = new[] { "Pendiente", "En Cocina", "Preparando", "Listo", "Entregado" };
+            var lista = await _context.Pedidos
+                .Where(p => estados.Contains(p.Estado_Pedido))
+                .Select(p => new SelectListItem
+                {
+                    Value = p.ID_Pedido.ToString(),
+                    Text = "Pedido #" + p.ID_Pedido + " - " + p.Estado_Pedido
+                }).ToListAsync();
             return lista;
         }
     }

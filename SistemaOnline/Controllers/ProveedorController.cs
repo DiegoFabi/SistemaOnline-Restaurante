@@ -103,6 +103,11 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            if (await _context.Contratos.AnyAsync(c => c.ID_Proveedor == id))
+            {
+                TempData["Error"] = "No se puede eliminar un proveedor que tiene contratos asociados.";
+                return RedirectToAction(nameof(Lista));
+            }
             Proveedor proveedor = await _context.Proveedores.FirstAsync(p => p.ID_Proveedor == id);
             _context.Proveedores.Remove(proveedor);
             await _context.SaveChangesAsync();

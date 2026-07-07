@@ -58,6 +58,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(InventarioVM modelo)
         {
+            if (modelo.Stock_Minimo > modelo.Stock_Maximo)
+                ModelState.AddModelError(nameof(modelo.Stock_Minimo), "El stock mínimo no puede ser mayor al stock máximo.");
+
             if (!ModelState.IsValid)
             {
                 modelo.IngredientesDisponibles = await ObtenerIngredientes();
@@ -97,6 +100,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(InventarioVM modelo)
         {
+            if (modelo.Stock_Minimo > modelo.Stock_Maximo)
+                ModelState.AddModelError(nameof(modelo.Stock_Minimo), "El stock mínimo no puede ser mayor al stock máximo.");
+
             if (!ModelState.IsValid)
             {
                 modelo.IngredientesDisponibles = await ObtenerIngredientes();

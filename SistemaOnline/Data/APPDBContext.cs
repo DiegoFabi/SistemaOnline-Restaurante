@@ -49,11 +49,11 @@ namespace SistemaOnline.Data
                 );
 
             modelBuilder.Entity<Usuario>().HasData(
-                new Usuario { ID_Usuario = 1, Nombre_Usuario = "Tigre Capo", Email = "TrigeCapo123@gmail.com", Estado = true, Password = "aQwr@2", ID_Rol = 1 },
+                new Usuario { ID_Usuario = 1, Nombre_Usuario = "Tigre Capo", Email = "admin@gmail.com", Estado = true, Password = "aQwr@2", ID_Rol = 1 },
                 new Usuario { ID_Usuario = 2, Nombre_Usuario = "Carlos Chef", Email = "carlos.chef@gmail.com", Estado = true, Password = "chef123", ID_Rol = 5 },
-                new Usuario { ID_Usuario = 3, Nombre_Usuario = "Ana Rojas", Email = "ana.rojas@rancho.com", Estado = true, Password = "mesero456", ID_Rol = 3 },
-                new Usuario { ID_Usuario = 4, Nombre_Usuario = "Julio Castillo", Email = "julio.castillo@rancho.com", Estado = true, Password = "chef456", ID_Rol = 5 },
-                new Usuario { ID_Usuario = 5, Nombre_Usuario = "Valeria Elizabeth", Email = "valeria.eli@rancho.com", Estado = true, Password = "caja456", ID_Rol = 2 }
+                new Usuario { ID_Usuario = 3, Nombre_Usuario = "Ana Rojas", Email = "ana.mes@rancho.com", Estado = true, Password = "mesero456", ID_Rol = 3 },
+                new Usuario { ID_Usuario = 4, Nombre_Usuario = "Julio Castillo", Email = "julio.chef@rancho.com", Estado = true, Password = "chef456", ID_Rol = 5 },
+                new Usuario { ID_Usuario = 5, Nombre_Usuario = "Valeria Elizabeth", Email = "valeria.caja@rancho.com", Estado = true, Password = "caja456", ID_Rol = 2 }
                 );
 
             // Relación 1:1 Opcional entre Empleado y Usuario

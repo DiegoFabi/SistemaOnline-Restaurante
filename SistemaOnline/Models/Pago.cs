@@ -19,7 +19,7 @@ namespace SistemaOnline.Models
         public string Metodo_Pago { get; set; }
 
         [MaxLength(100)]
-        public string Detalles_Tarjeta { get; set; }
+        public string? Detalles_Tarjeta { get; set; }
 
         [Required, MaxLength(20)]
         public string Estado { get; set; }

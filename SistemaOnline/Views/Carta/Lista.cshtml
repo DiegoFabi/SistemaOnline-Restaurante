@@ -37,7 +37,7 @@
                                 <a asp-controller="Carta" asp-action="Editar" asp-route-id="@item.ID_Carta" class="inline-flex items-center gap-xs text-tertiary hover:underline">
                                     <span class="material-symbols-outlined text-[18px]">edit</span> Editar
                                 </a>
-                                <a asp-controller="Carta" asp-action="Eliminar" asp-route-id="@item.ID_Carta" onclick="return confirm('¿Estás seguro de eliminar este registro?');" class="inline-flex items-center gap-xs text-error hover:underline">
+                                <a asp-controller="Carta" asp-action="Eliminar" asp-route-id="@item.ID_Carta"  class="inline-flex items-center gap-xs text-error hover:underline">
                                     <span class="material-symbols-outlined text-[18px]">delete</span> Eliminar
                                 </a>
                             </div>

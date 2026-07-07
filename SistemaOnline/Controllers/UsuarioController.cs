@@ -110,6 +110,11 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            if (id == 1)
+            {
+                TempData["Error"] = "No se puede eliminar la cuenta de administrador principal.";
+                return RedirectToAction(nameof(Lista));
+            }
             Usuario usuario = await _context.Usuarios.FirstAsync(u => u.ID_Usuario == id);
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();

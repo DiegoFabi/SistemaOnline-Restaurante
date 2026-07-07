@@ -41,6 +41,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(TurnoVM modelo)
         {
+            if (modelo.Hora_Fin <= modelo.Hora_Inicio)
+                ModelState.AddModelError(nameof(modelo.Hora_Fin), "La hora de fin debe ser posterior a la hora de inicio.");
+
             if (!ModelState.IsValid)
             {
                 return View(modelo);
@@ -74,6 +77,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(TurnoVM modelo)
         {
+            if (modelo.Hora_Fin <= modelo.Hora_Inicio)
+                ModelState.AddModelError(nameof(modelo.Hora_Fin), "La hora de fin debe ser posterior a la hora de inicio.");
+
             if (!ModelState.IsValid)
             {
                 return View(modelo);

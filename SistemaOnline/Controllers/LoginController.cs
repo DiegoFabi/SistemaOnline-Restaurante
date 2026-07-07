@@ -57,13 +57,21 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM modelo)
         {
+            if (!ModelState.IsValid) return View(modelo);
+
             Usuario? existe = await _dbcontext.Usuarios.Include(u => u.Rol).FirstOrDefaultAsync(
                 u => u.Email == modelo.Email &&
                 u.Password == modelo.Password);
 
             if (existe == null)
             {
-                ViewData["Msg"] = "El usuario no exise o esta mal escrito";
+                ViewData["Msg"] = "El usuario no existe o la contraseña es incorrecta";
+                return View();
+            }
+
+            if (!existe.Estado)
+            {
+                ViewData["Msg"] = "Tu cuenta está deshabilitada. Contacta al administrador.";
                 return View();
             }
             //Claims
@@ -88,7 +96,7 @@ namespace SistemaOnline.Controllers
             //Sesiones por rol
             HttpContext.Session.SetString("User", existe.Nombre_Usuario);
             HttpContext.Session.SetString("Rol", existe.Rol.Nombre_Rol);
-            HttpContext.Session.SetInt32("idUser", existe.ID_Rol);
+            HttpContext.Session.SetInt32("idUser", existe.ID_Usuario);
             switch (existe.Rol.Nombre_Rol)
             {
                 case "Administrador":

@@ -66,6 +66,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(ReservacionVM modelo)
         {
+            if (modelo.Fecha_Hora <= DateTime.Now)
+                ModelState.AddModelError(nameof(modelo.Fecha_Hora), "La reservación debe ser para una fecha y hora futura.");
+
             if (!await _context.Clientes.AnyAsync(c => c.ID_Cliente == modelo.ID_Cliente))
                 ModelState.AddModelError(nameof(modelo.ID_Cliente), "Selecciona un cliente válido.");
             if (!await _context.Mesas.AnyAsync(m => m.ID_Mesa == modelo.ID_Mesa))
@@ -116,6 +119,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(ReservacionVM modelo)
         {
+            if (modelo.Fecha_Hora <= DateTime.Now)
+                ModelState.AddModelError(nameof(modelo.Fecha_Hora), "La reservación debe ser para una fecha y hora futura.");
+
             if (!await _context.Clientes.AnyAsync(c => c.ID_Cliente == modelo.ID_Cliente))
                 ModelState.AddModelError(nameof(modelo.ID_Cliente), "Selecciona un cliente válido.");
             if (!await _context.Mesas.AnyAsync(m => m.ID_Mesa == modelo.ID_Mesa))

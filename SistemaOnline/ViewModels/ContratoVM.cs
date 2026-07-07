@@ -8,9 +8,11 @@ namespace SistemaOnline.ViewModels
     {
         public int ID_Contrato { get; set; }
 
+        [Required(ErrorMessage = "La fecha de inicio es obligatoria.")]
         [DataType(DataType.Date)]
         public DateTime Fecha_Inicio { get; set; }
 
+        [Required(ErrorMessage = "La fecha de fin es obligatoria.")]
         [DataType(DataType.Date)]
         public DateTime Fecha_Fin { get; set; }
 

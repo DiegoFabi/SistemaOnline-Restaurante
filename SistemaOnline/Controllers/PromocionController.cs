@@ -50,6 +50,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(PromocionVM modelo)
         {
+            if (modelo.Fecha_Fin < modelo.Fecha_Inicio)
+                ModelState.AddModelError(nameof(modelo.Fecha_Fin), "La fecha de fin debe ser posterior a la fecha de inicio.");
+
             if (!ModelState.IsValid)
             {
                 return View(modelo);
@@ -89,6 +92,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(PromocionVM modelo)
         {
+            if (modelo.Fecha_Fin < modelo.Fecha_Inicio)
+                ModelState.AddModelError(nameof(modelo.Fecha_Fin), "La fecha de fin debe ser posterior a la fecha de inicio.");
+
             if (!ModelState.IsValid)
             {
                 return View(modelo);

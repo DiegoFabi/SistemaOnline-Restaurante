@@ -76,6 +76,29 @@
     </div>
 </div>
 
+<!-- Modal global de confirmación de eliminación -->
+<div id="modalEliminarGlobal" class="fixed inset-0 z-[300] hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-[360px] overflow-hidden animate-fade-in mx-md">
+        <div class="bg-error-container flex flex-col items-center py-lg px-lg">
+            <span class="material-symbols-outlined text-error text-[48px]">delete_forever</span>
+        </div>
+        <div class="p-lg flex flex-col items-center">
+            <h3 class="font-title-md text-title-md text-on-surface mb-xs">¿Eliminar registro?</h3>
+            <p class="text-body-md text-on-surface-variant text-center mb-lg">Esta acción no se puede deshacer.</p>
+            <div class="flex gap-md w-full">
+                <button type="button" onclick="cerrarModalEliminar()"
+                        class="flex-1 h-11 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high font-bold transition-all">
+                    Cancelar
+                </button>
+                <a id="btnConfirmarEliminar" href="#"
+                   class="flex-1 h-11 rounded-lg bg-error text-white font-bold hover:bg-error/90 transition-all inline-flex items-center justify-center gap-xs">
+                    <span class="material-symbols-outlined text-[18px]">delete</span> Eliminar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     (function () {
         const buscador = document.getElementById('buscadorTabla');
@@ -87,7 +110,6 @@
             if (!tabla) return;
 
             tabla.querySelectorAll('tbody tr').forEach(function (fila) {
-                // Animación de desvanecimiento simple
                 const esVisible = fila.textContent.toLowerCase().includes(filtro);
                 fila.style.transition = "opacity 0.2s ease";
                 fila.style.opacity = esVisible ? "1" : "0";
@@ -95,4 +117,31 @@
             });
         });
     })();
+
+    function abrirModalEliminar(url) {
+        document.getElementById('btnConfirmarEliminar').href = url;
+        var modal = document.getElementById('modalEliminarGlobal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function cerrarModalEliminar() {
+        var modal = document.getElementById('modalEliminarGlobal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    document.getElementById('modalEliminarGlobal').addEventListener('click', function (e) {
+        if (e.target === this) cerrarModalEliminar();
+    });
+
+    // Intercept all Eliminar links and route them through the modal
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('a[href*="/Eliminar/"]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                abrirModalEliminar(link.href);
+            });
+        });
+    });
 </script>

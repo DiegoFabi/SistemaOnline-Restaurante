@@ -122,6 +122,9 @@ namespace SistemaOnline.Controllers
             if (!await _context.Mesas.AnyAsync(m => m.ID_Mesa == modelo.ID_Mesa))
                 ModelState.AddModelError(nameof(modelo.ID_Mesa), "Selecciona una mesa válida.");
 
+            if (modelo.ProductosSeleccionados == null || !modelo.ProductosSeleccionados.Any())
+                ModelState.AddModelError(nameof(modelo.ProductosSeleccionados), "Debes seleccionar al menos un producto.");
+
             if (!ModelState.IsValid)
             {
                 modelo.EmpleadosDisponibles = esMesero ? new List<SelectListItem>() : await ObtenerEmpleadosMeseros();
@@ -132,13 +135,28 @@ namespace SistemaOnline.Controllers
                 return View(modelo);
             }
 
+            // Recalcular totales desde productos seleccionados para evitar manipulación client-side
+            decimal subTotalCalculado = 0;
+            if (modelo.ProductosSeleccionados != null && modelo.ProductosSeleccionados.Any())
+            {
+                var precios = await _context.Productos
+                    .Where(p => modelo.ProductosSeleccionados.Contains(p.ID_Producto))
+                    .ToDictionaryAsync(p => p.ID_Producto, p => p.Precio);
+                foreach (var idProd in modelo.ProductosSeleccionados)
+                {
+                    int qty = modelo.CantidadesProductos != null && modelo.CantidadesProductos.TryGetValue(idProd, out int q) && q > 0 ? q : 1;
+                    if (precios.TryGetValue(idProd, out decimal precio)) subTotalCalculado += precio * qty;
+                }
+            }
+            decimal igv = Math.Round(subTotalCalculado * 0.18m, 2);
+
             Pedido pedido = new Pedido
             {
                 Fecha = DateTime.Now,
                 Estado_Pedido = modelo.Estado_Pedido,
                 Detalle_Pedido = modelo.Detalle_Pedido,
-                SubTotal = modelo.SubTotal,
-                Total = modelo.Total,
+                SubTotal = subTotalCalculado,
+                Total = subTotalCalculado + igv,
                 ID_Empleado = modelo.ID_Empleado,
                 ID_Mesa = modelo.ID_Mesa
             };
@@ -223,14 +241,29 @@ namespace SistemaOnline.Controllers
                 return View(modelo);
             }
 
+            // Recalcular totales desde productos seleccionados para evitar manipulación client-side
+            decimal subTotalEditado = 0;
+            if (modelo.ProductosSeleccionados != null && modelo.ProductosSeleccionados.Any())
+            {
+                var precios = await _context.Productos
+                    .Where(p => modelo.ProductosSeleccionados.Contains(p.ID_Producto))
+                    .ToDictionaryAsync(p => p.ID_Producto, p => p.Precio);
+                foreach (var idProd in modelo.ProductosSeleccionados)
+                {
+                    int qty = modelo.CantidadesProductos != null && modelo.CantidadesProductos.TryGetValue(idProd, out int q) && q > 0 ? q : 1;
+                    if (precios.TryGetValue(idProd, out decimal precio)) subTotalEditado += precio * qty;
+                }
+            }
+            decimal igvEditado = Math.Round(subTotalEditado * 0.18m, 2);
+
             Pedido pedido = await _context.Pedidos
                 .Include(p => p.Pedido_Detalles)
                 .FirstAsync(p => p.ID_Pedido == modelo.ID_Pedido);
             pedido.Fecha = modelo.Fecha;
             pedido.Estado_Pedido = modelo.Estado_Pedido;
             pedido.Detalle_Pedido = modelo.Detalle_Pedido;
-            pedido.SubTotal = modelo.SubTotal;
-            pedido.Total = modelo.Total;
+            pedido.SubTotal = subTotalEditado;
+            pedido.Total = subTotalEditado + igvEditado;
             pedido.ID_Empleado = modelo.ID_Empleado;
             pedido.ID_Mesa = modelo.ID_Mesa;
             _context.Pedidos.Update(pedido);
@@ -267,6 +300,14 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<ActionResult> Eliminar(int id)
         {
+            var tienePago = await _context.Pagos.AnyAsync(p => p.ID_Pedido == id);
+            var tieneComprobante = await _context.Comprobantes_Pagos.AnyAsync(c => c.ID_Pedido == id);
+            if (tienePago || tieneComprobante)
+            {
+                TempData["Error"] = "No se puede eliminar un pedido que tiene pagos o comprobantes asociados.";
+                return RedirectToAction(nameof(Lista));
+            }
+
             Pedido pedido = await _context.Pedidos.FirstAsync(p => p.ID_Pedido == id);
             _context.Pedidos.Remove(pedido);
             await _context.SaveChangesAsync();

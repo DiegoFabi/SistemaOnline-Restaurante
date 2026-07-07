@@ -7,6 +7,7 @@ namespace SistemaOnline.ViewModels
     {
         public int ID_Pago { get; set; }
 
+        [Required(ErrorMessage = "La fecha y hora del pago son obligatorias.")]
         [DataType(DataType.DateTime)]
         public DateTime Fecha_Hora_Pago { get; set; }
 
@@ -22,6 +23,7 @@ namespace SistemaOnline.ViewModels
         [Required, MaxLength(20)]
         public string Estado { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Selecciona un pedido válido.")]
         public int ID_Pedido { get; set; }
 
         // Para mostrar en Lista

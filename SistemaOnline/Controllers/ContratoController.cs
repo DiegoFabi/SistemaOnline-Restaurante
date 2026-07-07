@@ -43,9 +43,9 @@ namespace SistemaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Nuevo()
         {
-            if (!await _context.Empleados.AnyAsync() || !await _context.Proveedores.AnyAsync())
+            if (!await _context.Empleados.AnyAsync() && !await _context.Proveedores.AnyAsync())
             {
-                ViewData["Msg"] = "Debes registrar al menos un Empleado y un Proveedor antes de crear un Contrato.";
+                ViewData["Msg"] = "Debes registrar al menos un Empleado o un Proveedor antes de crear un Contrato.";
                 return View("~/Views/Negocio/Advertencia.cshtml");
             }
 
@@ -60,6 +60,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(ContratoVM modelo)
         {
+            if (modelo.Fecha_Fin < modelo.Fecha_Inicio)
+                ModelState.AddModelError(nameof(modelo.Fecha_Fin), "La fecha de fin debe ser posterior a la fecha de inicio.");
+
             ModelState.Remove(nameof(modelo.ID_Empleado));
             ModelState.Remove(nameof(modelo.ID_Proveedor));
 
@@ -120,6 +123,9 @@ namespace SistemaOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(ContratoVM modelo)
         {
+            if (modelo.Fecha_Fin < modelo.Fecha_Inicio)
+                ModelState.AddModelError(nameof(modelo.Fecha_Fin), "La fecha de fin debe ser posterior a la fecha de inicio.");
+
             ModelState.Remove(nameof(modelo.ID_Empleado));
             ModelState.Remove(nameof(modelo.ID_Proveedor));
 

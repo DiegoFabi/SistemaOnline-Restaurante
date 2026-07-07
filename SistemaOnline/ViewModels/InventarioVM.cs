@@ -19,6 +19,7 @@ namespace SistemaOnline.ViewModels
         [Range(0, double.MaxValue, ErrorMessage = "El stock máximo no puede ser negativo.")]
         public decimal Stock_Maximo { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Selecciona un ingrediente válido.")]
         public int ID_Ingrediente { get; set; }
 
         // Para mostrar en Lista

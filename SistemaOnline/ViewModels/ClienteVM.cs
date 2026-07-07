@@ -6,11 +6,11 @@ namespace SistemaOnline.ViewModels
     {
         public int ID_Cliente { get; set; }
 
-        [MaxLength(50)]
-        public string? Nombre { get; set; }
+        [Required(ErrorMessage = "El nombre es obligatorio."), MaxLength(50)]
+        public string Nombre { get; set; }
 
-        [MaxLength(50)]
-        public string? Apellidos { get; set; }
+        [Required(ErrorMessage = "Los apellidos son obligatorios."), MaxLength(50)]
+        public string Apellidos { get; set; }
 
         [MaxLength(9)]
         [RegularExpression(@"^9[0-9]{8}$", ErrorMessage = "El teléfono debe iniciar con 9 y tener exactamente 9 dígitos.")]
